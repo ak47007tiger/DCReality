@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using SkillSystem.ValueSystem;
 using UnityEngine;
 
 namespace SkillSystem
@@ -37,12 +38,13 @@ namespace SkillSystem
     {
         public void NormalAttack()
         {
+            IActor actor = null;
             ICaster caster = null;
             ISkillCfg normalAttackCfg = null;
             //get from user input
             ICastCfg castCfg = null;
 
-            var targets = GetTargetSystem().GetTargets(caster, normalAttackCfg);
+            var targets = GetTargetSystem().GetTargets(actor, caster, normalAttackCfg);
             castCfg.SetTargetActors(targets);
 
             caster.Cast(normalAttackCfg, castCfg);
@@ -164,6 +166,8 @@ namespace SkillSystem
     {
         List<IBuff> GetOwnerBuffs();
         void SetOwnerBuffs(List<IBuff> buffs);
+
+        IValueComponent GetValueComponent();
     }
 
     /// <summary>
@@ -205,6 +209,22 @@ namespace SkillSystem
         void UpdateCastConfig(ICastInput input);
 
         List<IBuff> GetOwnerBuffs();
+
+        List<ISkill> GetActiveSkills();
+
+        ISkill GetActiveSkill();
+
+        /// <summary>
+        /// 施法者本身的actor
+        /// </summary>
+        /// <returns></returns>
+        IActor GetActor();
+
+        CastMsg BuffAllowCast(ISkill skill);
+
+        CastMsg ConsumeEnough(ISkill skill);
+
+        CastMsg CdEnough(ISkill skill);
     }
 
     /// <summary>
@@ -237,13 +257,26 @@ namespace SkillSystem
         ICastCfg GetCastCfg();
         void SetCastCfg(ICastCfg castCfg);
 
+        ISkillCfg GetSkillCfg();
+        void SetSkillCfg(ISkillCfg skillCfg);
+
+        bool AllowCastTo(IActor actor);
+
         void Apply();
     }
 
     public interface ISkillCfg
     {
         int GetId();
-        bool AllowMultiple();
+
+        int GetDuration();
+
+        List<KeyValuePair<ValueType, int>> GetConsumes();
+    }
+
+    public class SkillConsume
+    {
+
     }
 
     public class BuffEffectRole
@@ -265,6 +298,14 @@ namespace SkillSystem
     {
         int GetId();
 
+        IBuffCfg GetBuffCfg();
+        
+        /// <summary>
+        /// buff拥有者是否可以释放技能
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <returns></returns>
+        bool AllowCast(ISkill skill);
     }
 
     public interface ISystemProvider
@@ -303,6 +344,53 @@ namespace SkillSystem
         }
     }
 
+    public enum CastMsgType
+    {
+        ok,
+        hp_low,
+        mp_low,
+        cd,
+        buff_reject,
+    }
+
+    public class CastMsg
+    {
+        public static readonly CastMsg s_Suc = new CastMsg();
+
+        public CastMsgType mMsgType = CastMsgType.ok;
+
+        public object mAttach;
+
+        public CastMsg() { }
+
+        public CastMsg(CastMsgType type)
+        {
+            mMsgType = type;
+        }
+
+        public CastMsg(CastMsgType type, object attach)
+        {
+            mMsgType = type;
+            mAttach = attach;
+        }
+
+        public bool Suc
+        {
+            get { return CastMsgType.ok == mMsgType; }
+        }
+
+        public bool Error
+        {
+            get { return !Suc; }
+        }
+
+    }
+
+    public class Filters
+    {
+        
+    }
+
     public class GameActor : GameElement, IActor, ICaster
     {
         private List<ISkillCfg> mSkillCfgs;
@@ -325,6 +413,20 @@ namespace SkillSystem
             Cast(normalAttackSkillCfg, normalAttackCastCfg);
         }
 
+        public CastMsg ConsumeEnough(ISkill skill)
+        {
+            var values = GetValueComponent();
+            var mp = values.GetValue(ValueType.mp);
+            var consumes = skill.GetSkillCfg().GetConsumes();
+
+            throw new System.NotImplementedException();
+        }
+
+        public CastMsg CdEnough(ISkill skill)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool Cast(ISkillCfg skillCfg)
         {
             var castCfg = GetCastSystem().GetDefaultCastCfg(skillCfg);
@@ -333,21 +435,36 @@ namespace SkillSystem
 
         public bool Cast(ISkillCfg skillCfg, ICastCfg castCfg)
         {
-            /*
-             判断是否可以释放
-             沉默 晕眩
-             能量
-             */
-            var ownerBuffs = GetOwnerBuffs();
-
-            /*
-             查找对skill有影响的buff
-             创建
-             激活
-             */
             var skill = GetSkillSystem().CreateSkill(skillCfg);
             skill.SetCaster(this);
             skill.SetCastCfg(castCfg);
+
+            /*
+             判断是否可以释放
+             buff
+                 沉默
+                 晕眩
+             能量
+             cd
+             */
+
+            var buffAllowCast = BuffAllowCast(skill);
+            if (buffAllowCast.Error)
+            {
+                return false;
+            }
+
+            var consumeEnough = ConsumeEnough(skill);
+            if (consumeEnough.Error)
+            {
+                return false;
+            }
+
+            if (CdEnough(skill).Error)
+            {
+                return false;
+            }
+
             skill.Apply();
             return true;
         }
@@ -367,12 +484,43 @@ namespace SkillSystem
             throw new System.NotImplementedException();
         }
 
+        public IActor GetActor()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CastMsg BuffAllowCast(ISkill skill)
+        {
+            var ownerBuffs = GetOwnerBuffs();
+            var rejectBuff = ownerBuffs.Find((buff => !buff.AllowCast(skill)));
+            if (null == rejectBuff)
+            {
+                return CastMsg.s_Suc;
+            }
+            return new CastMsg(CastMsgType.buff_reject, rejectBuff);
+        }
+
         public List<IBuff> GetOwnerBuffs()
         {
             throw new System.NotImplementedException();
         }
 
+        public List<ISkill> GetActiveSkills()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ISkill GetActiveSkill()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void SetOwnerBuffs(List<IBuff> buffs)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IValueComponent GetValueComponent()
         {
             throw new System.NotImplementedException();
         }
