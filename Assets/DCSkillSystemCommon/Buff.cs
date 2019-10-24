@@ -11,7 +11,7 @@ namespace DC.SkillSystem
     {
         int GetId();
 
-        IBuffCfg GetBuffCfg();
+        BuffCfg GetBuffCfg();
 
         /// <summary>
         /// buff拥有者是否可以释放技能

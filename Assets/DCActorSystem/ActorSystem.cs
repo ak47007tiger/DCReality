@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DC.SkillSystem;
@@ -18,13 +19,21 @@ namespace DC.ActorSystem
 
     public interface ITargetSystem
     {
-        List<IActor> GetTargets(IActor actor, ICaster caster, ISkillCfg skillCfg);
+        List<IActor> GetTargets(IActor actor, ICaster caster, SkillCfg skillCfg);
     }
 
     public enum RoleType
     {
         Hero,
         Soldier,
+        Building,
+    }
+
+    public enum ActorSide
+    {
+        Neutral,
+        Friend,
+        Enemy,
     }
 
     public interface IActor
@@ -54,5 +63,8 @@ namespace DC.ActorSystem
         void UpdateAnimatorParam(int paramId, int value);
         void UpdateAnimatorParam(int paramId, float value);
         void UpdateAnimatorParam(int paramId, bool value);
+
+        void TryCatch(IActor actor, float stopDistance, Action<IActor,float> onCatch);
+        void StopCatch();
     }
 }

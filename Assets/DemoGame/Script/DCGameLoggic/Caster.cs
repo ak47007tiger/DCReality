@@ -27,13 +27,13 @@ namespace DC.GameLogic
             throw new System.NotImplementedException();
         }
 
-        public bool Cast(ISkillCfg skillCfg)
+        public bool Cast(SkillCfg skillCfg)
         {
             var castCfg = GetCastSystem().GetDefaultCastCfg(skillCfg);
             return Cast(skillCfg, castCfg);
         }
 
-        public bool Cast(ISkillCfg skillCfg, ICastCfg castCfg)
+        public bool Cast(SkillCfg skillCfg, CastCfg castCfg)
         {
             var skill = GetSkillSystem().CreateSkill(skillCfg);
             skill.SetCaster(this);
@@ -65,16 +65,31 @@ namespace DC.GameLogic
                 return false;
             }
 
+            switch (skillCfg.mTargetType)
+            {
+                case SkillTargetType.Actor:
+                {
+                    foreach (var target in castCfg.mTargets)
+                    {
+                        if (!skill.AllowCastTo(target))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                    break;
+            }
+
             skill.Apply();
             return true;
         }
 
-        public void SetSkillActive(ISkillCfg skillCfg, bool active)
+        public void SetSkillActive(SkillCfg skillCfg, bool active)
         {
             throw new System.NotImplementedException();
         }
 
-        public List<ICastCfg> GetActiveCastCfgs()
+        public List<CastCfg> GetActiveCastCfgs()
         {
             throw new System.NotImplementedException();
         }

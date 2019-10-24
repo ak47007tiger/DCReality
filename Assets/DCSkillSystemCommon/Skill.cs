@@ -7,18 +7,16 @@ using DC.DCPhysics;
 
 namespace DC.SkillSystem
 {
-
-
     public interface ISkill
     {
         ICaster GetCaster();
         void SetCaster(ICaster caster);
 
-        ICastCfg GetCastCfg();
-        void SetCastCfg(ICastCfg castCfg);
+        CastCfg GetCastCfg();
+        void SetCastCfg(CastCfg castCfg);
 
-        ISkillCfg GetSkillCfg();
-        void SetSkillCfg(ISkillCfg skillCfg);
+        SkillCfg GetSkillCfg();
+        void SetSkillCfg(SkillCfg skillCfg);
 
         bool AllowCastTo(IActor actor);
 
@@ -31,10 +29,11 @@ namespace DC.SkillSystem
         void Apply();
     }
 
-    public class Skill : ISkill
+    public class Skill : BaseMonoBehaviour, ISkill
     {
         private ICaster mCaster;
 
+        private SkillCfg mSkillCfg;
 
         public ICaster GetCaster()
         {
@@ -46,24 +45,24 @@ namespace DC.SkillSystem
             throw new NotImplementedException();
         }
 
-        public ICastCfg GetCastCfg()
+        public CastCfg GetCastCfg()
         {
             throw new NotImplementedException();
         }
 
-        public void SetCastCfg(ICastCfg castCfg)
+        public void SetCastCfg(CastCfg castCfg)
         {
             throw new NotImplementedException();
         }
 
-        public ISkillCfg GetSkillCfg()
+        public SkillCfg GetSkillCfg()
         {
-            throw new NotImplementedException();
+            return mSkillCfg;
         }
 
-        public void SetSkillCfg(ISkillCfg skillCfg)
+        public void SetSkillCfg(SkillCfg skillCfg)
         {
-            throw new NotImplementedException();
+            mSkillCfg = skillCfg;
         }
 
         public bool AllowCastTo(IActor actor)

@@ -31,9 +31,9 @@ namespace DC.SkillSystem
         {
             IActor actor = null;
             ICaster caster = null;
-            ISkillCfg normalAttackCfg = null;
+            SkillCfg normalAttackCfg = null;
             //get from user input
-            ICastCfg castCfg = null;
+            CastCfg castCfg = null;
 
             var targets = GetTargetSystem().GetTargets(actor, caster, normalAttackCfg);
             castCfg.SetTargetActors(targets);
@@ -44,9 +44,9 @@ namespace DC.SkillSystem
         public void NormalAttackTarget()
         {
             ICaster caster = null;
-            ISkillCfg normalAttackCfg = null;
+            SkillCfg normalAttackCfg = null;
             //get from user input
-            ICastCfg castCfg = null;
+            CastCfg castCfg = null;
 
             //get from user input
             List<IActor> targets = null;
@@ -58,9 +58,9 @@ namespace DC.SkillSystem
         public void CastToActor()
         {
             ICaster caster = null;
-            ISkillCfg skillCfg = null;
+            SkillCfg skillCfg = null;
             //get from user input
-            ICastCfg castCfg = null;
+            CastCfg castCfg = null;
 
             //get from user input
             List<IActor> targets = null;
@@ -72,9 +72,9 @@ namespace DC.SkillSystem
         public void CastToDirection()
         {
             ICaster caster = null;
-            ISkillCfg skillCfg = null;
+            SkillCfg skillCfg = null;
             //get from user input
-            ICastCfg castCfg = null;
+            CastCfg castCfg = null;
 
             //get from user input
             var direction = Vector3Int.zero;
@@ -86,9 +86,9 @@ namespace DC.SkillSystem
         public void CastToPosition()
         {
             ICaster caster = null;
-            ISkillCfg skillCfg = null;
+            SkillCfg skillCfg = null;
             //get from user input
-            ICastCfg castCfg = null;
+            CastCfg castCfg = null;
 
             //get from user input
             var position = Vector3Int.zero;

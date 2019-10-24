@@ -15,20 +15,6 @@ namespace DC.SkillSystem
     /// </summary>
     public interface ICastCfg
     {
-        List<IActor> GetTargetActors();
-        void SetTargetActors(List<IActor> targets);
-
-        Vector3Int GetDirection();
-        void SetDirection(Vector3Int direction);
-
-        Vector3Int GetTargetPosition();
-        void SetTargetPosition(Vector3Int position);
-
-        int GetPower();
-        void SetPower(int power);
-
-        List<int> GetExtParams();
-        void SetExtParams(List<int> extParams);
     }
 
     public class CastCfg : ICastCfg

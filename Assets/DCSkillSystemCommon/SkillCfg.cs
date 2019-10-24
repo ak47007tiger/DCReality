@@ -10,80 +10,49 @@ namespace DC.SkillSystem
 
     public interface ISkillCfg
     {
-        int GetId();
-
-        int GetDuration();
-
-        List<KeyValuePair<ValueType, int>> GetConsumes();
-
-        List<KeyValuePair<ValueType, int>> GetValueEffects();
-
-        SkillAnimationCfg GetAnimation();
-
-        List<KeyValuePair<string, string>> GetEffectAndTransformNames();
-
-        int GetMaxTargetCnt();
-
-        bool NeedDirection();
-
-        bool NeedPosition();
     }
 
+    public enum SkillTargetType
+    {
+        None,
+        Actor,
+        Direction,
+        Position,
+    }
 
     public class SkillCfg : ISkillCfg
     {
-        private int mId;
-        private int mDuration;
-        private List<KeyValuePair<ValueType, int>> mConsumeList;
-        private List<KeyValuePair<ValueType, int>> mValueEffects;
-        private List<KeyValuePair<string, string>> mEffectAndTransformNames;
-        private int mMaxTargetCnt;
-        private bool mNeedDirection;
-        private bool mNeedPosition;
+        public int mId;
+        public int mDuration;
+        public List<KeyValuePair<ValueType, int>> mConsumeList;
+        public List<KeyValuePair<ValueType, int>> mValueEffectList;
 
-        public int GetId()
-        {
-            return mId;
-        }
+        public SkillAnimationCfg mSkillAnimationCfg;
 
-        public int GetDuration()
-        {
-            return mDuration;
-        }
+        public List<KeyValuePair<string, string>> mEffectAndTransformNames;
+
+        public SkillTargetType mTargetType;
+        public int mMaxTargetCnt;
+        public bool mNeedTarget;
+        public bool mNeedDirection;
+        public bool mNeedPosition;
+
+        /// <summary>
+        /// 施法距离
+        /// </summary>
+        /// <returns></returns>
+        public int mCastRange;
+
+        public string mPrefabPath;
 
         public List<KeyValuePair<ValueType, int>> GetConsumes()
         {
             return mConsumeList;
         }
 
-        public List<KeyValuePair<ValueType, int>> GetValueEffects()
-        {
-            return mValueEffects;
-        }
-
-        public SkillAnimationCfg GetAnimation()
-        {
-            throw new NotImplementedException();
-        }
-
         public List<KeyValuePair<string, string>> GetEffectAndTransformNames()
         {
             return mEffectAndTransformNames;
-        }
-
-        public int GetMaxTargetCnt()
-        {
-            return mMaxTargetCnt;
-        }
-
-        public bool NeedDirection()
-        {
-            return mNeedDirection;
-        }
-
-        public bool NeedPosition()
-        {
-            return mNeedPosition;
         }
     }
 }

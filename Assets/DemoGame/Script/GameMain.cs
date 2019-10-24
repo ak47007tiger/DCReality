@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using DC.GameLogic;
 using UnityEngine;
 
@@ -12,9 +13,9 @@ namespace DC
             //init all sys
             //load scene
             //create hero
-            var fighterCfg = MockSystem.Instance.NewFighterCfg();
+            var fighterCfg = MockSystem.Instance.DemoFighterCfg();
 
-            var prefabPath = fighterCfg.GetPrefabPath();
+            var prefabPath = fighterCfg.mPrefabPath;
             var resourceSys = SystemProvider.Instance.GetResourceSystem();
 
             var heroPrefab = resourceSys.Load<GameObject>(prefabPath);

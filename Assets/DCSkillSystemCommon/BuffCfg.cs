@@ -17,8 +17,11 @@ namespace DC.SkillSystem
 
     public interface IBuffCfg
     {
-        int GetRange();
-        void SetRange();
-        uint EffectRole();
+    }
+
+    public class BuffCfg : IBuffCfg
+    {
+        public int mRange;
+        public uint mEffectRole;
     }
 }

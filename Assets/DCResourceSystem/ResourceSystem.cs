@@ -8,4 +8,12 @@ namespace DC.ResourceSys
     {
         T Load<T>(string path) where T : Object;
     }
+
+    public class ResourceSystem : Singleton<ResourceSystem>, IResourceSystem
+    {
+        public T Load<T>(string path) where T : Object
+        {
+            return Resources.Load<T>(path);
+        }
+    }
 }

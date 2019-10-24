@@ -93,7 +93,7 @@ namespace DC.GameLogic
 
         public IResourceSystem GetResourceSystem()
         {
-            throw new System.NotImplementedException();
+            return ResourceSystem.Instance;
         }
     }
 

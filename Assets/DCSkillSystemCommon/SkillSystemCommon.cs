@@ -4,6 +4,8 @@ using UnityEngine;
 using DC.ActorSystem;
 using ValueType = DC.ValueSys.ValueType;
 using DC.DCPhysics;
+using DC.ResourceSys;
+using Object = UnityEngine.Object;
 
 namespace DC.SkillSystem
 {
@@ -21,7 +23,9 @@ namespace DC.SkillSystem
 
     public interface ISkillSystem
     {
-        ISkill CreateSkill(ISkillCfg cfg);
+        void Init();
+
+        ISkill CreateSkill(SkillCfg cfg);
 
         List<ISkill> GetActiveSkills();
 
@@ -29,7 +33,7 @@ namespace DC.SkillSystem
 
         void RemoveSkill(ISkill skill);
 
-        ISkillCfg GetSkillCfg(int id);
+        SkillCfg GetSkillCfg(int skillId);
 
         /// <summary>
         /// 释放设定
@@ -51,14 +55,28 @@ namespace DC.SkillSystem
         /// <param name="skill"></param>
         void OnSkillComplete(ISkill skill);
 
-        IBuff CreateBuff(IBuffCfg cfg);
+        IBuff CreateBuff(BuffCfg cfg);
     }
 
-    public class SkillSystem : ISkillSystem
+    public class SkillSystem : Singleton<SkillSystem>, ISkillSystem
     {
-        public ISkill CreateSkill(ISkillCfg cfg)
+        private HashSet<ISkill> mAllActiveSkill = new HashSet<ISkill>();
+
+        Dictionary<int, SkillCfg> mIdToSkillCfg = new Dictionary<int, SkillCfg>();
+
+        public void Init()
         {
-            throw new NotImplementedException();
+            //todo read all skill config
+        }
+
+        public ISkill CreateSkill(SkillCfg cfg)
+        {
+            //create skill from prefab
+            var skillPrefab = ResourceSystem.Instance.Load<GameObject>(cfg.mPrefabPath);
+            var skillGO = Object.Instantiate(skillPrefab);
+            var skillInstance = skillGO.GetComponent<Skill>();
+            AddSkill(skillInstance);
+            return skillInstance;
         }
 
         public List<ISkill> GetActiveSkills()
@@ -68,17 +86,27 @@ namespace DC.SkillSystem
 
         public void AddSkill(ISkill skill)
         {
-            throw new NotImplementedException();
+            if (skill != null)
+            {
+                mAllActiveSkill.Add(skill);
+            }
         }
 
         public void RemoveSkill(ISkill skill)
         {
-            throw new NotImplementedException();
+            if (skill == null) return;
+
+            mAllActiveSkill.Remove(skill);
         }
 
-        public ISkillCfg GetSkillCfg(int id)
+        public SkillCfg GetSkillCfg(int skillId)
         {
-            throw new NotImplementedException();
+            if (mIdToSkillCfg.TryGetValue(skillId, out var cfg))
+            {
+                return cfg;
+            }
+
+            return null;
         }
 
         public void OnSkillCreate(ISkill skill)
@@ -87,7 +115,6 @@ namespace DC.SkillSystem
             var fxAndTfNames = skillCfg.GetEffectAndTransformNames();
             if (null != fxAndTfNames)
             {
-
             }
         }
 
@@ -98,21 +125,17 @@ namespace DC.SkillSystem
 
         public void OnSkillComplete(ISkill skill)
         {
-
         }
 
-        public IBuff CreateBuff(IBuffCfg cfg)
+        public IBuff CreateBuff(BuffCfg cfg)
         {
             throw new NotImplementedException();
         }
     }
 
-
     public enum SkillLifeCycle
     {
-
     }
-
 
     public enum SkillCompleteBehaviour
     {
@@ -122,15 +145,7 @@ namespace DC.SkillSystem
         Dead,
     }
 
-    
-
-    public interface SkillAnimationCfg
-    {
-
-    }
-
     public class Filters
     {
     }
-
 }

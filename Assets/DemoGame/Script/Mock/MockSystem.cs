@@ -7,15 +7,19 @@ namespace DC
 {
     public interface IMockSystem
     {
-        IHeroCfg NewFighterCfg();
+        /// <summary>
+        /// 战士
+        /// </summary>
+        /// <returns></returns>
+        HeroCfg DemoFighterCfg();
     }
 
     public class MockSystem : Singleton<MockSystem>, IMockSystem
     {
-        public IHeroCfg NewFighterCfg()
+        public HeroCfg DemoFighterCfg()
         {
             var fighterCfg = new HeroCfg();
-            fighterCfg.SetPrefabPath("Actor/hero_demo_fighter");
+            fighterCfg.mPrefabPath = "Actor/hero_demo_fighter";
             return fighterCfg;
         }
     }

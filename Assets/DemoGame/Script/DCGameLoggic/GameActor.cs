@@ -8,22 +8,22 @@ namespace DC.GameLogic
 {
     public class GameActor : GameElement, IActor
     {
-        private List<ISkillCfg> mSkillCfgs;
+        private List<SkillCfg> mSkillCfgs;
 
-        private Dictionary<ISkillCfg, ISkill> mCfgToSkill;
+        private Dictionary<SkillCfg, ISkill> mCfgToSkill;
 
         public void Attack()
         {
             var targetSys = GetTargetSystem();
-            ISkillCfg normalAttackSkillCfg = null;
+            SkillCfg normalAttackSkillCfg = null;
             var targets = targetSys.GetTargets(this, GetCaster(), normalAttackSkillCfg);
             Attack(targets);
         }
 
         public void Attack(List<IActor> targets)
         {
-            ISkillCfg normalAttackSkillCfg = null;
-            ICastCfg normalAttackCastCfg = null;
+            SkillCfg normalAttackSkillCfg = null;
+            CastCfg normalAttackCastCfg = null;
 
             GetCaster().Cast(normalAttackSkillCfg, normalAttackCastCfg);
         }

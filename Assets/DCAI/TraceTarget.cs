@@ -11,7 +11,7 @@ namespace DC.AI
 
         public float mSpeed;
 
-        public float stopDistance = 1;
+        public float mStopDistance = 1;
 
         void Update()
         {
@@ -25,9 +25,16 @@ namespace DC.AI
             CacheTransform.position = ComputeNextPosition(CacheTransform, mTargetTf, mSpeed);
         }
 
+        public void UpdateTraceInfo(Transform targetTf, float speed, float stopDistance)
+        {
+            mTargetTf = targetTf;
+            mSpeed = speed;
+            mStopDistance = stopDistance;
+        }
+
         public bool CatchTarget()
         {
-            return Vector3.Distance(mTargetTf.position, CacheTransform.position) <= stopDistance;
+            return Vector3.Distance(mTargetTf.position, CacheTransform.position) <= mStopDistance;
         }
 
         public static Vector3 ComputeNextPosition(Transform traceTf, Transform targetTf, float speed)

@@ -2,6 +2,7 @@
 using DC.ActorSystem;
 using DC.SkillSystem;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace DC.GameLogic
 {
@@ -14,48 +15,75 @@ namespace DC.GameLogic
         private IActor mGameActor;
         private ICaster mCaster;
 
-        private IHeroCfg mHeroCfg;
+        public HeroCfg mHeroCfg;
 
-        private ISkillCfg mSelectedSkillCfg;
-        private ICastCfg mCastCfg;
+        private SkillCfg mSelectedSkillCfg;
+        private CastCfg mCastCfg;
 
         private HeroInput_State mState;
         private HeroInput_State mIdle = new HeroInput_Idle();
         private HeroInput_State mDeployCast = new HeroInput_DeployCast();
 
-        public void SetHeroCfg(IHeroCfg cfg)
-        {
-            mHeroCfg = cfg;
-        }
+        public NavMeshAgent mMeshAgent;
+
+        List<KeyCode> mSkillKeyCodeList = new List<KeyCode>();
 
         void Awake()
         {
             mGameActor = GetComponent<GameActor>();
             mCaster = GetComponent<Caster>();
+        }
 
+        public void SetForward(Vector3 forward)
+        {
+            CacheTransform.forward = forward;
+        }
 
+        public void MoveTo(Vector3 position)
+        {
+            SetForward((position - CacheTransform.position).normalized);
+            mMeshAgent.destination = position;
         }
 
         void Update()
         {
-            //准备q技能 设置释放参数 or 直接释放
-            if (Input.GetKeyDown(KeyCode.Q))
+            HandleSkillKey();
+            HandleLeftMouseBtn();
+            HandleRightMouseBtn();
+        }
+
+        #region skill key code
+
+        private void HandleSkillKey()
+        {
+            foreach (var code in mSkillKeyCodeList)
             {
-                var skillId = mHeroCfg.GetSkillId(KeyCode.Q);
-                var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
-                //不需要目标 直接释放技能
-                if (skillCfg.GetMaxTargetCnt() == 0 && !skillCfg.NeedDirection() && !skillCfg.NeedPosition())
+                //准备技能 设置释放参数 or 直接释放
+                if (Input.GetKeyDown(code))
                 {
-                    mCaster.Cast(skillCfg);
-                }
-                else
-                {
-                    //选中某个技能 准备调参
-                    mSelectedSkillCfg = skillCfg;
-                    mCastCfg = new CastCfg();
+                    var skillId = mHeroCfg.GetSkillId(code);
+                    var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
+                    //不需要目标 直接释放技能
+                    if (skillCfg.mTargetType == SkillTargetType.None)
+                    {
+                        mCaster.Cast(skillCfg);
+                    }
+                    else
+                    {
+                        //选中某个技能 准备调参
+                        mSelectedSkillCfg = skillCfg;
+                        mCastCfg = new CastCfg();
+                    }
                 }
             }
+        }
 
+        #endregion
+
+        #region set target
+
+        private void HandleLeftMouseBtn()
+        {
             //选择目标 or 方位
             if (Input.GetMouseButtonDown(0))
             {
@@ -66,60 +94,84 @@ namespace DC.GameLogic
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit, 100))
                     {
-                        var target = hit.transform.GetComponent<GameActor>();
-                        if (null != target)
+                        switch (mSelectedSkillCfg.mTargetType)
                         {
-                            var castCfg = new CastCfg();
-                            var targets = new List<IActor>();
-                            targets.Add(target);
-                            castCfg.SetTargetActors(targets);
-                            mCaster.Cast(mSelectedSkillCfg, castCfg);
+                            case SkillTargetType.Actor:
+                            {
+                                var target = hit.transform.GetComponent<GameActor>();
+                                var distance = Toolkit.ComputeDistance(target, CacheTransform);
+                                if (distance > mSelectedSkillCfg.mCastRange)
+                                {
+                                    mGameActor.TryCatch(target, mSelectedSkillCfg.mCastRange, OnCatchActor);
+                                    return;
+                                }
 
-                            ClearSkill();
+                                if (null != target)
+                                {
+                                    CastSelectedSkill(target);
+                                }
+                            }
+                                break;
+                            case SkillTargetType.Direction:
+                            {
+                                //计算一个方向，并且平行于地面。让y值都为0
+                                var hitPos = hit.point;
+                                hitPos.y = 0;
+                                var playerPos = CacheTransform.position;
+                                playerPos.y = 0;
+                                var rawDirection = hitPos - playerPos;
+                                var castCfg = new CastCfg();
+                                castCfg.SetDirection(Toolkit.FloatToInt(rawDirection));
+                                mCaster.Cast(mSelectedSkillCfg, castCfg);
 
-                            return;
-                        }
+                                ClearSkill();
+                            }
+                                break;
+                            case SkillTargetType.Position:
+                            {
+                                var hitPos = hit.point;
+                                var castCfg = new CastCfg();
+                                castCfg.SetTargetPosition(Toolkit.FloatToInt(hitPos));
+                                mCaster.Cast(mSelectedSkillCfg, castCfg);
 
-                        //position or direction
-                        if (mSelectedSkillCfg.NeedPosition())
-                        {
-                            var hitPos = hit.point;
-                            var castCfg = new CastCfg();
-                            castCfg.SetTargetPosition(Toolkit.FloatToInt(hitPos));
-                            mCaster.Cast(mSelectedSkillCfg, castCfg);
-
-                            ClearSkill();
-
-                            return;
-                        }
-
-                        if (mSelectedSkillCfg.NeedDirection())
-                        {
-                            //计算一个方向，并且平行于地面。让y值都为0
-                            var hitPos = hit.point;
-                            hitPos.y = 0;
-                            var playerPos = CacheTransform.position;
-                            playerPos.y = 0;
-                            var rawDirection = hitPos - playerPos;
-                            var castCfg = new CastCfg();
-                            castCfg.SetDirection(Toolkit.FloatToInt(rawDirection));
-                            mCaster.Cast(mSelectedSkillCfg, castCfg);
-
-                            ClearSkill();
-
-                            return;
+                                ClearSkill();
+                            }
+                                break;
                         }
                     }
                 }
             }
+        }
 
+        #endregion
+
+
+        private void OnCatchActor(IActor actor, float distance)
+        {
+            CastSelectedSkill(actor);
+        }
+
+        private void CastSelectedSkill(IActor target)
+        {
+            var castCfg = new CastCfg();
+            var targets = new List<IActor>();
+            targets.Add(target);
+            castCfg.SetTargetActors(targets);
+            mCaster.Cast(mSelectedSkillCfg, castCfg);
+
+            ClearSkill();
+        }
+
+        #region right mouse btn
+        private void HandleRightMouseBtn()
+        {
             //1 非施法准备期 普攻 2 施法准备期 取消
             if (Input.GetMouseButtonDown(1))
             {
                 //cancel skill
-                if (mSelectedSkillCfg != null)
+                if (IsPreparingCast())
                 {
-                    ClearSkill();
+                    StopPreparingCast();
                     return;
                 }
 
@@ -144,6 +196,17 @@ namespace DC.GameLogic
                 }
             }
         }
+        #endregion
+
+        public bool IsPreparingCast()
+        {
+            return mSelectedSkillCfg != null;
+        }
+
+        public void StopPreparingCast()
+        {
+            ClearSkill();
+        }
 
         public void ClearSkill()
         {
@@ -165,147 +228,15 @@ namespace DC.GameLogic
         {
             protected virtual void Update()
             {
-
             }
         }
 
         class HeroInput_Idle : HeroInput_State
         {
-            
         }
 
         class HeroInput_DeployCast : HeroInput_State
         {
-            
         }
     }
-
-    public interface IHeroCfg
-    {
-        int GetAttackRange();
-        void SetAttackRange(int range);
-
-        int GetPassiveSkillId();
-        void SetPassiveSkillId(int id);
-
-        List<int> GetSkillIds();
-        void SetSkillIds(List<int> ids);
-
-        int GetSkillId(KeyCode position);
-        void SetSkillId(KeyCode position, int id);
-
-        /// <summary>
-        /// 换肤用
-        /// </summary>
-        /// <returns></returns>
-        string GetModelPath();
-        void SetModelPath(string path);
-
-        string GetPrefabPath();
-        void SetPrefabPath(string path);
-
-        string GetName();
-        void SetName(string name);
-
-        string GetDesc();
-        void SetDesc(string desc);
-    }
-
-    public class HeroCfg : IHeroCfg
-    {
-        private int mAttackRange;
-        private int mPassiveSkillId;
-        private List<int> mSkillList = new List<int>();
-        private Dictionary<KeyCode, int> mKeyToSkillId = new Dictionary<KeyCode, int>();
-        private string mModelPath;
-        private string mPrefabPath;
-        private string mName;
-        private string mDesc;
-
-        public int GetAttackRange()
-        {
-            return mAttackRange;
-        }
-
-        public void SetAttackRange(int range)
-        {
-            mAttackRange = range;
-        }
-
-        public int GetPassiveSkillId()
-        {
-            return mPassiveSkillId;
-        }
-
-        public void SetPassiveSkillId(int id)
-        {
-            mPassiveSkillId = id;
-        }
-
-        public List<int> GetSkillIds()
-        {
-            return mSkillList;
-        }
-
-        public void SetSkillIds(List<int> ids)
-        {
-            mSkillList = ids;
-        }
-
-        public int GetSkillId(KeyCode position)
-        {
-            if(mKeyToSkillId.TryGetValue(position, out var id))
-            {
-                return id;
-            }
-
-            return 0;
-        }
-
-        public void SetSkillId(KeyCode position, int id)
-        {
-            mKeyToSkillId[position] = id;
-        }
-
-        public string GetModelPath()
-        {
-            return mModelPath;
-        }
-
-        public void SetModelPath(string path)
-        {
-            mModelPath = path;
-        }
-
-        public string GetPrefabPath()
-        {
-            return mPrefabPath;
-        }
-
-        public void SetPrefabPath(string path)
-        {
-            mPrefabPath = path;
-        }
-
-        public string GetName()
-        {
-            return mName;
-        }
-
-        public void SetName(string name)
-        {
-            mName = name;
-        }
-
-        public string GetDesc()
-        {
-            return mDesc;
-        }
-
-        public void SetDesc(string desc)
-        {
-            mDesc = desc;
-        }
-    }
-
 }

@@ -10,7 +10,7 @@ namespace DC.SkillSystem
 
     public interface ICastSystem
     {
-        ICastCfg GetDefaultCastCfg(ISkillCfg skillCfg);
+        CastCfg GetDefaultCastCfg(SkillCfg skillCfg);
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace DC.SkillSystem
         /// </summary>
         /// <param name="skillCfg"></param>
         /// <returns></returns>
-        bool Cast(ISkillCfg skillCfg);
+        bool Cast(SkillCfg skillCfg);
 
         /// <summary>
         /// cast with specific cast config
@@ -37,7 +37,7 @@ namespace DC.SkillSystem
         /// <param name="skillCfg"></param>
         /// <param name="castCfg"></param>
         /// <returns></returns>
-        bool Cast(ISkillCfg skillCfg, ICastCfg castCfg);
+        bool Cast(SkillCfg skillCfg, CastCfg castCfg);
 
         /// <summary>
         /// active skill or not
@@ -45,9 +45,9 @@ namespace DC.SkillSystem
         /// </summary>
         /// <param name="skillCfg"></param>
         /// <param name="active"></param>
-        void SetSkillActive(ISkillCfg skillCfg, bool active);
+        void SetSkillActive(SkillCfg skillCfg, bool active);
 
-        List<ICastCfg> GetActiveCastCfgs();
+        List<CastCfg> GetActiveCastCfgs();
 
         void UpdateCastConfig(ICastInput input);
 
