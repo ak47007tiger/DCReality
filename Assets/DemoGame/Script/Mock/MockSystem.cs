@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DC.GameLogic;
+using DC.ResourceSys;
 using UnityEngine;
 
 namespace DC
@@ -18,9 +19,12 @@ namespace DC
     {
         public HeroCfg DemoFighterCfg()
         {
-            var fighterCfg = new HeroCfg();
-            fighterCfg.mPrefabPath = "Actor/hero_demo_fighter";
-            return fighterCfg;
+            return ResourceSystem.Instance.Load<HeroCfg>("Configs/Hero/demo_fighter");
+        }
+
+        public HeroCfg DemoEnemyFighterCfg()
+        {
+            return ResourceSystem.Instance.Load<HeroCfg>("Configs/Hero/demo_enemy_fighter");
         }
     }
 }

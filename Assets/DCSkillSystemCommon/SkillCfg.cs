@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
-using ValueType = DC.ValueSys.ValueType;
+using DC.Collections.Generic;
 using DC.DCPhysics;
+using DC.ValueSys;
 
 namespace DC.SkillSystem
 {
@@ -20,16 +21,17 @@ namespace DC.SkillSystem
         Position,
     }
 
-    public class SkillCfg : ISkillCfg
+    [CreateAssetMenu(fileName = "SkillCfg", menuName = "DC/ScriptableObjects/SkillCfg", order = 1)]
+    public class SkillCfg : ScriptableObject, ISkillCfg
     {
         public int mId;
         public int mDuration;
-        public List<KeyValuePair<ValueType, int>> mConsumeList;
-        public List<KeyValuePair<ValueType, int>> mValueEffectList;
+        public List<KVPair<GValueType, int>> mConsumeList;
+        public List<KVPair<GValueType, int>> mValueEffectList;
 
         public SkillAnimationCfg mSkillAnimationCfg;
 
-        public List<KeyValuePair<string, string>> mEffectAndTransformNames;
+        public List<KVPair<string, string>> mEffectAndTransformNames;
 
         public SkillTargetType mTargetType;
         public int mMaxTargetCnt;
@@ -45,12 +47,12 @@ namespace DC.SkillSystem
 
         public string mPrefabPath;
 
-        public List<KeyValuePair<ValueType, int>> GetConsumes()
+        public List<KVPair<GValueType, int>> GetConsumes()
         {
             return mConsumeList;
         }
 
-        public List<KeyValuePair<string, string>> GetEffectAndTransformNames()
+        public List<KVPair<string, string>> GetEffectAndTransformNames()
         {
             return mEffectAndTransformNames;
         }

@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d33763f48fcf524ba5fcb1b03fc7c2c, type: 3}
-  m_Name: HeroCfg
+  m_Name: demo_fighter
   m_EditorClassIdentifier: 
-  mAttackRange: 0
+  mAttackRange: 1
   mPassiveSkillId: 0
+  mSkillList: 00000000000000000000000000000000
+  mKeyToSkillPairList: []
   mModelPath: 
-  mPrefabPath: 
+  mPrefabPath: actor/demo_hero_fighter
   mName: 
   mDesc: 

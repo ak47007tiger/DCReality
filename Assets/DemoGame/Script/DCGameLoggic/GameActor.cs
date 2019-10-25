@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
 using DC.SkillSystem;
@@ -86,6 +87,16 @@ namespace DC.GameLogic
         public void UpdateAnimatorParam(int paramId, bool value)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void TryCatch(IActor actor, float stopDistance, Action<IActor, float> onCatch)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StopCatch()
+        {
+            throw new NotImplementedException();
         }
     }
 }

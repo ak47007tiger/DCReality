@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using DC.SkillSystem;
 using DC.ActorSystem;
+using DC.ValueSys;
 using UnityEngine;
-using ValueType = DC.ValueSys.ValueType;
 
 namespace DC.GameLogic
 {
@@ -11,7 +11,7 @@ namespace DC.GameLogic
         public CastMsg ConsumeEnough(ISkill skill)
         {
             var values = GetActor().GetValueComponent();
-            var mp = values.GetValue(ValueType.mp);
+            var mp = values.GetValue(GValueType.mp);
             var consumes = skill.GetSkillCfg().GetConsumes();
 
             throw new System.NotImplementedException();

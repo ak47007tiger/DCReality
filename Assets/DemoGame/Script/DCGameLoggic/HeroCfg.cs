@@ -1,8 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using DC.Collections.Generic;
 using UnityEngine;
 
 namespace DC.GameLogic
 {
+    [Serializable]
+    public class KeyToKill : KVPair<KeyCode, int>
+    {
+        public KeyToKill(KeyCode key, int value) : base(key, value)
+        {
+        }
+    }
 
     [CreateAssetMenu(fileName = "HeroCfg", menuName = "DC/ScriptableObjects/HeroCfg", order = 1)]
     public class HeroCfg : ScriptableObject
@@ -11,7 +20,7 @@ namespace DC.GameLogic
         public int mPassiveSkillId;
         public List<int> mSkillList = new List<int>();
 
-        public List<KeyValuePair<KeyCode,int>> mKeyToSkillPairList = new List<KeyValuePair<KeyCode, int>>();
+        public List<KeyToKill> mKeyToSkillPairList = new List<KeyToKill>();
 
         public Dictionary<KeyCode, int> mKeyToSkillId = new Dictionary<KeyCode, int>();
         /// <summary>

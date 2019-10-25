@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
-using ValueType = DC.ValueSys.ValueType;
 using DC.DCPhysics;
 using DC.ResourceSys;
 using Object = UnityEngine.Object;

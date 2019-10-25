@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DC.Collections.Generic;
+using DC.GameLogic;
 using UnityEngine;
 
 namespace DC
@@ -34,7 +36,26 @@ namespace DC
             return PairListToDictionary(pairList, dic);
         }
 
-        public static Dictionary<TK, TV> PairListToDictionary<TK, TV>(List<KeyValuePair<TK, TV>> pairList, Dictionary<TK,TV> dic)
+        public static Dictionary<TK, TV> PairListToDictionary<TK, TV>(List<KeyValuePair<TK, TV>> pairList,
+            Dictionary<TK, TV> dic)
+        {
+            foreach (var kv in pairList)
+            {
+                dic.Add(kv.Key, kv.Value);
+            }
+
+            return dic;
+        }
+
+        public static Dictionary<TK, TV> PairListToDictionary<TKV, TK, TV>(List<TKV> pairList)
+            where TKV : KVPair<TK, TV>
+        {
+            var dic = new Dictionary<TK, TV>();
+            return PairListToDictionary(pairList, dic);
+        }
+
+        public static Dictionary<TK, TV> PairListToDictionary<TKV, TK, TV>(List<TKV> pairList, Dictionary<TK, TV> dic)
+            where TKV : KVPair<TK, TV>
         {
             foreach (var kv in pairList)
             {

@@ -19,12 +19,12 @@ namespace DC.ValueSys
 
     public interface IValueComponent
     {
-        int GetValue(ValueType type);
+        int GetValue(GValueType type);
     }
 
     public class ValueComponent
     {
-        private Dictionary<ValueType, int> mDicTypeToValue;
+        private Dictionary<GValueType, int> mDicTypeToValue;
 
     }
 
@@ -35,7 +35,7 @@ namespace DC.ValueSys
         real,
     }
 
-    public enum ValueType
+    public enum GValueType
     {
         hp,
         hp_recover,
