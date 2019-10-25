@@ -14,12 +14,12 @@ namespace DC.GameLogic
             var mp = values.GetValue(GValueType.mp);
             var consumes = skill.GetSkillCfg().GetConsumes();
 
-            throw new System.NotImplementedException();
+            return CastMsg.s_Suc;
         }
 
         public CastMsg CdEnough(ISkill skill)
         {
-            throw new System.NotImplementedException();
+            return CastMsg.s_Suc;
         }
 
         public Transform GetCastTransform(string name)
@@ -35,6 +35,8 @@ namespace DC.GameLogic
 
         public bool Cast(SkillCfg skillCfg, CastCfg castCfg)
         {
+            LogDC.LogEx("cast", skillCfg.mId);
+
             var skill = GetSkillSystem().CreateSkill(skillCfg);
             skill.SetCaster(this);
             skill.SetCastCfg(castCfg);

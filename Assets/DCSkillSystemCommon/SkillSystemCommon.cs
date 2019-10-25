@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
 using DC.DCPhysics;
+using DC.GameLogic;
 using DC.ResourceSys;
 using Object = UnityEngine.Object;
 
@@ -54,7 +55,7 @@ namespace DC.SkillSystem
         /// <param name="skill"></param>
         void OnSkillComplete(ISkill skill);
 
-        IBuff CreateBuff(BuffCfg cfg);
+        Buff CreateBuff(BuffCfg cfg);
     }
 
     public class SkillSystem : Singleton<SkillSystem>, ISkillSystem
@@ -66,6 +67,11 @@ namespace DC.SkillSystem
         public void Init()
         {
             //todo read all skill config
+            var skillCfgs = ResourceSystem.Instance.LoadAll<SkillCfg>(SystemPreset.path_skill_cfgs);
+            foreach (var skillCfg in skillCfgs)
+            {
+                mIdToSkillCfg.Add(skillCfg.mId, skillCfg);
+            }
         }
 
         public ISkill CreateSkill(SkillCfg cfg)
@@ -126,7 +132,7 @@ namespace DC.SkillSystem
         {
         }
 
-        public IBuff CreateBuff(BuffCfg cfg)
+        public Buff CreateBuff(BuffCfg cfg)
         {
             throw new NotImplementedException();
         }

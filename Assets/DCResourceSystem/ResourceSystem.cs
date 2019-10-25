@@ -7,6 +7,8 @@ namespace DC.ResourceSys
     public interface IResourceSystem
     {
         T Load<T>(string path) where T : Object;
+
+        T[] LoadAll<T>(string path) where T : Object;
     }
 
     public class ResourceSystem : Singleton<ResourceSystem>, IResourceSystem
@@ -14,6 +16,11 @@ namespace DC.ResourceSys
         public T Load<T>(string path) where T : Object
         {
             return Resources.Load<T>(path);
+        }
+
+        public T[] LoadAll<T>(string path) where T : Object
+        {
+            return Resources.LoadAll<T>(path);
         }
     }
 }

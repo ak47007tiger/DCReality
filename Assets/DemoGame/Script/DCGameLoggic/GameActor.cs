@@ -13,6 +13,8 @@ namespace DC.GameLogic
 
         private Dictionary<SkillCfg, ISkill> mCfgToSkill;
 
+        private bool mIsPlayer;
+
         public void Attack()
         {
             var targetSys = GetTargetSystem();
@@ -34,12 +36,12 @@ namespace DC.GameLogic
             throw new System.NotImplementedException();
         }
 
-        public List<IBuff> GetOwnerBuffs()
+        public List<Buff> GetOwnerBuffs()
         {
             throw new System.NotImplementedException();
         }
 
-        public void SetOwnerBuffs(List<IBuff> buffs)
+        public void SetOwnerBuffs(List<Buff> buffs)
         {
             throw new System.NotImplementedException();
         }
@@ -49,7 +51,7 @@ namespace DC.GameLogic
             throw new System.NotImplementedException();
         }
 
-        public void AddBuff(IBuff buff)
+        public void AddBuff(Buff buff)
         {
             throw new System.NotImplementedException();
         }
@@ -97,6 +99,16 @@ namespace DC.GameLogic
         public void StopCatch()
         {
             throw new NotImplementedException();
+        }
+
+        public bool IsPlayer()
+        {
+            return mIsPlayer;
+        }
+
+        public void SetIsPlayer(bool player)
+        {
+            mIsPlayer = player;
         }
     }
 }

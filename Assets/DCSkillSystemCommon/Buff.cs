@@ -19,4 +19,22 @@ namespace DC.SkillSystem
         /// <returns></returns>
         bool AllowCast(ISkill skill);
     }
+
+    public class Buff : IBuff
+    {
+        public int GetId()
+        {
+            throw new NotImplementedException();
+        }
+
+        public BuffCfg GetBuffCfg()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool AllowCast(ISkill skill)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

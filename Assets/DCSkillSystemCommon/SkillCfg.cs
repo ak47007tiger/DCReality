@@ -35,9 +35,6 @@ namespace DC.SkillSystem
 
         public SkillTargetType mTargetType;
         public int mMaxTargetCnt;
-        public bool mNeedTarget;
-        public bool mNeedDirection;
-        public bool mNeedPosition;
 
         /// <summary>
         /// 施法距离

@@ -2,6 +2,6 @@
 {
     public enum GameEvent
     {
-        Move,
+        ClickEnvGround,
     }
 }

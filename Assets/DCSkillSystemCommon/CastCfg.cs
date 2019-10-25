@@ -21,6 +21,9 @@ namespace DC.SkillSystem
         public List<IActor> mTargets;
         public Vector3Int mDirection;
         public Vector3Int mTargetPosition;
+        /// <summary>
+        /// 释放力度
+        /// </summary>
         public int mPower;
         public List<int> mExtParams;
 

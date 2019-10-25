@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using DC.ActorSystem;
 using DC.GameLogic;
 using DC.ResourceSys;
 using UnityEngine;
@@ -37,6 +38,7 @@ namespace DC
             var fighterCfg = MockSystem.Instance.DemoFighterCfg();
             var heroPrefab = ResourceSystem.Instance.Load<GameObject>(fighterCfg.mPrefabPath);
             var hero = Instantiate(heroPrefab, RootTf);
+            hero.GetComponent<IActor>().SetIsPlayer(true);
             hero.transform.position = new Vector3(1,0,0);
         }
 

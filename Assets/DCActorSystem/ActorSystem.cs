@@ -42,12 +42,12 @@ namespace DC.ActorSystem
 
         ICaster GetCaster();
 
-        List<IBuff> GetOwnerBuffs();
-        void SetOwnerBuffs(List<IBuff> buffs);
+        List<Buff> GetOwnerBuffs();
+        void SetOwnerBuffs(List<Buff> buffs);
 
         IValueComponent GetValueComponent();
 
-        void AddBuff(IBuff buff);
+        void AddBuff(Buff buff);
 
         void Attack();
 
@@ -66,5 +66,8 @@ namespace DC.ActorSystem
 
         void TryCatch(IActor actor, float stopDistance, Action<IActor,float> onCatch);
         void StopCatch();
+
+        bool IsPlayer();
+        void SetIsPlayer(bool player);
     }
 }

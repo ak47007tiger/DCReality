@@ -168,9 +168,11 @@ namespace DC.GameLogic
             //1 非施法准备期 普攻 2 施法准备期 取消
             if (Input.GetMouseButtonDown(1))
             {
+                LogDC.Log("right btn click");
                 //cancel skill
                 if (IsPreparingCast())
                 {
+                    LogDC.Log("cancel cast");
                     StopPreparingCast();
                     return;
                 }
@@ -181,10 +183,12 @@ namespace DC.GameLogic
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 100))
                 {
+                    LogDC.Log("cast obj");
                     var target = hit.transform.GetComponent<GameActor>();
                     //是目标
                     if (target != null)
                     {
+                        LogDC.Log("get target");
                         var targets = new List<IActor>();
                         targets.Add(target);
 

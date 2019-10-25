@@ -16,7 +16,7 @@ namespace DC.GameLogic
                 {
                     if (SystemPreset.IsGround(hit.transform.gameObject.tag))
                     {
-                        MsgSys.Instance.Send(GameEvent.Move, hit.point);
+                        MsgSys.Instance.Send(GameEvent.ClickEnvGround, hit.point);
                     }
                 }
             }
