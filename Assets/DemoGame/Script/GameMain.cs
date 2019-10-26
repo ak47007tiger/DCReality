@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using DC.ActorSystem;
 using DC.GameLogic;
-using DC.ResourceSys;
+using DC.DCResourceSystem;
 using UnityEngine;
 
 namespace DC
 {
-    public class GameMain : MonoBehaviour
+    public class GameMain : GameContextObject
     {
         private Transform mRootTf;
         public Transform RootTf
@@ -26,7 +26,10 @@ namespace DC
         void Start()
         {
             //init all sys
+            GetSkillSystem().Init();
+
             //load scene
+
             //create hero
             CreateDemoHeroFighter();
 
@@ -36,17 +39,25 @@ namespace DC
         private void CreateDemoHeroFighter()
         {
             var fighterCfg = MockSystem.Instance.DemoFighterCfg();
-            var heroPrefab = ResourceSystem.Instance.Load<GameObject>(fighterCfg.mPrefabPath);
+            fighterCfg.BuildDerivedData();
+
+            var heroPrefab = GetResourceSystem().Load<GameObject>(fighterCfg.mPrefabPath);
+
             var hero = Instantiate(heroPrefab, RootTf);
             hero.GetComponent<IActor>().SetIsPlayer(true);
+            hero.GetComponent<HeroInput>().mHeroCfg = fighterCfg;
             hero.transform.position = new Vector3(1,0,0);
         }
 
         private void CreateDemoEnemyFighter()
         {
             var fighterCfg = MockSystem.Instance.DemoEnemyFighterCfg();
-            var heroPrefab = ResourceSystem.Instance.Load<GameObject>(fighterCfg.mPrefabPath);
+            fighterCfg.BuildDerivedData();
+
+            var heroPrefab = GetResourceSystem().Load<GameObject>(fighterCfg.mPrefabPath);
+
             var hero = Instantiate(heroPrefab, RootTf);
+            hero.GetComponent<HeroInput>().mHeroCfg = fighterCfg;
             hero.transform.position = new Vector3(-1, 0, 0);
         }
     }

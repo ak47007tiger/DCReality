@@ -34,24 +34,26 @@ namespace DC.SkillSystem
 
         private SkillCfg mSkillCfg;
 
+        private CastCfg mCastCfg;
+
         public ICaster GetCaster()
         {
-            throw new NotImplementedException();
+            return mCaster;
         }
 
         public void SetCaster(ICaster caster)
         {
-            throw new NotImplementedException();
+            mCaster = caster;
         }
 
         public CastCfg GetCastCfg()
         {
-            throw new NotImplementedException();
+            return mCastCfg;
         }
 
         public void SetCastCfg(CastCfg castCfg)
         {
-            throw new NotImplementedException();
+            mCastCfg = castCfg;
         }
 
         public SkillCfg GetSkillCfg()
@@ -66,27 +68,27 @@ namespace DC.SkillSystem
 
         public bool AllowCastTo(IActor actor)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void OnCatchTarget(IActor target)
         {
-            throw new NotImplementedException();
+
         }
 
         public List<IActor> TryCollectTargets()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public void OnSkillLifeRecycle(SkillLifeCycle lifeCycle)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Apply()
         {
-            throw new NotImplementedException();
+            LogDC.LogEx("apply skill id :", GetSkillCfg().mId);
         }
     }
 }

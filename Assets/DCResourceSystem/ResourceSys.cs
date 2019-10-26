@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DC.ResourceSys
+namespace DC.DCResourceSystem
 {
     public interface IResourceSystem
     {
@@ -11,7 +11,7 @@ namespace DC.ResourceSys
         T[] LoadAll<T>(string path) where T : Object;
     }
 
-    public class ResourceSystem : Singleton<ResourceSystem>, IResourceSystem
+    public class ResourceSys : Singleton<ResourceSys>, IResourceSystem
     {
         public T Load<T>(string path) where T : Object
         {

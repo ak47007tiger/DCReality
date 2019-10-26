@@ -17,4 +17,4 @@ MonoBehaviour:
   mTargetType: 1
   mMaxTargetCnt: 1
   mCastRange: 1
-  mPrefabPath: 
+  mPrefabPath: Skill/demo_attack

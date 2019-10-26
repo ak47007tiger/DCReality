@@ -47,6 +47,11 @@ namespace DC.GameLogic
 
         void Update()
         {
+            if (!mGameActor.IsPlayer())
+            {
+                return;
+            }
+
             HandleSkillKey();
             HandleLeftMouseBtn();
             HandleRightMouseBtn();
@@ -183,8 +188,8 @@ namespace DC.GameLogic
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 100))
                 {
-                    LogDC.Log("cast obj");
                     var target = hit.transform.GetComponent<GameActor>();
+                    LogDC.LogEx("cast obj ", hit.transform.gameObject.name);
                     //是目标
                     if (target != null)
                     {
@@ -192,7 +197,8 @@ namespace DC.GameLogic
                         var targets = new List<IActor>();
                         targets.Add(target);
 
-                        var skillCfg = GetSkillSystem().GetSkillCfg(mHeroCfg.GetSkillId(KeyCode.A));
+                        var skillId = mHeroCfg.GetSkillId(KeyCode.A);
+                        var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
                         var castCfg = new CastCfg();
                         castCfg.SetTargetActors(targets);
                         mCaster.Cast(skillCfg, castCfg);

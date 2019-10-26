@@ -19,7 +19,7 @@ namespace DC.SkillSystem
     }
 
     [CreateAssetMenu(fileName = "BuffCfg", menuName = "DC/ScriptableObjects/BuffCfg", order = 1)]
-    public class BuffCfg : IBuffCfg
+    public class BuffCfg : ScriptableObject, IBuffCfg
     {
         public int mRange;
         public uint mEffectRole;

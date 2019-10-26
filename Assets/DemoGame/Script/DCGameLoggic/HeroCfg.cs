@@ -19,7 +19,6 @@ namespace DC.GameLogic
         public int mAttackRange;
         public int mPassiveSkillId;
         public List<int> mSkillList = new List<int>();
-
         public List<KeyToKill> mKeyToSkillPairList = new List<KeyToKill>();
 
         public Dictionary<KeyCode, int> mKeyToSkillId = new Dictionary<KeyCode, int>();

@@ -12,7 +12,7 @@ using UnityEngine;
      震动
  */
 
-namespace DC.EffectSys
+namespace DC.DCEffectSys
 {
     public interface IEffectSystem
     {
@@ -30,7 +30,16 @@ namespace DC.EffectSys
         Effect,
     }
 
-    public class EffectSystem : Singleton<EffectSystem>
+    public class EffectSys : Singleton<EffectSys>, IEffectSystem
     {
+        public void PlayEffect(EffectType effectType, object pParam)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void StopEffect(EffectType effectType, object pParam)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

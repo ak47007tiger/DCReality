@@ -1,7 +1,7 @@
 ﻿using DC.ActorSystem;
-using DC.EffectSys;
+using DC.DCEffectSys;
 using DC.DCPhysics;
-using DC.ResourceSys;
+using DC.DCResourceSystem;
 using DC.SkillSystem;
 
 namespace DC.GameLogic
@@ -25,37 +25,37 @@ namespace DC.GameLogic
     {
         public IActorSystem GetActorSystem()
         {
-            throw new System.NotImplementedException();
+            return ActorSys.Instance;
         }
 
         public ITargetSystem GetTargetSystem()
         {
-            throw new System.NotImplementedException();
+            return TargetSys.Instance;
         }
 
         public ISkillSystem GetSkillSystem()
         {
-            throw new System.NotImplementedException();
+            return SkillSys.Instance;
         }
 
         public ICastSystem GetCastSystem()
         {
-            throw new System.NotImplementedException();
+            return CastSys.Instance;
         }
 
         public IPhysicSystem GetPhysicSystem()
         {
-            throw new System.NotImplementedException();
+            return PhysicSys.Instance;
         }
 
         public IEffectSystem GetEffectSystem()
         {
-            throw new System.NotImplementedException();
+            return EffectSys.Instance;
         }
 
         public IResourceSystem GetResourceSystem()
         {
-            throw new System.NotImplementedException();
+            return ResourceSys.Instance;
         }
     }
 
@@ -63,37 +63,37 @@ namespace DC.GameLogic
     {
         public IActorSystem GetActorSystem()
         {
-            throw new System.NotImplementedException();
+            return ActorSys.Instance;
         }
 
         public ITargetSystem GetTargetSystem()
         {
-            throw new System.NotImplementedException();
+            return TargetSys.Instance;
         }
 
         public ISkillSystem GetSkillSystem()
         {
-            throw new System.NotImplementedException();
+            return SkillSys.Instance;
         }
 
         public ICastSystem GetCastSystem()
         {
-            throw new System.NotImplementedException();
+            return CastSys.Instance;
         }
 
         public IPhysicSystem GetPhysicSystem()
         {
-            throw new System.NotImplementedException();
+            return PhysicSys.Instance;
         }
 
         public IEffectSystem GetEffectSystem()
         {
-            throw new System.NotImplementedException();
+            return EffectSys.Instance;
         }
 
         public IResourceSystem GetResourceSystem()
         {
-            return ResourceSystem.Instance;
+            return ResourceSys.Instance;
         }
     }
 

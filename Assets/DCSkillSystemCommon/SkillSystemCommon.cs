@@ -4,7 +4,7 @@ using UnityEngine;
 using DC.ActorSystem;
 using DC.DCPhysics;
 using DC.GameLogic;
-using DC.ResourceSys;
+using DC.DCResourceSystem;
 using Object = UnityEngine.Object;
 
 namespace DC.SkillSystem
@@ -58,7 +58,7 @@ namespace DC.SkillSystem
         Buff CreateBuff(BuffCfg cfg);
     }
 
-    public class SkillSystem : Singleton<SkillSystem>, ISkillSystem
+    public class SkillSys : Singleton<SkillSys>, ISkillSystem
     {
         private HashSet<ISkill> mAllActiveSkill = new HashSet<ISkill>();
 
@@ -66,8 +66,7 @@ namespace DC.SkillSystem
 
         public void Init()
         {
-            //todo read all skill config
-            var skillCfgs = ResourceSystem.Instance.LoadAll<SkillCfg>(SystemPreset.path_skill_cfgs);
+            var skillCfgs = ResourceSys.Instance.LoadAll<SkillCfg>(SystemPreset.path_skill_cfgs);
             foreach (var skillCfg in skillCfgs)
             {
                 mIdToSkillCfg.Add(skillCfg.mId, skillCfg);
@@ -77,7 +76,7 @@ namespace DC.SkillSystem
         public ISkill CreateSkill(SkillCfg cfg)
         {
             //create skill from prefab
-            var skillPrefab = ResourceSystem.Instance.Load<GameObject>(cfg.mPrefabPath);
+            var skillPrefab = ResourceSys.Instance.Load<GameObject>(cfg.mPrefabPath);
             var skillGO = Object.Instantiate(skillPrefab);
             var skillInstance = skillGO.GetComponent<Skill>();
             AddSkill(skillInstance);

@@ -9,7 +9,7 @@ namespace DC.DCPhysics
 
     }
 
-    public class PhysicSystem : Singleton<PhysicSystem>, IPhysicSystem
+    public class PhysicSys : Singleton<PhysicSys>, IPhysicSystem
     {
 
     }
