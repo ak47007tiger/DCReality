@@ -84,17 +84,19 @@ namespace DC.GameLogic
                             return false;
                         }
                     }
-
+                    //面向目标
+                    var newForward = (castCfg.mTargets[0].GetTransform().position - CacheTransform.position).normalized;
+                    CacheTransform.forward = newForward;
                     break;
                 }
             }
-
-            skill.Apply();
 
             var skillTf = skill.GetTransform();
             var skillBirthTf = GetActor().GetActorPos(ActorPos.body_front);
             skillTf.position = skillBirthTf.position;
             skillTf.forward = skillBirthTf.forward;
+
+            skill.Apply();
 
             return true;
         }

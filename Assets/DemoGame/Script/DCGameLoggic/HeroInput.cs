@@ -23,8 +23,6 @@ namespace DC.GameLogic
 
         public NavMeshAgent mMeshAgent;
 
-        List<KeyCode> mSkillKeyCodeList = new List<KeyCode>();
-
         protected override void Awake()
         {
             base.Awake();
@@ -57,13 +55,21 @@ namespace DC.GameLogic
 
         private void HandleSkillKey()
         {
-            foreach (var code in mSkillKeyCodeList)
+            if (mHeroCfg == null)
+            {
+                return;
+            }
+
+            foreach (var code in mHeroCfg.GetSkillKeyList())
             {
                 //准备技能 设置释放参数 or 直接释放
                 if (Input.GetKeyDown(code))
                 {
                     var skillId = mHeroCfg.GetSkillId(code);
                     var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
+
+                    LogDC.LogEx("press  ", code);
+
                     //不需要目标 直接释放技能
                     if (skillCfg.mTargetType == SkillTargetType.None)
                     {
@@ -74,6 +80,7 @@ namespace DC.GameLogic
                         //选中某个技能 准备调参
                         mSelectedSkillCfg = skillCfg;
                         mCastCfg = new CastCfg();
+                        LogDC.LogEx("prepare skill ", skillId);
                     }
                 }
             }
@@ -90,12 +97,13 @@ namespace DC.GameLogic
             {
                 if (null != mSelectedSkillCfg)
                 {
+                    LogDC.Log("try get target");
                     var mPos = Input.mousePosition;
                     var ray = Camera.main.ScreenPointToRay(mPos);
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit, 100))
                     {
-                        
+                        PrepareCastSelectedSkill(mSelectedSkillCfg, hit.transform, hit.point);
                     }
                 }
             }

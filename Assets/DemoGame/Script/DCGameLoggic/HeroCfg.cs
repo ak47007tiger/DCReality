@@ -20,7 +20,6 @@ namespace DC.GameLogic
         public List<int> mSkillList = new List<int>();
         public List<KeyToKill> mKeyToSkillPairList = new List<KeyToKill>();
 
-        public Dictionary<KeyCode, int> mKeyToSkillId = new Dictionary<KeyCode, int>();
         /// <summary>
         /// 换肤用
         /// </summary>
@@ -32,10 +31,20 @@ namespace DC.GameLogic
 
         public float mSpeed;
 
+        private List<KeyCode> mSkillKeyList = new List<KeyCode>();
+        private Dictionary<KeyCode, int> mKeyToSkillId = new Dictionary<KeyCode, int>();
+
         public void BuildDerivedData()
         {
             mKeyToSkillId.Clear();
             Toolkit.PairListToDictionary(mKeyToSkillPairList, mKeyToSkillId);
+            mSkillKeyList.Clear();
+            mSkillKeyList.AddRange(mKeyToSkillId.Keys);
+        }
+
+        public List<KeyCode> GetSkillKeyList()
+        {
+            return mSkillKeyList;
         }
 
         public int GetSkillId(KeyCode position)

@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 namespace DC.AI
 {
-    public class TraceTarget : BaseMonoBehaviour
+    public class NavTraceTarget : BaseMonoBehaviour
     {
         public Transform mTargetTf;
 

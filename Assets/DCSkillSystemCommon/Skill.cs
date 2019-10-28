@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
+using DC.AI;
 using DC.DCPhysics;
 using DC.GameLogic;
 
 namespace DC.SkillSystem
 {
+    /*
+        区域型技能
+        移动型技能
+     */
+
     public class Skill : BaseMonoBehaviour, ISkill
     {
         private ICaster mCaster;
@@ -20,6 +26,10 @@ namespace DC.SkillSystem
         private float mLife;
 
         private int mHitCnt;
+
+        private DCBaseTimer mTimerForApply;
+
+        private int mTryApplyToTargetCnt = 1;
 
         protected void Awake()
         {
@@ -63,7 +73,6 @@ namespace DC.SkillSystem
 
         public void OnCatchTarget(IActor target)
         {
-
         }
 
         public List<IActor> TryCollectTargets()
@@ -73,18 +82,28 @@ namespace DC.SkillSystem
 
         public void OnSkillLifeRecycle(SkillLifeCycle lifeCycle)
         {
-            
         }
 
         public void Apply()
         {
             LogDC.LogEx("apply skill id :", GetSkillCfg().mId);
-            
+            if (mSkillCfg.mSkillType == SkillType.bullet)
+            {
+                var transformTraceTarget = gameObject.AddComponent<TransformTraceTarget>();
+                transformTraceTarget.StartTrace(mCastCfg.mTargets[0].GetTransform(), 0.5f, mSkillCfg.mSpeed);
+            }
+
+            mTimerForApply = new DCDurationTimer(mSkillCfg.mAffectInterval, AddApplyCnt, -1).Create();
         }
 
         public Transform GetTransform()
         {
             return CacheTransform;
+        }
+
+        void OnDestroy()
+        {
+            if (null != mTimerForApply) mTimerForApply.Destroy();
         }
 
         void Update()
@@ -95,47 +114,78 @@ namespace DC.SkillSystem
                 return;
             }
 
-            if (mHitCnt < mSkillCfg.mHitCnt)
-            {
-                var allHit = Physics.BoxCastAll(CacheTransform.position, mBoxCollider.Value.size * 0.5f, CacheTransform.forward,
-                    CacheTransform.rotation);
+            mLife += Time.deltaTime;
 
-                if (!Toolkit.IsNullOrEmpty(allHit))
+        }
+
+        void AddApplyCnt()
+        {
+            mTryApplyToTargetCnt++;
+        }
+
+        private void TryApplyToTarget()
+        {
+            var halfExtents = mBoxCollider.Value.size * 0.5f;
+            var center = CacheTransform.position;
+            var allHit = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation);
+            var bound = new Bounds(CacheTransform.position, mBoxCollider.Value.size);
+            DebugExtension.DebugBounds(bound, Color.green);
+
+            if (!Toolkit.IsNullOrEmpty(allHit))
+            {
+                foreach (var raycastHit in allHit)
                 {
-                    foreach (var raycastHit in allHit)
+                    var hitActor = raycastHit.transform.GetComponent<IActor>();
+                    if (hitActor != null)
                     {
-                        var hitActor = raycastHit.transform.GetComponent<IActor>();
-                        if (hitActor != null)
+                        if (mCastCfg.GetTargetActors().Count > 0)
                         {
-                            if (mCastCfg.GetTargetActors().Count > 0)
-                            {
-                                if (mCastCfg.GetTargetActors().Contains(hitActor))
-                                {
-                                    if (hitActor.GetActorSide() != mCaster.GetActor().GetActorSide())
-                                    {
-                                        LogDC.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
-                                    }
-                                }
-                            }
-                            else
+                            if (mCastCfg.GetTargetActors().Contains(hitActor))
                             {
                                 if (hitActor.GetActorSide() != mCaster.GetActor().GetActorSide())
                                 {
                                     LogDC.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
+                                    mHitCnt++;
                                 }
+                            }
+                        }
+                        else
+                        {
+                            if (hitActor.GetActorSide() != mCaster.GetActor().GetActorSide())
+                            {
+                                LogDC.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
+                                mHitCnt++;
                             }
                         }
                     }
                 }
-
-                mHitCnt++;
             }
-            else
+        }
+
+        void FixedUpdate()
+        {
+            switch (mSkillCfg.mSkillType)
             {
-                SkillSys.Instance.DestroySkill(this);
-            }
+                case SkillType.area:
+                {
+                    if (mTryApplyToTargetCnt > 0)
+                    {
+                        TryApplyToTarget();
+                        mTryApplyToTargetCnt--;
+                    }
 
-            mLife += Time.deltaTime;
+                    break;
+                }
+                default:
+                {
+                    if (mHitCnt < mSkillCfg.mHitCnt)
+                    {
+                        TryApplyToTarget();
+                    }
+
+                    break;
+                }
+            }
         }
     }
 }

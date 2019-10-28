@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: demo_fighter_q
   m_EditorClassIdentifier: 
   mId: 2
-  mDuration: 0
-  hitCnt: 1
+  mDuration: 1000
+  mHitCnt: 1
   mTargetType: 1
   mMaxTargetCnt: 1
-  mCastRange: 4
-  mPrefabPath: Skill/demo_attack
+  mCastRange: 6
+  mPrefabPath: Skill/bullet_demo
+  mSkillType: 1
+  mSpeed: 3

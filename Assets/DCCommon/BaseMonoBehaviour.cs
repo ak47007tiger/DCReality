@@ -15,5 +15,15 @@ namespace DC
                 return mCacheTf;
             }
         }
+
+        private RectTransform mCacheRTf;
+        public RectTransform CacheRectTransform
+        {
+            get
+            {
+                if (mCacheTf == null) mCacheTf = transform;
+                return CacheRectTransform;
+            }
+        }
     }
 }

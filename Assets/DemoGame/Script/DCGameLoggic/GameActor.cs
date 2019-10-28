@@ -33,7 +33,7 @@ namespace DC.GameLogic
 
         private HeroCfg mHeroCfg;
 
-        private TraceTarget mTraceTarget;
+        private NavTraceTarget mNavTraceTarget;
 
         protected override void Awake()
         {
@@ -148,13 +148,13 @@ namespace DC.GameLogic
 
         public void TryCatch(IActor actor, float stopDistance, Action<IActor, float> onCatch)
         {
-            if (mTraceTarget == null)
+            if (mNavTraceTarget == null)
             {
-                mTraceTarget = gameObject.AddComponent<TraceTarget>();
+                mNavTraceTarget = gameObject.AddComponent<NavTraceTarget>();
             }
-            mTraceTarget.mTracingActor = actor;
-            mTraceTarget.mOnCatchTarget = onCatch;
-            mTraceTarget.StartTrace(actor.GetTransform(), stopDistance);
+            mNavTraceTarget.mTracingActor = actor;
+            mNavTraceTarget.mOnCatchTarget = onCatch;
+            mNavTraceTarget.StartTrace(actor.GetTransform(), stopDistance);
         }
 
         public void StopCatch()
@@ -214,16 +214,16 @@ namespace DC.GameLogic
 
         public bool IsAutoMoving()
         {
-            if (null == mTraceTarget) return false;
+            if (null == mNavTraceTarget) return false;
 
-            return !mTraceTarget.IsStop();
+            return !mNavTraceTarget.IsStop();
         }
 
         public void StopAutoMove()
         {
-            if (null == mTraceTarget) return;
+            if (null == mNavTraceTarget) return;
 
-            mTraceTarget.StopTrace();
+            mNavTraceTarget.StopTrace();
         }
     }
 }

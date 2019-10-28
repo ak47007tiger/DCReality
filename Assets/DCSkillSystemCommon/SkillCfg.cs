@@ -21,6 +21,13 @@ namespace DC.SkillSystem
         Position,
     }
 
+    public enum SkillType
+    {
+        normal,
+        bullet,
+        area,
+    }
+
     [CreateAssetMenu(fileName = "SkillCfg", menuName = "DC/ScriptableObjects/SkillCfg", order = 1)]
     public class SkillCfg : ScriptableObject, ISkillCfg
     {
@@ -44,6 +51,18 @@ namespace DC.SkillSystem
         public float mCastRange;
 
         public string mPrefabPath;
+
+        public SkillType mSkillType;
+
+        /// <summary>
+        /// 移动速度
+        /// </summary>
+        public float mSpeed;
+
+        /// <summary>
+        /// 区域技能生效间隔
+        /// </summary>
+        public float mAffectInterval;
 
         public List<KVPair<GValueType, float>> GetConsumes()
         {

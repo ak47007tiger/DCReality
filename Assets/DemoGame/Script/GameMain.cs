@@ -25,7 +25,9 @@ namespace DC
         }
         void Start()
         {
+            //init all mono singleton
             //init all sys
+
             GetSkillSystem().Init();
 
             //load scene
