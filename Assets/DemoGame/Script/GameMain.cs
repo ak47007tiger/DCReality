@@ -44,7 +44,14 @@ namespace DC
             var heroPrefab = GetResourceSystem().Load<GameObject>(fighterCfg.mPrefabPath);
 
             var hero = Instantiate(heroPrefab, RootTf);
-            hero.GetComponent<IActor>().SetIsPlayer(true);
+
+            var actor = hero.GetComponent<IActor>();
+            actor.SetHeroCfg(fighterCfg);
+            actor.SetIsPlayer(true);
+            actor.SetActorSide(ActorSide.blue);
+            actor.SetModel(fighterCfg.mModelPath);
+            actor.UpdateModel();
+
             hero.GetComponent<HeroInput>().mHeroCfg = fighterCfg;
             hero.transform.position = new Vector3(1,0,0);
         }
@@ -57,6 +64,12 @@ namespace DC
             var heroPrefab = GetResourceSystem().Load<GameObject>(fighterCfg.mPrefabPath);
 
             var hero = Instantiate(heroPrefab, RootTf);
+
+            var actor = hero.GetComponent<IActor>();
+            actor.SetHeroCfg(fighterCfg);
+            actor.SetModel(fighterCfg.mModelPath);
+            actor.UpdateModel();
+
             hero.GetComponent<HeroInput>().mHeroCfg = fighterCfg;
             hero.transform.position = new Vector3(-1, 0, 0);
         }

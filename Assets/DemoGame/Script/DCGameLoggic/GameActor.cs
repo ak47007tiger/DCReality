@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
+using DC.AI;
+using DC.Collections.Generic;
 using DC.SkillSystem;
 using DC.ValueSys;
 
@@ -14,6 +16,29 @@ namespace DC.GameLogic
         private Dictionary<SkillCfg, ISkill> mCfgToSkill;
 
         private bool mIsPlayer;
+
+        private List<Buff> mBuffList = new List<Buff>();
+
+        private ValueComponent mValueComponent = new ValueComponent();
+
+        private string mModelPath;
+
+        private Dictionary<ActorPos, Transform> mPosToTf = new Dictionary<ActorPos, Transform>();
+
+        private GameObject mModelGo;
+
+        private ActorSide mActorSide;
+
+        private RoleType mRoleType;
+
+        private HeroCfg mHeroCfg;
+
+        private TraceTarget mTraceTarget;
+
+        protected override void Awake()
+        {
+            base.Awake();
+        }
 
         public void Attack()
         {
@@ -31,34 +56,64 @@ namespace DC.GameLogic
             GetCaster().Cast(normalAttackSkillCfg, normalAttackCastCfg);
         }
 
+        public void SetModel(string model)
+        {
+            mModelPath = model;
+        }
+
+        public void UpdateModel()
+        {
+            if (string.IsNullOrEmpty(mModelPath))
+            {
+                return;
+            }
+
+            mPosToTf.Clear();
+            if (null != mModelGo)
+            {
+                Destroy(mModelGo);
+            }
+
+            var modelPrefab = GetResourceSystem().Load<GameObject>(mModelPath);
+            mModelGo = Instantiate(modelPrefab);
+
+            var modelTf = mModelGo.transform;
+            modelTf.SetParent(transform);
+            modelTf.localPosition = modelPrefab.transform.localPosition;
+
+            var posArray = Enum.GetValues(typeof(ActorPos));
+            
+            foreach (var pos in posArray)
+            {
+                var posEnum = (ActorPos)pos;
+                var posTf = modelTf.Find(posEnum.ToString());
+                mPosToTf.Add(posEnum, posTf);
+            }
+        }
+
         public ICaster GetCaster()
         {
-            throw new System.NotImplementedException();
+            return Caster;
         }
 
         public List<Buff> GetOwnerBuffs()
         {
-            throw new System.NotImplementedException();
+            return mBuffList;
         }
 
         public void SetOwnerBuffs(List<Buff> buffs)
         {
-            throw new System.NotImplementedException();
+            mBuffList = buffs;
         }
 
         public IValueComponent GetValueComponent()
         {
-            throw new System.NotImplementedException();
+            return mValueComponent;
         }
 
         public void AddBuff(Buff buff)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public GameObject GetModel()
-        {
-            throw new System.NotImplementedException();
+            mBuffList.Add(buff);
         }
 
         public void SetVisibility(bool show)
@@ -93,7 +148,13 @@ namespace DC.GameLogic
 
         public void TryCatch(IActor actor, float stopDistance, Action<IActor, float> onCatch)
         {
-            throw new NotImplementedException();
+            if (mTraceTarget == null)
+            {
+                mTraceTarget = gameObject.AddComponent<TraceTarget>();
+            }
+            mTraceTarget.mTracingActor = actor;
+            mTraceTarget.mOnCatchTarget = onCatch;
+            mTraceTarget.StartTrace(actor.GetTransform(), stopDistance);
         }
 
         public void StopCatch()
@@ -109,6 +170,60 @@ namespace DC.GameLogic
         public void SetIsPlayer(bool player)
         {
             mIsPlayer = player;
+        }
+
+        public ActorSide GetActorSide()
+        {
+            return mActorSide;
+        }
+
+        public void SetActorSide(ActorSide side)
+        {
+            mActorSide = side;
+        }
+
+        public RoleType GetRoleType()
+        {
+            return mRoleType;
+        }
+
+        public void SetRoleType(RoleType type)
+        {
+            mRoleType = type;
+        }
+
+        public Transform GetActorPos(ActorPos pos)
+        {
+            return mPosToTf.GetVal(pos);
+        }
+
+        public Transform GetTransform()
+        {
+            return CacheTransform;
+        }
+
+        public HeroCfg GetHeroCfg()
+        {
+            return mHeroCfg;
+        }
+
+        public void SetHeroCfg(HeroCfg cfg)
+        {
+            mHeroCfg = cfg;
+        }
+
+        public bool IsAutoMoving()
+        {
+            if (null == mTraceTarget) return false;
+
+            return !mTraceTarget.IsStop();
+        }
+
+        public void StopAutoMove()
+        {
+            if (null == mTraceTarget) return;
+
+            mTraceTarget.StopTrace();
         }
     }
 }

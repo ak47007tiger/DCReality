@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: demo_fighter_q
   m_EditorClassIdentifier: 
   mId: 2
-  mDuration: 1
+  mDuration: 0
+  hitCnt: 1
   mTargetType: 1
   mMaxTargetCnt: 1
   mCastRange: 4

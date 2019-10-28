@@ -27,6 +27,8 @@ namespace DC.SkillSystem
 
         ISkill CreateSkill(SkillCfg cfg);
 
+        void DestroySkill(ISkill skill);
+
         List<ISkill> GetActiveSkills();
 
         void AddSkill(ISkill skill);
@@ -77,10 +79,21 @@ namespace DC.SkillSystem
         {
             //create skill from prefab
             var skillPrefab = ResourceSys.Instance.Load<GameObject>(cfg.mPrefabPath);
-            var skillGO = Object.Instantiate(skillPrefab);
-            var skillInstance = skillGO.GetComponent<Skill>();
+            var skillGo = Object.Instantiate(skillPrefab);
+            var skillInstance = skillGo.GetComponent<Skill>();
+            skillInstance.SetSkillCfg(cfg);
             AddSkill(skillInstance);
             return skillInstance;
+        }
+
+        public void DestroySkill(ISkill skill)
+        {
+            if (null == skill)
+            {
+                return;
+            }
+            RemoveSkill(skill);
+            Object.Destroy(skill.GetTransform().gameObject);
         }
 
         public List<ISkill> GetActiveSkills()

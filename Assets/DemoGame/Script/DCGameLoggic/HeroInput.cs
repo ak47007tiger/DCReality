@@ -12,9 +12,6 @@ namespace DC.GameLogic
     /// </summary>
     public class HeroInput : GameElement
     {
-        private IActor mGameActor;
-        private ICaster mCaster;
-
         public HeroCfg mHeroCfg;
 
         private SkillCfg mSelectedSkillCfg;
@@ -28,10 +25,9 @@ namespace DC.GameLogic
 
         List<KeyCode> mSkillKeyCodeList = new List<KeyCode>();
 
-        void Awake()
+        protected override void Awake()
         {
-            mGameActor = GetComponent<GameActor>();
-            mCaster = GetComponent<Caster>();
+            base.Awake();
         }
 
         public void SetForward(Vector3 forward)
@@ -47,7 +43,7 @@ namespace DC.GameLogic
 
         void Update()
         {
-            if (!mGameActor.IsPlayer())
+            if (!Actor.IsPlayer())
             {
                 return;
             }
@@ -71,7 +67,7 @@ namespace DC.GameLogic
                     //不需要目标 直接释放技能
                     if (skillCfg.mTargetType == SkillTargetType.None)
                     {
-                        mCaster.Cast(skillCfg);
+                        Caster.Cast(skillCfg);
                     }
                     else
                     {
@@ -99,52 +95,57 @@ namespace DC.GameLogic
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit, 100))
                     {
-                        switch (mSelectedSkillCfg.mTargetType)
-                        {
-                            case SkillTargetType.Actor:
-                            {
-                                var target = hit.transform.GetComponent<GameActor>();
-                                var distance = Toolkit.ComputeDistance(target, CacheTransform);
-                                if (distance > mSelectedSkillCfg.mCastRange)
-                                {
-                                    mGameActor.TryCatch(target, mSelectedSkillCfg.mCastRange, OnCatchActor);
-                                    return;
-                                }
-
-                                if (null != target)
-                                {
-                                    CastSelectedSkill(target);
-                                }
-                            }
-                                break;
-                            case SkillTargetType.Direction:
-                            {
-                                //计算一个方向，并且平行于地面。让y值都为0
-                                var hitPos = hit.point;
-                                hitPos.y = 0;
-                                var playerPos = CacheTransform.position;
-                                playerPos.y = 0;
-                                var rawDirection = hitPos - playerPos;
-                                var castCfg = new CastCfg();
-                                castCfg.SetDirection(Toolkit.FloatToInt(rawDirection));
-                                mCaster.Cast(mSelectedSkillCfg, castCfg);
-
-                                ClearSkill();
-                            }
-                                break;
-                            case SkillTargetType.Position:
-                            {
-                                var hitPos = hit.point;
-                                var castCfg = new CastCfg();
-                                castCfg.SetTargetPosition(Toolkit.FloatToInt(hitPos));
-                                mCaster.Cast(mSelectedSkillCfg, castCfg);
-
-                                ClearSkill();
-                            }
-                                break;
-                        }
+                        
                     }
                 }
+            }
+        }
+
+        private void PrepareCastSelectedSkill(SkillCfg selectedSkillCfg, Transform targetTf, Vector3 hitPos)
+        {
+            switch (selectedSkillCfg.mTargetType)
+            {
+                case SkillTargetType.Actor:
+                    {
+                        var target = targetTf.GetComponent<IActor>();
+                        if (null != target)
+                        {
+                            LogDC.Log("find actor");
+                            var distance = Toolkit.ComputeDistance(targetTf, CacheTransform);
+                            if (distance > selectedSkillCfg.mCastRange)
+                            {
+                                LogDC.Log("try catch actor");
+                                Actor.TryCatch(target, selectedSkillCfg.mCastRange, OnCatchActor);
+                                return;
+                            }
+
+                            CastSelectedSkill(target);
+                        }
+                    }
+                    break;
+                case SkillTargetType.Direction:
+                    {
+                        //计算一个方向，并且平行于地面。让y值都为0
+                        hitPos.y = 0;
+                        var playerPos = CacheTransform.position;
+                        playerPos.y = 0;
+                        var rawDirection = hitPos - playerPos;
+                        var castCfg = new CastCfg();
+                        castCfg.SetDirection(Toolkit.FloatToInt(rawDirection));
+                        Caster.Cast(selectedSkillCfg, castCfg);
+
+                        ClearSkill();
+                    }
+                    break;
+                case SkillTargetType.Position:
+                    {
+                        var castCfg = new CastCfg();
+                        castCfg.SetTargetPosition(Toolkit.FloatToInt(hitPos));
+                        Caster.Cast(selectedSkillCfg, castCfg);
+
+                        ClearSkill();
+                    }
+                    break;
             }
         }
 
@@ -162,7 +163,7 @@ namespace DC.GameLogic
             var targets = new List<IActor>();
             targets.Add(target);
             castCfg.SetTargetActors(targets);
-            mCaster.Cast(mSelectedSkillCfg, castCfg);
+            Caster.Cast(mSelectedSkillCfg, castCfg);
 
             ClearSkill();
         }
@@ -174,6 +175,7 @@ namespace DC.GameLogic
             if (Input.GetMouseButtonDown(1))
             {
                 LogDC.Log("right btn click");
+
                 //cancel skill
                 if (IsPreparingCast())
                 {
@@ -188,20 +190,16 @@ namespace DC.GameLogic
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 100))
                 {
-                    var target = hit.transform.GetComponent<GameActor>();
                     LogDC.LogEx("cast obj ", hit.transform.gameObject.name);
+                    
+                    var target = hit.transform.GetComponent<GameActor>();
                     //是目标
                     if (target != null)
                     {
-                        LogDC.Log("get target");
-                        var targets = new List<IActor>();
-                        targets.Add(target);
-
                         var skillId = mHeroCfg.GetSkillId(KeyCode.A);
                         var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
-                        var castCfg = new CastCfg();
-                        castCfg.SetTargetActors(targets);
-                        mCaster.Cast(skillCfg, castCfg);
+                        mSelectedSkillCfg = skillCfg;
+                        PrepareCastSelectedSkill(mSelectedSkillCfg, hit.transform, Vector3.zero);
                     }
                 }
             }

@@ -4,27 +4,37 @@ using UnityEngine.AI;
 
 namespace DC.GameLogic
 {
-    public class HeroMoveComponent : BaseMonoBehaviour
+    public class HeroMoveComponent : GameElement
     {
-        public NavMeshAgent mMeshAgent;
-        public IActor mActor;
+        public NavMeshAgent mNavMeshAgent;
 
-        void Awake()
+        protected override void Awake()
         {
-            mMeshAgent = GetComponent<NavMeshAgent>();
-            mActor = GetComponent<IActor>();
+            base.Awake();
+
+            mNavMeshAgent = GetComponent<NavMeshAgent>();
 
             MsgSys.Instance.Add<Vector3>(GameEvent.ClickEnvGround, OnClickEnvGround);
         }
 
+        void Start()
+        {
+            mNavMeshAgent.speed = Actor.GetHeroCfg().mSpeed;
+        }
+
         void OnClickEnvGround(Vector3 pos)
         {
-            if (null == mActor || !mActor.IsPlayer())
+            if (null == Actor || !Actor.IsPlayer())
             {
                 return;
             }
 
-            mMeshAgent.SetDestination(pos);
+            if (Actor.IsAutoMoving())
+            {
+                Actor.StopAutoMove();
+            }
+
+            mNavMeshAgent.SetDestination(pos);
         }
     }
 }

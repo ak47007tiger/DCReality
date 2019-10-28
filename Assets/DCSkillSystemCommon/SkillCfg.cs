@@ -25,9 +25,10 @@ namespace DC.SkillSystem
     public class SkillCfg : ScriptableObject, ISkillCfg
     {
         public int mId;
-        public int mDuration;
-        public List<KVPair<GValueType, int>> mConsumeList;
-        public List<KVPair<GValueType, int>> mValueEffectList;
+        public float mDuration;
+        public int mHitCnt = 1;
+        public List<KVPair<GValueType, float>> mConsumeList;
+        public List<KVPair<GValueType, float>> mValueEffectList;
 
         public SkillAnimationCfg mSkillAnimationCfg;
 
@@ -40,11 +41,11 @@ namespace DC.SkillSystem
         /// 施法距离
         /// </summary>
         /// <returns></returns>
-        public int mCastRange;
+        public float mCastRange;
 
         public string mPrefabPath;
 
-        public List<KVPair<GValueType, int>> GetConsumes()
+        public List<KVPair<GValueType, float>> GetConsumes()
         {
             return mConsumeList;
         }

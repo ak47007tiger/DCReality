@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DC.GameLogic;
 using DC.ValueSys;
 using DC.SkillSystem;
 using UnityEngine;
@@ -25,7 +26,9 @@ namespace DC.ActorSystem
 
         #endregion
 
-        GameObject GetModel();
+        void SetModel(string model);
+        void UpdateModel();
+
         void SetVisibility(bool show);
         void Destroy();
 
@@ -39,5 +42,21 @@ namespace DC.ActorSystem
 
         bool IsPlayer();
         void SetIsPlayer(bool player);
+
+        ActorSide GetActorSide();
+        void SetActorSide(ActorSide side);
+
+        RoleType GetRoleType();
+        void SetRoleType(RoleType type);
+
+        Transform GetActorPos(ActorPos pos);
+
+        Transform GetTransform();
+
+        HeroCfg GetHeroCfg();
+        void SetHeroCfg(HeroCfg cfg);
+
+        bool IsAutoMoving();
+        void StopAutoMove();
     }
 }

@@ -38,9 +38,37 @@ namespace DC.ActorSystem
 
     public enum ActorSide
     {
-        Neutral,
-        Friend,
-        Enemy,
+        neutral,
+        blue,
+        red,
+    }
+
+    public enum EffectType
+    {
+        neutral,
+        friend,
+        enemy,
+    }
+
+    public enum ActorPos
+    {
+        root,
+
+        head,
+
+        body,
+        body_front,
+        body_back,
+        body_left,
+        body_right,
+        body_top,
+        body_bottom,
+
+        hand_left,
+        hand_right,
+
+        foot_left,
+        foot_right,
     }
     
 }

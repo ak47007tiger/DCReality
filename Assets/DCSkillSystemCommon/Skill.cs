@@ -3,31 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
 using DC.DCPhysics;
+using DC.GameLogic;
 
 namespace DC.SkillSystem
 {
-    public interface ISkill
-    {
-        ICaster GetCaster();
-        void SetCaster(ICaster caster);
-
-        CastCfg GetCastCfg();
-        void SetCastCfg(CastCfg castCfg);
-
-        SkillCfg GetSkillCfg();
-        void SetSkillCfg(SkillCfg skillCfg);
-
-        bool AllowCastTo(IActor actor);
-
-        void OnCatchTarget(IActor target);
-
-        List<IActor> TryCollectTargets();
-
-        void OnSkillLifeRecycle(SkillLifeCycle lifeCycle);
-
-        void Apply();
-    }
-
     public class Skill : BaseMonoBehaviour, ISkill
     {
         private ICaster mCaster;
@@ -35,6 +14,17 @@ namespace DC.SkillSystem
         private SkillCfg mSkillCfg;
 
         private CastCfg mCastCfg;
+
+        private CacheItem<BoxCollider> mBoxCollider;
+
+        private float mLife;
+
+        private int mHitCnt;
+
+        protected void Awake()
+        {
+            mBoxCollider = new CacheItem<BoxCollider>(GetComponent<BoxCollider>);
+        }
 
         public ICaster GetCaster()
         {
@@ -89,6 +79,63 @@ namespace DC.SkillSystem
         public void Apply()
         {
             LogDC.LogEx("apply skill id :", GetSkillCfg().mId);
+            
+        }
+
+        public Transform GetTransform()
+        {
+            return CacheTransform;
+        }
+
+        void Update()
+        {
+            if (mLife > mSkillCfg.mDuration)
+            {
+                SkillSys.Instance.DestroySkill(this);
+                return;
+            }
+
+            if (mHitCnt < mSkillCfg.mHitCnt)
+            {
+                var allHit = Physics.BoxCastAll(CacheTransform.position, mBoxCollider.Value.size * 0.5f, CacheTransform.forward,
+                    CacheTransform.rotation);
+
+                if (!Toolkit.IsNullOrEmpty(allHit))
+                {
+                    foreach (var raycastHit in allHit)
+                    {
+                        var hitActor = raycastHit.transform.GetComponent<IActor>();
+                        if (hitActor != null)
+                        {
+                            if (mCastCfg.GetTargetActors().Count > 0)
+                            {
+                                if (mCastCfg.GetTargetActors().Contains(hitActor))
+                                {
+                                    if (hitActor.GetActorSide() != mCaster.GetActor().GetActorSide())
+                                    {
+                                        LogDC.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (hitActor.GetActorSide() != mCaster.GetActor().GetActorSide())
+                                {
+                                    LogDC.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                mHitCnt++;
+            }
+            else
+            {
+                SkillSys.Instance.DestroySkill(this);
+            }
+
+            mLife += Time.deltaTime;
         }
     }
 }

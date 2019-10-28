@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: demo_fighter_a
   m_EditorClassIdentifier: 
   mId: 1
-  mDuration: 1
+  mDuration: 0
+  hitCnt: 1
   mTargetType: 1
   mMaxTargetCnt: 1
-  mCastRange: 1
+  mCastRange: 1.5
   mPrefabPath: Skill/demo_attack

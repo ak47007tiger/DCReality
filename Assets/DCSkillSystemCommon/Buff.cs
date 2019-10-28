@@ -6,31 +6,11 @@ using DC.DCPhysics;
 
 namespace DC.SkillSystem
 {
-    public interface IBuff
-    {
-        int GetId();
-
-        BuffCfg GetBuffCfg();
-
-        /// <summary>
-        /// buff拥有者是否可以释放技能
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <returns></returns>
-        bool AllowCast(ISkill skill);
-    }
-
     public class Buff : IBuff
     {
-        public int GetId()
-        {
-            throw new NotImplementedException();
-        }
+        public int mId;
 
-        public BuffCfg GetBuffCfg()
-        {
-            throw new NotImplementedException();
-        }
+        public BuffCfg mBuffCfg;
 
         public bool AllowCast(ISkill skill)
         {

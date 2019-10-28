@@ -8,11 +8,17 @@ namespace DC.GameLogic
 {
     public class Caster : GameElement, ICaster
     {
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
         public CastMsg ConsumeEnough(ISkill skill)
         {
             var values = GetActor().GetValueComponent();
             var mp = values.GetValue(GValueType.mp);
-            var consumes = skill.GetSkillCfg().GetConsumes();
+            var skillCfg = skill.GetSkillCfg();
+            var consumes = skillCfg.GetConsumes();
 
             return CastMsg.s_Suc;
         }
@@ -78,11 +84,18 @@ namespace DC.GameLogic
                             return false;
                         }
                     }
-                }
+
                     break;
+                }
             }
 
             skill.Apply();
+
+            var skillTf = skill.GetTransform();
+            var skillBirthTf = GetActor().GetActorPos(ActorPos.body_front);
+            skillTf.position = skillBirthTf.position;
+            skillTf.forward = skillBirthTf.forward;
+
             return true;
         }
 
@@ -113,7 +126,7 @@ namespace DC.GameLogic
 
         public IActor GetActor()
         {
-            throw new System.NotImplementedException();
+            return Actor;
         }
 
         public CastMsg BuffAllowCast(ISkill skill)

@@ -8,7 +8,7 @@ namespace DC
     /// 跟踪到某个hero
     /// 查看某个区域
     /// 移动查看的区域
-    /// 
+    /// 拥有焦点时 按esc 停止监听，按其他按键重新处理
     /// </summary>
     public class MobaCamera : BaseMonoBehaviour
     {
@@ -23,9 +23,22 @@ namespace DC
 
         private Camera mCamera;
 
+        private bool mStop;
+
+        private bool mHasFocus;
+
         void Awake()
         {
             mCamera = GetComponent<Camera>();
+        }
+
+        void OnApplicationFocus(bool hasFocus)
+        {
+            mHasFocus = hasFocus;
+        }
+
+        void OnApplicationPause(bool pauseStatus)
+        {
         }
 
         public void LookTo(Transform targetTf)
@@ -46,6 +59,21 @@ namespace DC
 
         void LateUpdate()
         {
+            if (!mHasFocus)
+            {
+                return;
+            }
+
+            if (Input.anyKeyDown)
+            {
+                mStop = Input.GetKey(KeyCode.Escape);
+            }
+
+            if (mStop)
+            {
+                return;
+            }
+
             var pos = Input.mousePosition;
             var op = ComputeOp(pos);
 

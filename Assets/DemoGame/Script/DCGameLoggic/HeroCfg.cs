@@ -16,7 +16,6 @@ namespace DC.GameLogic
     [CreateAssetMenu(fileName = "HeroCfg", menuName = "DC/ScriptableObjects/HeroCfg", order = 1)]
     public class HeroCfg : ScriptableObject
     {
-        public int mAttackRange;
         public int mPassiveSkillId;
         public List<int> mSkillList = new List<int>();
         public List<KeyToKill> mKeyToSkillPairList = new List<KeyToKill>();
@@ -30,6 +29,8 @@ namespace DC.GameLogic
         public string mPrefabPath;
         public string mName;
         public string mDesc;
+
+        public float mSpeed;
 
         public void BuildDerivedData()
         {

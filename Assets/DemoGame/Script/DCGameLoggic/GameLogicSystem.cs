@@ -99,6 +99,34 @@ namespace DC.GameLogic
 
     public class GameElement : GameContextObject
     {
+        private CacheItem<IActor> mCacheActor;
+        private CacheItem<ICaster> mCacheCaster;
+
+        protected virtual void Awake()
+        {
+            mCacheActor = new CacheItem<IActor>(GetComponent<IActor>);
+            mCacheCaster = new CacheItem<ICaster>(GetComponent<ICaster>);
+        }
+
+        public IActor Actor
+        {
+            get
+            {
+                return mCacheActor.Value;
+            }
+        }
+
+        public ICaster Caster
+        {
+            get
+            {
+                return mCacheCaster.Value;
+            }
+        }
+    }
+
+    public class HeroElement : GameElement
+    {
 
     }
 }

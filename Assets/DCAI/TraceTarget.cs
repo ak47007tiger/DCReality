@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using DC.ActorSystem;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace DC.AI
 {
@@ -9,32 +12,63 @@ namespace DC.AI
     {
         public Transform mTargetTf;
 
-        public float mSpeed;
-
         public float mStopDistance = 1;
+
+        public NavMeshAgent mNavMeshAgent;
+
+        public IActor mTracingActor;
+
+        private bool mStop;
+
+        public Action<IActor, float> mOnCatchTarget;
+
+        public bool IsStop()
+        {
+            return mStop;
+        }
+
+        public void StopTrace()
+        {
+            mStop = true;
+            mNavMeshAgent.destination = CacheTransform.position;
+        }
+
+        void Awake()
+        {
+            mNavMeshAgent = GetComponent<NavMeshAgent>();
+        }
 
         void Update()
         {
+            if(mStop) return;
+
             if (mTargetTf == null) return;
 
-            if (CatchTarget())
+            var catchTarget = CatchTarget();
+            if (catchTarget.Item1)
             {
+                StopTrace();
+
+                if (null != mOnCatchTarget)
+                {
+                    mOnCatchTarget(mTracingActor, catchTarget.Item2);
+                }
                 return;
             }
-
-            CacheTransform.position = ComputeNextPosition(CacheTransform, mTargetTf, mSpeed);
+            mNavMeshAgent.destination = mTargetTf.position;
         }
 
-        public void UpdateTraceInfo(Transform targetTf, float speed, float stopDistance)
+        public void StartTrace(Transform targetTf, float stopDistance)
         {
             mTargetTf = targetTf;
-            mSpeed = speed;
             mStopDistance = stopDistance;
+            mStop = false;
         }
 
-        public bool CatchTarget()
+        public Tuple<bool,float> CatchTarget()
         {
-            return Vector3.Distance(mTargetTf.position, CacheTransform.position) <= mStopDistance;
+            var distance = Vector3.Distance(mTargetTf.position, CacheTransform.position);
+            return new Tuple<bool, float>(distance < mStopDistance, distance);
         }
 
         public static Vector3 ComputeNextPosition(Transform traceTf, Transform targetTf, float speed)

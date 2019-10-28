@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DC.Collections.Generic;
 
 namespace DC.ValueSys
 {
@@ -22,10 +23,14 @@ namespace DC.ValueSys
         int GetValue(GValueType type);
     }
 
-    public class ValueComponent
+    public class ValueComponent : IValueComponent
     {
-        private Dictionary<GValueType, int> mDicTypeToValue;
+        private Dictionary<GValueType, int> mDicTypeToValue = new Dictionary<GValueType, int>();
 
+        public int GetValue(GValueType type)
+        {
+            return mDicTypeToValue.GetVal(type);
+        }
     }
 
     public enum DamageType
