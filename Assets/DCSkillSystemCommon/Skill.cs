@@ -75,7 +75,6 @@ namespace DC.SkillSystem
 
         public void OnCatchTarget(IActor target)
         {
-
         }
 
         public List<IActor> TryCollectTargets()
@@ -85,34 +84,60 @@ namespace DC.SkillSystem
 
         public void OnSkillLifeRecycle(SkillLifeCycle lifeCycle)
         {
+        }
 
+        private void ApplyBullet()
+        {
+            switch (mSkillCfg.mTargetType)
+            {
+                case SkillTargetType.Actor:
+                {
+                    var transformTraceTarget = gameObject.AddComponent<TransformTraceTarget>();
+                    transformTraceTarget.StartTrace(mCastCfg.mTargets[0].GetTransform(), 0.5f, mSkillCfg.mSpeed);
+                    break;
+                }
+                case SkillTargetType.Position:
+                {
+                    var arriveCmp = gameObject.AddComponent<ArrivePosition>();
+                    arriveCmp.StartTrace(mCastCfg.mTargetPosition, 0.5f, mSkillCfg.mSpeed);
+                    break;
+                }
+                case SkillTargetType.Direction:
+                {
+                    var moveDir = gameObject.AddComponent<MoveToDirection>();
+                    moveDir.StartMove(mCastCfg.mDirection, mSkillCfg.mDuration, mSkillCfg.mSpeed);
+                    break;
+                }
+            }
+        }
+
+        private void ApplyArea()
+        {
+            switch (mSkillCfg.mTargetType)
+            {
+                case SkillTargetType.Position:
+                {
+                    CacheTransform.position = mCastCfg.mTargetPosition;
+                    break;
+                }
+            }
         }
 
         public void Apply()
         {
-            LogDC.LogEx("apply skill id :", GetSkillCfg().mId);
-            if (mSkillCfg.mSkillType == SkillType.bullet)
+            LogDC.LogEx("apply skill id :", GetSkillCfg().mId, mSkillCfg.mSkillType);
+            switch (mSkillCfg.mSkillType)
             {
-                switch (mSkillCfg.mTargetType)
+                case SkillType.bullet:
                 {
-                    case SkillTargetType.Actor:
-                    {
-                        var transformTraceTarget = gameObject.AddComponent<TransformTraceTarget>();
-                        transformTraceTarget.StartTrace(mCastCfg.mTargets[0].GetTransform(), 0.5f, mSkillCfg.mSpeed);
-                        break;
-                    }
-                    case SkillTargetType.Position:
-                    {
-                        var arriveCmp = gameObject.AddComponent<ArrivePosition>();
-                        arriveCmp.StartTrace(mCastCfg.mTargetPosition, 0.5f, mSkillCfg.mSpeed);
-                        break;
-                    }
-                    case SkillTargetType.Direction:
-                    {
-                        var moveDir = gameObject.AddComponent<MoveToDirection>();
-                        moveDir.StartMove(mCastCfg.mDirection, mSkillCfg.mDuration, mSkillCfg.mSpeed);
-                        break;
-                    }
+                    ApplyBullet();
+                    break;
+                }
+
+                case SkillType.area:
+                {
+                    ApplyArea();
+                    break;
                 }
             }
 
@@ -121,17 +146,14 @@ namespace DC.SkillSystem
 
         private void OnTraceTransformEnd(TransformTraceTarget cmp, float distance)
         {
-
         }
 
         private void OnArrivePosEnd(ArrivePosition cmp)
         {
-
         }
 
         private void OnMoveDirEnd(MoveToDirection cmp)
         {
-
         }
 
         public Transform GetTransform()
@@ -171,6 +193,8 @@ namespace DC.SkillSystem
 
             if (!Toolkit.IsNullOrEmpty(allHit))
             {
+                LogDC.Log("get hit: " + allHit.Length);
+
                 foreach (var raycastHit in allHit)
                 {
                     var hitActor = raycastHit.transform.GetComponent<IActor>();

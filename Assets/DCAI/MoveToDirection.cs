@@ -59,7 +59,7 @@ namespace DC.AI
 
         public static Vector3 ComputeNextPosition(Vector3 curPos,Vector3 direction, float speed)
         {
-            return curPos + direction * speed * Time.deltaTime;
+            return curPos + (direction * speed * Time.deltaTime);
         }
 
     }

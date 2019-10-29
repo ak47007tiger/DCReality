@@ -138,7 +138,7 @@ namespace DC.GameLogic
                         hitPos.y = 0;
                         var playerPos = CacheTransform.position;
                         playerPos.y = 0;
-                        var rawDirection = hitPos - playerPos;
+                        var rawDirection = (hitPos - playerPos).normalized;
                         var castCfg = new CastCfg();
                         castCfg.SetDirection(rawDirection);
                         Caster.Cast(selectedSkillCfg, castCfg);

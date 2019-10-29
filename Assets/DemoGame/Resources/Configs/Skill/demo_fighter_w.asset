@@ -20,5 +20,6 @@ MonoBehaviour:
   mCastRange: 6
   mPrefabPath: Skill/bullet_demo
   mSkillType: 1
-  mSpeed: 3
+  mSpeed: 4
   mAffectInterval: 0
+  mDieAfterDone: 0

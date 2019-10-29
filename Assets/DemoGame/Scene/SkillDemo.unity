@@ -1796,6 +1796,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: demo_skill_area
       objectReference: {fileID: 0}
+    - target: {fileID: 8084150325172403946, guid: 8cd664f18fab4014e94510323949def7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8084150325172403957, guid: 8cd664f18fab4014e94510323949def7,
         type: 3}
       propertyPath: m_LocalPosition.x
