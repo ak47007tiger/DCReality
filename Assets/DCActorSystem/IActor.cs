@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DC.AI;
 using DC.GameLogic;
 using DC.ValueSys;
 using DC.SkillSystem;
@@ -37,7 +38,7 @@ namespace DC.ActorSystem
         void UpdateAnimatorParam(int paramId, float value);
         void UpdateAnimatorParam(int paramId, bool value);
 
-        void TryCatch(IActor actor, float stopDistance, Action<IActor, float> onCatch);
+        void TryCatch(Transform actor, float stopDistance, Action<NavTraceTarget, float> onCatch);
         void StopCatch();
 
         bool IsPlayer();
@@ -58,5 +59,8 @@ namespace DC.ActorSystem
 
         bool IsAutoMoving();
         void StopAutoMove();
+
+        void FaceTo(Transform targetTf);
+        void FaceTo(Vector3 direction);
     }
 }

@@ -16,8 +16,6 @@ namespace DC.AI
 
         public NavMeshAgent mNavMeshAgent;
 
-        public IActor mTracingActor;
-
         private bool mStop;
 
         public Action<NavTraceTarget, float> mOnCatchTarget;

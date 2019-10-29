@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DC.ActorSystem;
+using DC.AI;
 using DC.SkillSystem;
 using UnityEngine;
 using UnityEngine.AI;
@@ -123,7 +124,7 @@ namespace DC.GameLogic
                             if (distance > selectedSkillCfg.mCastRange)
                             {
                                 LogDC.Log("try catch actor");
-                                Actor.TryCatch(target, selectedSkillCfg.mCastRange, OnCatchActor);
+                                Actor.TryCatch(target.GetTransform(), selectedSkillCfg.mCastRange, OnCatchActor);
                                 return;
                             }
 
@@ -159,10 +160,9 @@ namespace DC.GameLogic
 
         #endregion
 
-
-        private void OnCatchActor(IActor actor, float distance)
+        private void OnCatchActor(NavTraceTarget tracer, float distance)
         {
-            CastSelectedSkill(actor);
+            CastSelectedSkill(tracer.mTargetTf.GetComponent<IActor>());
         }
 
         private void CastSelectedSkill(IActor target)

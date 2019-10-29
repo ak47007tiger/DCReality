@@ -27,14 +27,16 @@ namespace DC
             return mToDelTimerSet.Contains(obj);
         }
 
-        public void Add(DCBaseTimer timer)
+        public static void Add(DCBaseTimer timer)
         {
-            mTimerSet.Add(timer);
+            Instance.mTimerSet.Add(timer);
         }
 
-        public void Remove(DCBaseTimer timer)
+        public static void Remove(DCBaseTimer timer)
         {
-            mToDelTimerSet.Add(timer);
+            if (null == Instance) return;
+
+            Instance.mToDelTimerSet.Add(timer);
         }
     }
 
@@ -50,7 +52,7 @@ namespace DC
 
         public DCBaseTimer Create()
         {
-            DCTimer.Instance.Add(this);
+            DCTimer.Add(this);
 
             return this;
         }
@@ -60,7 +62,7 @@ namespace DC
             if (mDestroyed) return;
             mDestroyed = true;
 
-            DCTimer.Instance.Remove(this);
+            DCTimer.Remove(this);
         }
 
         public void SetPause(bool pause)

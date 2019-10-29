@@ -146,15 +146,14 @@ namespace DC.GameLogic
             throw new System.NotImplementedException();
         }
 
-        public void TryCatch(IActor actor, float stopDistance, Action<IActor, float> onCatch)
+        public void TryCatch(Transform actor, float stopDistance, Action<NavTraceTarget, float> onCatch)
         {
             if (mNavTraceTarget == null)
             {
                 mNavTraceTarget = gameObject.AddComponent<NavTraceTarget>();
             }
-            mNavTraceTarget.mTracingActor = actor;
             mNavTraceTarget.mOnCatchTarget = onCatch;
-            mNavTraceTarget.StartTrace(actor.GetTransform(), stopDistance);
+            mNavTraceTarget.StartTrace(actor, stopDistance);
         }
 
         public void StopCatch()
@@ -223,7 +222,17 @@ namespace DC.GameLogic
         {
             if (null == mNavTraceTarget) return;
 
-            mNavTraceTarget.SetStop();
+            mNavTraceTarget.SetStop(true);
+        }
+
+        public void FaceTo(Transform targetTf)
+        {
+            FaceTo((targetTf.position - CacheTransform.position).normalized);
+        }
+
+        public void FaceTo(Vector3 direction)
+        {
+            CacheTransform.forward = direction;
         }
     }
 }

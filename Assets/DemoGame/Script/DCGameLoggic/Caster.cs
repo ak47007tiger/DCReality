@@ -89,6 +89,12 @@ namespace DC.GameLogic
                     CacheTransform.forward = newForward;
                     break;
                 }
+                case SkillTargetType.Position:
+                    GetActor().FaceTo((castCfg.mTargetPosition - CacheTransform.position).normalized);
+                    break;
+                case SkillTargetType.Direction:
+                    GetActor().FaceTo(castCfg.mDirection);
+                    break;
             }
 
             var skillTf = skill.GetTransform();

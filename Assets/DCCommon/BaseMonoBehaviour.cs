@@ -21,8 +21,8 @@ namespace DC
         {
             get
             {
-                if (mCacheTf == null) mCacheTf = transform;
-                return CacheRectTransform;
+                if (mCacheRTf == null) mCacheRTf = transform as RectTransform;
+                return mCacheRTf;
             }
         }
     }
