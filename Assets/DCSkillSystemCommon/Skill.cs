@@ -11,6 +11,8 @@ namespace DC.SkillSystem
     /*
         区域型技能
         移动型技能
+
+        放一个技能打多个目标 这个技能不能是指向性的
      */
 
     public class Skill : BaseMonoBehaviour, ISkill
@@ -73,6 +75,7 @@ namespace DC.SkillSystem
 
         public void OnCatchTarget(IActor target)
         {
+
         }
 
         public List<IActor> TryCollectTargets()
@@ -82,6 +85,7 @@ namespace DC.SkillSystem
 
         public void OnSkillLifeRecycle(SkillLifeCycle lifeCycle)
         {
+
         }
 
         public void Apply()
@@ -89,11 +93,45 @@ namespace DC.SkillSystem
             LogDC.LogEx("apply skill id :", GetSkillCfg().mId);
             if (mSkillCfg.mSkillType == SkillType.bullet)
             {
-                var transformTraceTarget = gameObject.AddComponent<TransformTraceTarget>();
-                transformTraceTarget.StartTrace(mCastCfg.mTargets[0].GetTransform(), 0.5f, mSkillCfg.mSpeed);
+                switch (mSkillCfg.mTargetType)
+                {
+                    case SkillTargetType.Actor:
+                    {
+                        var transformTraceTarget = gameObject.AddComponent<TransformTraceTarget>();
+                        transformTraceTarget.StartTrace(mCastCfg.mTargets[0].GetTransform(), 0.5f, mSkillCfg.mSpeed);
+                        break;
+                    }
+                    case SkillTargetType.Position:
+                    {
+                        var arriveCmp = gameObject.AddComponent<ArrivePosition>();
+                        arriveCmp.StartTrace(mCastCfg.mTargetPosition, 0.5f, mSkillCfg.mSpeed);
+                        break;
+                    }
+                    case SkillTargetType.Direction:
+                    {
+                        var moveDir = gameObject.AddComponent<MoveToDirection>();
+                        moveDir.StartMove(mCastCfg.mDirection, mSkillCfg.mDuration, mSkillCfg.mSpeed);
+                        break;
+                    }
+                }
             }
 
             mTimerForApply = new DCDurationTimer(mSkillCfg.mAffectInterval, AddApplyCnt, -1).Create();
+        }
+
+        private void OnTraceTransformEnd(TransformTraceTarget cmp, float distance)
+        {
+
+        }
+
+        private void OnArrivePosEnd(ArrivePosition cmp)
+        {
+
+        }
+
+        private void OnMoveDirEnd(MoveToDirection cmp)
+        {
+
         }
 
         public Transform GetTransform()
@@ -115,7 +153,6 @@ namespace DC.SkillSystem
             }
 
             mLife += Time.deltaTime;
-
         }
 
         void AddApplyCnt()
@@ -127,7 +164,8 @@ namespace DC.SkillSystem
         {
             var halfExtents = mBoxCollider.Value.size * 0.5f;
             var center = CacheTransform.position;
-            var allHit = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation);
+            var allHit = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation,
+                halfExtents.x * 2);
             var bound = new Bounds(CacheTransform.position, mBoxCollider.Value.size);
             DebugExtension.DebugBounds(bound, Color.green);
 
@@ -138,7 +176,8 @@ namespace DC.SkillSystem
                     var hitActor = raycastHit.transform.GetComponent<IActor>();
                     if (hitActor != null)
                     {
-                        if (mCastCfg.GetTargetActors().Count > 0)
+                        var targetActors = mCastCfg.GetTargetActors();
+                        if (!Toolkit.IsNullOrEmpty(targetActors))
                         {
                             if (mCastCfg.GetTargetActors().Contains(hitActor))
                             {
@@ -181,6 +220,11 @@ namespace DC.SkillSystem
                     if (mHitCnt < mSkillCfg.mHitCnt)
                     {
                         TryApplyToTarget();
+                    }
+
+                    if (mHitCnt >= mSkillCfg.mHitCnt)
+                    {
+                        SkillSys.Instance.DestroySkill(this);
                     }
 
                     break;

@@ -77,7 +77,7 @@ namespace DC.SkillSystem
             CastCfg castCfg = null;
 
             //get from user input
-            var direction = Vector3Int.zero;
+            var direction = Vector3.zero;
             castCfg.SetDirection(direction);
 
             caster.Cast(skillCfg, castCfg);
@@ -91,7 +91,7 @@ namespace DC.SkillSystem
             CastCfg castCfg = null;
 
             //get from user input
-            var position = Vector3Int.zero;
+            var position = Vector3.zero;
             castCfg.SetDirection(position);
 
             caster.Cast(skillCfg, castCfg);

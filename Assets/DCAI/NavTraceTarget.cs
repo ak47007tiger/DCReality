@@ -20,17 +20,25 @@ namespace DC.AI
 
         private bool mStop;
 
-        public Action<IActor, float> mOnCatchTarget;
+        public Action<NavTraceTarget, float> mOnCatchTarget;
 
         public bool IsStop()
         {
             return mStop;
         }
 
-        public void StopTrace()
+        public void SetStop(bool value)
         {
-            mStop = true;
-            mNavMeshAgent.destination = CacheTransform.position;
+            mStop = value;
+
+            if (value)
+            {
+                mNavMeshAgent.destination = CacheTransform.position;
+            }
+            else
+            {
+                mNavMeshAgent.destination = mTargetTf.position;
+            }
         }
 
         void Awake()
@@ -44,14 +52,14 @@ namespace DC.AI
 
             if (mTargetTf == null) return;
 
-            var catchTarget = CatchTarget();
+            var catchTarget = CatchTarget(mTargetTf, CacheTransform, mStopDistance);
             if (catchTarget.Item1)
             {
-                StopTrace();
+                SetStop(true);
 
                 if (null != mOnCatchTarget)
                 {
-                    mOnCatchTarget(mTracingActor, catchTarget.Item2);
+                    mOnCatchTarget(this, catchTarget.Item2);
                 }
                 return;
             }
@@ -65,10 +73,10 @@ namespace DC.AI
             mStop = false;
         }
 
-        public Tuple<bool,float> CatchTarget()
+        public static Tuple<bool,float> CatchTarget(Transform targetTf, Transform curTf, float stopDistance)
         {
-            var distance = Vector3.Distance(mTargetTf.position, CacheTransform.position);
-            return new Tuple<bool, float>(distance < mStopDistance, distance);
+            var distance = Vector3.Distance(targetTf.position, curTf.position);
+            return new Tuple<bool, float>(distance < stopDistance, distance);
         }
 
         public static Vector3 ComputeNextPosition(Transform traceTf, Transform targetTf, float speed)

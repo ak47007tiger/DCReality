@@ -19,8 +19,8 @@ namespace DC.SkillSystem
     public class CastCfg : ICastCfg
     {
         public List<IActor> mTargets;
-        public Vector3Int mDirection;
-        public Vector3Int mTargetPosition;
+        public Vector3 mDirection;
+        public Vector3 mTargetPosition;
         /// <summary>
         /// 释放力度
         /// </summary>
@@ -37,22 +37,17 @@ namespace DC.SkillSystem
             mTargets = targets;
         }
 
-        public Vector3Int GetDirection()
-        {
-            return mDirection;
-        }
-
-        public void SetDirection(Vector3Int direction)
+        public void SetDirection(Vector3 direction)
         {
             mDirection = direction;
         }
 
-        public Vector3Int GetTargetPosition()
+        public Vector3 GetTargetPosition()
         {
             return mTargetPosition;
         }
 
-        public void SetTargetPosition(Vector3Int position)
+        public void SetTargetPosition(Vector3 position)
         {
             mTargetPosition = position;
         }

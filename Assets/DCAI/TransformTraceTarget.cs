@@ -10,29 +10,29 @@ namespace DC.AI
 {
     public class TransformTraceTarget : BaseMonoBehaviour
     {
-        public Transform mTargetTf;
-
         public float mStopDistance = 1;
 
         public IActor mTracingActor;
 
         private bool mStop;
 
-        public Action<IActor, float> mOnCatchTarget;
+        public Action<TransformTraceTarget, float> mOnCatchTarget;
 
         [HideInInspector]
         public float mSpeed;
 
         public bool StopAfterCatchTarget;
 
+        public Transform mTargetTf;
+
         public bool IsStop()
         {
             return mStop;
         }
 
-        public void StopTrace()
+        public void SetStop(bool value)
         {
-            mStop = true;
+            mStop = value;
         }
 
         void Awake()
@@ -45,17 +45,17 @@ namespace DC.AI
 
             if (mTargetTf == null) return;
 
-            var catchTarget = CatchTarget();
+            var catchTarget = CatchTarget(mTargetTf.position, CacheTransform.position, mStopDistance);
             if (catchTarget.Item1)
             {
                 if (StopAfterCatchTarget)
                 {
-                    StopTrace();
+                    SetStop(true);
                 }
 
                 if (null != mOnCatchTarget)
                 {
-                    mOnCatchTarget(mTracingActor, catchTarget.Item2);
+                    mOnCatchTarget(this, catchTarget.Item2);
                 }
                 return;
             }
@@ -71,17 +71,23 @@ namespace DC.AI
             mStop = false;
         }
 
-        public Tuple<bool,float> CatchTarget()
+        public static Tuple<bool, float> CatchTarget(Vector3 targetPos, Vector3 curPos, float stopDistance)
         {
-            var distance = Vector3.Distance(mTargetTf.position, CacheTransform.position);
-            return new Tuple<bool, float>(distance < mStopDistance, distance);
+            var distance = Vector3.Distance(targetPos, curPos);
+            return new Tuple<bool, float>(distance< stopDistance, distance);
         }
 
         public static Vector3 ComputeNextPosition(Transform traceTf, Transform targetTf, float speed)
         {
-            var dir = (targetTf.position - traceTf.position).normalized;
-            var delta = speed * dir * Time.deltaTime;
-            return traceTf.position + delta;
+            return ComputeNextPosition(traceTf.position, targetTf.position, speed);
         }
+
+        public static Vector3 ComputeNextPosition(Vector3 curPos, Vector3 targetPos, float speed)
+        {
+            var dir = (targetPos - curPos).normalized;
+            var delta = speed * dir * Time.deltaTime;
+            return curPos + delta;
+        }
+
     }
 }

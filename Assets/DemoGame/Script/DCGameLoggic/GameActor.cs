@@ -223,7 +223,7 @@ namespace DC.GameLogic
         {
             if (null == mNavTraceTarget) return;
 
-            mNavTraceTarget.StopTrace();
+            mNavTraceTarget.SetStop();
         }
     }
 }

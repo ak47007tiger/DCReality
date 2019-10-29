@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: demo_fighter
   m_EditorClassIdentifier: 
   mPassiveSkillId: 0
-  mSkillList: 0100000002000000
+  mSkillList: 010000000200000003000000
   mKeyToSkillPairList:
   - Key: 97
     Value: 1
   - Key: 113
     Value: 2
+  - Key: 119
+    Value: 3
   mModelPath: Model/Actor/_actor_property_pos
   mPrefabPath: actor/demo_hero_fighter
   mName: 

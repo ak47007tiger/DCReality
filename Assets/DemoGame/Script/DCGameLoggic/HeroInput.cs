@@ -139,7 +139,7 @@ namespace DC.GameLogic
                         playerPos.y = 0;
                         var rawDirection = hitPos - playerPos;
                         var castCfg = new CastCfg();
-                        castCfg.SetDirection(Toolkit.FloatToInt(rawDirection));
+                        castCfg.SetDirection(rawDirection);
                         Caster.Cast(selectedSkillCfg, castCfg);
 
                         ClearSkill();
@@ -148,7 +148,7 @@ namespace DC.GameLogic
                 case SkillTargetType.Position:
                     {
                         var castCfg = new CastCfg();
-                        castCfg.SetTargetPosition(Toolkit.FloatToInt(hitPos));
+                        castCfg.SetTargetPosition(hitPos);
                         Caster.Cast(selectedSkillCfg, castCfg);
 
                         ClearSkill();
