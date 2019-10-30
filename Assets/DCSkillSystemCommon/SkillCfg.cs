@@ -14,9 +14,23 @@ namespace DC.SkillSystem
             释放技能
             受到攻击
             最后普攻的目标
+
+        经过一段时间的延迟再生效
+            较长的施法动画
+            先播放动画，在动画进行一段时间后生效
         
         二次触发的技能：技能创建的技能
+
         技能组：一次释放一组技能
+        技能效果：一个技能造成多个效果
+            buff
+            视觉表现
+                相机效果
+                人物效果
+
+        时间驱动的技能
+            生效时加buff
+            一段时间后生效
 
         蛮王 
             a, 近战伤害
@@ -81,6 +95,30 @@ namespace DC.SkillSystem
         area,
     }
 
+    public enum TranslateType
+    {
+        off_target,
+        close_target,
+    }
+
+    public enum HpType
+    {
+        physics,
+        magic,
+        real,
+    }
+
+    public enum EffectType
+    {
+        hp,
+        mp,
+        translate,//type, dir, distance
+        camera,
+        buff,
+        create_npc,
+        terrier,
+    }
+
     [CreateAssetMenu(fileName = "SkillCfg", menuName = "DC/ScriptableObjects/SkillCfg", order = 1)]
     public class SkillCfg : ScriptableObject, ISkillCfg
     {
@@ -121,6 +159,11 @@ namespace DC.SkillSystem
         /// 生效后死亡
         /// </summary>
         public bool mDieAfterDone;
+
+        /// <summary>
+        /// 技能施加影响的延迟
+        /// </summary>
+        public float mEffectDelay;
 
         public List<KVPair<GValueType, float>> GetConsumes()
         {

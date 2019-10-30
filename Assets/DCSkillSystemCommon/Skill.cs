@@ -25,7 +25,7 @@ namespace DC.SkillSystem
 
         private CacheItem<BoxCollider> mBoxCollider;
 
-        private float mLife;
+        private float mTickedLife;
 
         private int mHitCnt;
 
@@ -168,13 +168,13 @@ namespace DC.SkillSystem
 
         void Update()
         {
-            if (mLife > mSkillCfg.mDuration)
+            if (mTickedLife > mSkillCfg.mDuration)
             {
                 SkillSys.Instance.DestroySkill(this);
                 return;
             }
 
-            mLife += Time.deltaTime;
+            mTickedLife += Time.deltaTime;
         }
 
         void AddApplyCnt()
@@ -227,6 +227,11 @@ namespace DC.SkillSystem
 
         void FixedUpdate()
         {
+            if (mTickedLife < mSkillCfg.mEffectDelay)
+            {
+                return;
+            }
+
             switch (mSkillCfg.mSkillType)
             {
                 case SkillType.area:

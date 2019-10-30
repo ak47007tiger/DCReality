@@ -60,5 +60,9 @@ namespace DC.ValueSys
         magic_attack,
         magic_weaken,//魔穿
         magic_defense,
+
+        move_speed,
+
+        attack_speed,
     }
 }
