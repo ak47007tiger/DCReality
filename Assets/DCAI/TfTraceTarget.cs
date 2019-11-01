@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 namespace DC.AI
 {
-    public class TransformTraceTarget : BaseMonoBehaviour
+    public class TfTraceTarget : BaseMonoBehaviour
     {
         public float mStopDistance = 1;
 
@@ -16,7 +16,7 @@ namespace DC.AI
 
         private bool mStop;
 
-        public Action<TransformTraceTarget, float> mOnCatchTarget;
+        public Action<TfTraceTarget, float> mOnCatchTarget;
 
         [HideInInspector]
         public float mSpeed;

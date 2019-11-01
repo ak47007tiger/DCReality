@@ -55,7 +55,7 @@ namespace DC
             actor.UpdateModel();
 
             hero.GetComponent<HeroInput>().mHeroCfg = fighterCfg;
-            hero.transform.position = new Vector3(1,0,0);
+            hero.transform.position = new Vector3(2,0,0);
         }
 
         private void CreateDemoEnemyFighter()
@@ -73,7 +73,7 @@ namespace DC
             actor.UpdateModel();
 
             hero.GetComponent<HeroInput>().mHeroCfg = fighterCfg;
-            hero.transform.position = new Vector3(-1, 0, 0);
+            hero.transform.position = new Vector3(-2, 0, 0);
         }
     }
 }

@@ -13,13 +13,10 @@ namespace DC.ActorSystem
         #region skill system
 
         ICaster GetCaster();
-
-        List<Buff> GetOwnerBuffs();
-        void SetOwnerBuffs(List<Buff> buffs);
+        
+        BuffCmpnt GetBuffCmpnt();
 
         IValueComponent GetValueComponent();
-
-        void AddBuff(Buff buff);
 
         void Attack();
 
@@ -39,7 +36,7 @@ namespace DC.ActorSystem
         void UpdateAnimatorParam(int paramId, bool value);
 
         void TryCatch(Transform actor, float stopDistance, Action<NavTraceTarget, float> onCatch);
-        void StopCatch();
+        void TryArrive(Vector3 targetPos, float stopDistance, Action<NavArrivePosition, float> onArrive);
 
         bool IsPlayer();
         void SetIsPlayer(bool player);

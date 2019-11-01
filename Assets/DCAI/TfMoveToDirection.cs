@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DC.AI
 {
-    public class MoveToDirection : BaseMonoBehaviour
+    public class TfMoveToDirection : BaseMonoBehaviour
     {
         public float mDuration;
         public Vector3 mDirection;
@@ -17,7 +17,7 @@ namespace DC.AI
 
         public bool StopAfterCatchTarget = true;
 
-        public Action<MoveToDirection> mOnEnd;
+        public Action<TfMoveToDirection> mOnEnd;
 
         public bool IsStop()
         {

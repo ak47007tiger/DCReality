@@ -92,19 +92,19 @@ namespace DC.SkillSystem
             {
                 case SkillTargetType.Actor:
                 {
-                    var transformTraceTarget = gameObject.AddComponent<TransformTraceTarget>();
+                    var transformTraceTarget = gameObject.AddComponent<TfTraceTarget>();
                     transformTraceTarget.StartTrace(mCastCfg.mTargets[0].GetTransform(), 0.5f, mSkillCfg.mSpeed);
                     break;
                 }
                 case SkillTargetType.Position:
                 {
-                    var arriveCmp = gameObject.AddComponent<ArrivePosition>();
+                    var arriveCmp = gameObject.AddComponent<TfArrivePosition>();
                     arriveCmp.StartTrace(mCastCfg.mTargetPosition, 0.5f, mSkillCfg.mSpeed);
                     break;
                 }
                 case SkillTargetType.Direction:
                 {
-                    var moveDir = gameObject.AddComponent<MoveToDirection>();
+                    var moveDir = gameObject.AddComponent<TfMoveToDirection>();
                     moveDir.StartMove(mCastCfg.mDirection, mSkillCfg.mDuration, mSkillCfg.mSpeed);
                     break;
                 }
@@ -144,15 +144,15 @@ namespace DC.SkillSystem
             mTimerForApply = new DCDurationTimer(mSkillCfg.mAffectInterval, AddApplyCnt, -1).Create();
         }
 
-        private void OnTraceTransformEnd(TransformTraceTarget cmp, float distance)
+        private void OnTraceTransformEnd(TfTraceTarget cmp, float distance)
         {
         }
 
-        private void OnArrivePosEnd(ArrivePosition cmp)
+        private void OnArrivePosEnd(TfArrivePosition cmp)
         {
         }
 
-        private void OnMoveDirEnd(MoveToDirection cmp)
+        private void OnMoveDirEnd(TfMoveToDirection cmp)
         {
         }
 

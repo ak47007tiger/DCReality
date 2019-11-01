@@ -138,6 +138,7 @@ namespace DC.GameLogic
                         hitPos.y = 0;
                         var playerPos = CacheTransform.position;
                         playerPos.y = 0;
+
                         var rawDirection = (hitPos - playerPos).normalized;
                         var castCfg = new CastCfg();
                         castCfg.SetDirection(rawDirection);
@@ -148,6 +149,17 @@ namespace DC.GameLogic
                     break;
                 case SkillTargetType.Position:
                     {
+                        var playerPos = CacheTransform.position;
+                        hitPos.y = 0;
+                        mLastCastPosition = hitPos;
+                        var distance = Vector3.Distance(hitPos, playerPos);
+                        if (distance > selectedSkillCfg.mCastRange)
+                        {
+                            var targetPos = Vector3.MoveTowards(playerPos, hitPos, distance - mSelectedSkillCfg.mCastRange);
+                            Actor.TryArrive(targetPos, 0.1f, OnArrive);
+                            return;
+                        }
+
                         var castCfg = new CastCfg();
                         castCfg.SetTargetPosition(hitPos);
                         Caster.Cast(selectedSkillCfg, castCfg);
@@ -159,6 +171,14 @@ namespace DC.GameLogic
         }
 
         #endregion
+
+        private Vector3 mLastCastPosition;
+        private void OnArrive(NavArrivePosition arrive, float distance)
+        {
+            var castCfg = new CastCfg();
+            castCfg.SetTargetPosition(mLastCastPosition);
+            Caster.Cast(mSelectedSkillCfg, castCfg);
+        }
 
         private void OnCatchActor(NavTraceTarget tracer, float distance)
         {

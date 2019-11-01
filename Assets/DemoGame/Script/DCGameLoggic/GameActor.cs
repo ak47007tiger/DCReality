@@ -17,8 +17,6 @@ namespace DC.GameLogic
 
         private bool mIsPlayer;
 
-        private List<Buff> mBuffList = new List<Buff>();
-
         private ValueComponent mValueComponent = new ValueComponent();
 
         private string mModelPath;
@@ -34,6 +32,10 @@ namespace DC.GameLogic
         private HeroCfg mHeroCfg;
 
         private NavTraceTarget mNavTraceTarget;
+
+        private NavArrivePosition mNavArrivePosition;
+
+        private BuffCmpnt mBuffCmpnt = new BuffCmpnt();
 
         protected override void Awake()
         {
@@ -96,24 +98,14 @@ namespace DC.GameLogic
             return Caster;
         }
 
-        public List<Buff> GetOwnerBuffs()
+        public BuffCmpnt GetBuffCmpnt()
         {
-            return mBuffList;
-        }
-
-        public void SetOwnerBuffs(List<Buff> buffs)
-        {
-            mBuffList = buffs;
+            return mBuffCmpnt;
         }
 
         public IValueComponent GetValueComponent()
         {
             return mValueComponent;
-        }
-
-        public void AddBuff(Buff buff)
-        {
-            mBuffList.Add(buff);
         }
 
         public void SetVisibility(bool show)
@@ -156,9 +148,15 @@ namespace DC.GameLogic
             mNavTraceTarget.StartTrace(actor, stopDistance);
         }
 
-        public void StopCatch()
+        public void TryArrive(Vector3 targetPos, float stopDistance, Action<NavArrivePosition, float> onArrive)
         {
-            throw new NotImplementedException();
+            if (mNavArrivePosition == null)
+            {
+                mNavArrivePosition = gameObject.AddComponent<NavArrivePosition>();
+            }
+
+            mNavArrivePosition.mOnCatchTarget = onArrive;
+            mNavArrivePosition.StartTrace(targetPos, stopDistance);
         }
 
         public bool IsPlayer()
@@ -213,16 +211,30 @@ namespace DC.GameLogic
 
         public bool IsAutoMoving()
         {
-            if (null == mNavTraceTarget) return false;
+            if (null != mNavTraceTarget)
+            {
+                return !mNavTraceTarget.IsStop();
+            }
 
-            return !mNavTraceTarget.IsStop();
+            if (null != mNavArrivePosition)
+            {
+                return !mNavArrivePosition.IsStop();
+            }
+
+            return false;
         }
 
         public void StopAutoMove()
         {
-            if (null == mNavTraceTarget) return;
+            if (null != mNavTraceTarget)
+            {
+                mNavTraceTarget.SetStop(true);
+            }
 
-            mNavTraceTarget.SetStop(true);
+            if (null != mNavArrivePosition)
+            {
+                mNavArrivePosition.SetStop(true);
+            }
         }
 
         public void FaceTo(Transform targetTf)

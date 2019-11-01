@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DC.AI
 {
-    public class PushTarget : MonoBehaviour
+    public class NavPushTarget : BaseMonoBehaviour
     {
         void Start()
         {

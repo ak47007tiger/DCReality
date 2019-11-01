@@ -4,15 +4,13 @@ using UnityEngine;
 
 namespace DC.AI
 {
-    public class ArrivePosition : BaseMonoBehaviour
+    public class TfArrivePosition : BaseMonoBehaviour
     {
         public float mStopDistance = 1;
 
-        public IActor mTracingActor;
-
         private bool mStop;
 
-        public Action<ArrivePosition, float> mOnCatchTarget;
+        public Action<TfArrivePosition, float> mOnCatchTarget;
 
         [HideInInspector]
         public float mSpeed;
@@ -43,7 +41,7 @@ namespace DC.AI
         {
             if (mStop) return;
 
-            var catchTarget = TransformTraceTarget.CatchTarget(mTargetPos, CacheTransform.position, mStopDistance);
+            var catchTarget = TfTraceTarget.CatchTarget(mTargetPos, CacheTransform.position, mStopDistance);
             if (catchTarget.Item1)
             {
                 if (StopAfterCatchTarget)
@@ -58,7 +56,7 @@ namespace DC.AI
                 return;
             }
 
-            CacheTransform.position = TransformTraceTarget.ComputeNextPosition(CacheTransform.position, mTargetPos, mSpeed);
+            CacheTransform.position = TfTraceTarget.ComputeNextPosition(CacheTransform.position, mTargetPos, mSpeed);
         }
 
     }

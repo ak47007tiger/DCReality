@@ -139,7 +139,7 @@ namespace DC.GameLogic
 
         public CastMsg BuffAllowCast(ISkill skill)
         {
-            var ownerBuffs = GetActor().GetOwnerBuffs();
+            var ownerBuffs = GetActor().GetBuffCmpnt().GetBuffList();
             var rejectBuff = ownerBuffs.Find((buff => !buff.AllowCast(skill)));
             if (null == rejectBuff)
             {

@@ -61,7 +61,12 @@ namespace DC.AI
                 }
                 return;
             }
-            mNavMeshAgent.destination = mTargetTf.position;
+            mNavMeshAgent.destination = GetTargetPos();
+        }
+
+        private Vector3 GetTargetPos()
+        {
+            return mTargetTf.position;
         }
 
         public void StartTrace(Transform targetTf, float stopDistance)
