@@ -108,17 +108,6 @@ namespace DC.SkillSystem
         real,
     }
 
-    public enum EffectType
-    {
-        hp,
-        mp,
-        translate,//type, dir, distance
-        camera,
-        buff,
-        create_npc,
-        terrier,
-    }
-
     [CreateAssetMenu(fileName = "SkillCfg", menuName = "DC/ScriptableObjects/SkillCfg", order = 1)]
     public class SkillCfg : ScriptableObject, ISkillCfg
     {
@@ -164,6 +153,8 @@ namespace DC.SkillSystem
         /// 技能施加影响的延迟
         /// </summary>
         public float mEffectDelay;
+
+        public List<EventHandlerConfig> mEvtHandlerCfgs;
 
         public List<KVPair<GValueType, float>> GetConsumes()
         {

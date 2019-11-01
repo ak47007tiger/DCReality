@@ -13,6 +13,9 @@ namespace DC.SkillSystem
         移动型技能
 
         放一个技能打多个目标 这个技能不能是指向性的
+
+        根据时间流逝释放skill的行为
+        根据监听到的事件skill来处理
      */
 
     public class Skill : BaseMonoBehaviour, ISkill
@@ -32,6 +35,8 @@ namespace DC.SkillSystem
         private DCBaseTimer mTimerForApply;
 
         private int mTryApplyToTargetCnt = 1;
+
+        private List<BaseEvtHandler> mEvthandlerList = new List<BaseEvtHandler>();
 
         protected void Awake()
         {
@@ -119,6 +124,29 @@ namespace DC.SkillSystem
                 {
                     CacheTransform.position = mCastCfg.mTargetPosition;
                     break;
+                }
+            }
+        }
+
+        private void InitHandlers()
+        {
+            foreach (var handlerConfig in mSkillCfg.mEvtHandlerCfgs)
+            {
+                switch (handlerConfig.mHandlerType)
+                {
+                    case HandlerType.time:
+                        mEvthandlerList.Add(new TimeEvtHandler().SetConfig(handlerConfig));
+                        break;
+                    case HandlerType.none:
+                        LogDC.Log("none handler cfg");
+                        break;
+                }
+            }
+            foreach (var handler in mEvthandlerList)
+            {
+                switch (handler.mHandlerCfg.mHandlerType)
+                {
+                    
                 }
             }
         }

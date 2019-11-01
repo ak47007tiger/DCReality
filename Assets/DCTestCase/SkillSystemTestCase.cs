@@ -23,6 +23,8 @@ namespace DC.SkillSystem
         //buff
         void CastToActorWithSelfBuff();
         void CastToActorWithOppositeBuff();
+
+        void TimeTrigger();
     }
 
     public class TSkillSystemTestCaseImpl : GameContextObject, ITestCase
@@ -111,7 +113,27 @@ namespace DC.SkillSystem
         {
             throw new System.NotImplementedException();
         }
+
+        List<Trigger> mTriggerList = new List<Trigger>();
+        public void TimeTrigger()
+        {
+            foreach (var trigger in mTriggerList)
+            {
+                trigger.Update();
+            }
+        }
     }
+
+    public class Trigger
+    {
+        public bool mOnce;
+        public void Update()
+        {
+            if (mOnce)
+            {
+                return;
+            }
+        }
+    }
+    
 }
-
-
