@@ -32,11 +32,14 @@ namespace DC.SkillSystem
 
         private int mHitCnt;
 
-        private DCBaseTimer mTimerForApply;
+        private List<DCBaseTimer> mTimerToDestroy = new List<DCBaseTimer>();
 
-        private int mTryApplyToTargetCnt = 1;
+        private int mDoSkillEffectRemaingCnt = 1;
 
         private List<BaseEvtHandler> mEvthandlerList = new List<BaseEvtHandler>();
+
+        private Dictionary<HandlerType, List<BaseEvtHandler>> mTypeToHandlerList =
+            new Dictionary<HandlerType, List<BaseEvtHandler>>();
 
         protected void Awake()
         {
@@ -82,7 +85,7 @@ namespace DC.SkillSystem
         {
         }
 
-        public List<IActor> TryCollectTargets()
+        public List<IActor> GetEffectTargets()
         {
             return null;
         }
@@ -91,7 +94,7 @@ namespace DC.SkillSystem
         {
         }
 
-        private void ApplyBullet()
+        private void CreateBullet()
         {
             switch (mSkillCfg.mTargetType)
             {
@@ -114,9 +117,28 @@ namespace DC.SkillSystem
                     break;
                 }
             }
+
+            //因为要检查是否获取目标，所以子弹类型每帧更新
+            if (mSkillCfg.mEffectDelay > 0)
+            {
+                var delayTimer = new DCDurationTimer(mSkillCfg.mEffectDelay, SetupBulletTimerStep2)
+                    .SetAutoDestroy(true).CreateNormal();
+                mTimerToDestroy.Add(delayTimer);
+            }
+            else
+            {
+                SetupBulletTimerStep2();
+            }
         }
 
-        private void ApplyArea()
+        private void SetupBulletTimerStep2()
+        {
+            var frameTimer = new DCFrameTimer(1, DoSkillEffect, -1);
+            frameTimer.CreatePhysic();
+            mTimerToDestroy.Add(frameTimer);
+        }
+
+        private void CreateArea()
         {
             switch (mSkillCfg.mTargetType)
             {
@@ -125,7 +147,74 @@ namespace DC.SkillSystem
                     CacheTransform.position = mCastCfg.mTargetPosition;
                     break;
                 }
+                case SkillTargetType.Actor:
+                {
+                    break;
+                }
             }
+
+            //area类型，1 每过一段时间起效一次 2 经过延迟后直接起效
+            if (mSkillCfg.mEffectDelay > 0)
+            {
+                var delayTimer = new DCDurationTimer(mSkillCfg.mEffectDelay, SetupAreaTimerStep2)
+                    .SetAutoDestroy(true).CreateNormal();
+                mTimerToDestroy.Add(delayTimer);
+            }
+            else
+            {
+                SetupAreaTimerStep2();
+            }
+        }
+
+        private void SetupAreaTimerStep2()
+        {
+            if (mSkillCfg.mAffectInterval > 0)
+            {
+                var intervalTimer = new DCDurationTimer(mSkillCfg.mAffectInterval, PostDoSkillEffect, - 1).CreateNormal();
+                mTimerToDestroy.Add(intervalTimer);
+            }
+            else
+            {
+                PostDoSkillEffect();
+            }
+        }
+
+        private void PostDoSkillEffect()
+        {
+            mDoSkillEffectRemaingCnt++;
+        }
+
+        private void CreateNormal()
+        {
+            switch (mSkillCfg.mTargetType)
+            {
+                case SkillTargetType.Actor:
+                {
+                    break;
+                }
+                case SkillTargetType.Position:
+                {
+                    break;
+                }
+                case SkillTargetType.Direction:
+                {
+                    break;
+                }
+            }
+
+            //normal类型是直接起效，所以直接施加影响到目标
+            DoSkillEffect();
+        }
+
+        private void AddHandleToDic(HandlerType type, BaseEvtHandler handler)
+        {
+            if (!mTypeToHandlerList.TryGetValue(type, out var list))
+            {
+                list = new List<BaseEvtHandler>();
+                mTypeToHandlerList.Add(type, list);
+            }
+
+            list.Add(handler);
         }
 
         private void InitHandlers()
@@ -134,42 +223,51 @@ namespace DC.SkillSystem
             {
                 switch (handlerConfig.mHandlerType)
                 {
-                    case HandlerType.time:
-                        mEvthandlerList.Add(new TimeEvtHandler().SetConfig(handlerConfig));
-                        break;
                     case HandlerType.none:
                         LogDC.Log("none handler cfg");
                         break;
-                }
-            }
-            foreach (var handler in mEvthandlerList)
-            {
-                switch (handler.mHandlerCfg.mHandlerType)
-                {
-                    
+                    case HandlerType.time:
+                    {
+                        var handler = new TimeEvtHandler();
+                        AddHandleToDic(handlerConfig.mHandlerType, handler);
+                        mEvthandlerList.Add(handler.SetConfig(handlerConfig).SetSkill(this));
+                        break;
+                    }
+                    case HandlerType.on_cast_target:
+                    {
+                        var handler = new CastTargetHandler();
+                        AddHandleToDic(handlerConfig.mHandlerType, handler);
+                        mEvthandlerList.Add(handler.SetConfig(handlerConfig).SetSkill(this));
+                        break;
+                    }
                 }
             }
         }
 
-        public void Apply()
+        public void Create()
         {
             LogDC.LogEx("apply skill id :", GetSkillCfg().mId, mSkillCfg.mSkillType);
+
+            InitHandlers();
+
             switch (mSkillCfg.mSkillType)
             {
                 case SkillType.bullet:
                 {
-                    ApplyBullet();
+                    CreateBullet();
                     break;
                 }
 
                 case SkillType.area:
                 {
-                    ApplyArea();
+                    CreateArea();
                     break;
                 }
-            }
 
-            mTimerForApply = new DCDurationTimer(mSkillCfg.mAffectInterval, AddApplyCnt, -1).Create();
+                case SkillType.normal:
+                    CreateNormal();
+                    break;
+            }
         }
 
         private void OnTraceTransformEnd(TfTraceTarget cmp, float distance)
@@ -191,7 +289,10 @@ namespace DC.SkillSystem
 
         void OnDestroy()
         {
-            if (null != mTimerForApply) mTimerForApply.Destroy();
+            foreach (var timer in mTimerToDestroy)
+            {
+                timer.Destroy();
+            }
         }
 
         void Update()
@@ -203,51 +304,144 @@ namespace DC.SkillSystem
             }
 
             mTickedLife += Time.deltaTime;
+
+            if (mTypeToHandlerList.TryGetValue(HandlerType.time, out var list))
+            {
+                foreach (var handler in list)
+                {
+                    handler.Update();
+                }
+            }
         }
 
-        void AddApplyCnt()
-        {
-            mTryApplyToTargetCnt++;
-        }
-
-        private void TryApplyToTarget()
+        public void DoSkillEffect()
         {
             var halfExtents = mBoxCollider.Value.size * 0.5f;
             var center = CacheTransform.position;
             var allHit = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation,
                 halfExtents.x * 2);
             var bound = new Bounds(CacheTransform.position, mBoxCollider.Value.size);
+
             DebugExtension.DebugBounds(bound, Color.green);
 
             if (!Toolkit.IsNullOrEmpty(allHit))
             {
                 LogDC.Log("get hit: " + allHit.Length);
 
+                switch (mSkillCfg.mSkillType)
+                {
+                    case SkillType.area:
+                        DoAreaSkillEffect(allHit);
+                        break;
+                    case SkillType.bullet:
+                        DoBulletSkillEffect(allHit);
+                        break;
+                }
+            }
+        }
+
+        void DoBulletSkillEffect(RaycastHit[] allHit)
+        {
+            if (mSkillCfg.mTargetType == SkillTargetType.Actor)
+            {
                 foreach (var raycastHit in allHit)
                 {
+                    /*
+
+                    收集到目标，施加影响，发送事件
+                     */
+                    if (mHitCnt > mSkillCfg.mHitCnt)
+                    {
+                        return;
+                    }
+
                     var hitActor = raycastHit.transform.GetComponent<IActor>();
+
                     if (hitActor != null)
                     {
-                        var targetActors = mCastCfg.GetTargetActors();
-                        if (!Toolkit.IsNullOrEmpty(targetActors))
+                        if (mCastCfg.IsTarget(hitActor))
                         {
-                            if (mCastCfg.GetTargetActors().Contains(hitActor))
-                            {
-                                if (hitActor.GetActorSide() != mCaster.GetActor().GetActorSide())
-                                {
-                                    LogDC.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
-                                    mHitCnt++;
-                                }
-                            }
+                            OnBulletHitActor(hitActor);
                         }
-                        else
-                        {
-                            if (hitActor.GetActorSide() != mCaster.GetActor().GetActorSide())
-                            {
-                                LogDC.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
-                                mHitCnt++;
-                            }
-                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var raycastHit in allHit)
+                {
+                    /*
+
+                    收集到目标，施加影响，发送事件
+                     */
+                    if (mHitCnt > mSkillCfg.mHitCnt)
+                    {
+                        return;
+                    }
+
+                    var hitActor = raycastHit.transform.GetComponent<IActor>();
+
+                    if (hitActor != null)
+                    {
+                        OnBulletHitActor(hitActor);
+                    }
+                }
+            }
+        }
+
+        void DoAreaSkillEffect(RaycastHit[] allHit)
+        {
+            /*
+             
+            找到所有的actor，过滤actor并排序
+            1 指向性
+            2 非指向性
+             */
+
+            var actors = new List<IActor>();
+            for (var i = 0; i < allHit.Length; i++)
+            {
+                var actor = allHit[i].transform.GetComponent<IActor>();
+                if (actor != null)
+                {
+                    actors.Add(actor);
+                }
+            }
+            actors.Sort();
+            TargetSelector.Shared.Sort(actors, mCaster.GetActor().GetTransform().position);
+            while (actors.Count > mSkillCfg.mMaxTargetCnt)
+            {
+                actors.RemoveAt(actors.Count - 1);
+            }
+
+            if (mTypeToHandlerList.TryGetValue(HandlerType.on_cast_target, out var list))
+            {
+                foreach (var handler in list)
+                {
+                    handler.OnEvt(this, CastTargetType.multi, list);
+                }
+            }
+        }
+
+        void OnBulletHitActor(IActor hitActor)
+        {
+            LogDC.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
+
+            mHitCnt++;
+            if (mHitCnt > mSkillCfg.mHitCnt)
+            {
+                return;
+            }
+
+            //side过滤
+            if (mSkillCfg.mEffectSide.Contains(hitActor.GetActorSide()))
+            {
+                //生效事件
+                if (mTypeToHandlerList.TryGetValue(HandlerType.on_cast_target, out var handleList))
+                {
+                    foreach (var handler in handleList)
+                    {
+                        handler.OnEvt(this, CastTargetType.single, hitActor);
                     }
                 }
             }
@@ -255,38 +449,21 @@ namespace DC.SkillSystem
 
         void FixedUpdate()
         {
-            if (mTickedLife < mSkillCfg.mEffectDelay)
+            if (mDoSkillEffectRemaingCnt > 0)
             {
-                return;
+                if (mHitCnt < mSkillCfg.mHitCnt)
+                {
+                    DoSkillEffect();
+                }
+                mDoSkillEffectRemaingCnt--;
             }
 
-            switch (mSkillCfg.mSkillType)
+            if (mHitCnt >= mSkillCfg.mHitCnt && mSkillCfg.mDieAfterDone)
             {
-                case SkillType.area:
-                {
-                    if (mTryApplyToTargetCnt > 0)
-                    {
-                        TryApplyToTarget();
-                        mTryApplyToTargetCnt--;
-                    }
-
-                    break;
-                }
-                default:
-                {
-                    if (mHitCnt < mSkillCfg.mHitCnt)
-                    {
-                        TryApplyToTarget();
-                    }
-
-                    if (mHitCnt >= mSkillCfg.mHitCnt)
-                    {
-                        SkillSys.Instance.DestroySkill(this);
-                    }
-
-                    break;
-                }
+                SkillSys.Instance.DestroySkill(this);
             }
         }
+
     }
+
 }

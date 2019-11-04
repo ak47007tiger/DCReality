@@ -19,11 +19,11 @@ namespace DC.SkillSystem
 
         void OnCatchTarget(IActor target);
 
-        List<IActor> TryCollectTargets();
+        List<IActor> GetEffectTargets();
 
         void OnSkillLifeRecycle(SkillLifeCycle lifeCycle);
 
-        void Apply();
+        void Create();
 
         Transform GetTransform();
     }

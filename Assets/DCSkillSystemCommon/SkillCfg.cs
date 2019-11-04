@@ -112,17 +112,17 @@ namespace DC.SkillSystem
     public class SkillCfg : ScriptableObject, ISkillCfg
     {
         public int mId;
+        public string mName;
+        public string mDesc;
         public float mDuration;
         public int mHitCnt = 1;
         public List<KVPair<GValueType, float>> mConsumeList;
         public List<KVPair<GValueType, float>> mValueEffectList;
 
-        public SkillAnimationCfg mSkillAnimationCfg;
-
         public List<KVPair<string, string>> mEffectAndTransformNames;
 
         public SkillTargetType mTargetType;
-        public int mMaxTargetCnt;
+        public int mMaxTargetCnt = 1000;
 
         /// <summary>
         /// 施法距离
@@ -147,7 +147,7 @@ namespace DC.SkillSystem
         /// <summary>
         /// 生效后死亡
         /// </summary>
-        public bool mDieAfterDone;
+        public bool mDieAfterDone = true;
 
         /// <summary>
         /// 技能施加影响的延迟
@@ -155,6 +155,11 @@ namespace DC.SkillSystem
         public float mEffectDelay;
 
         public List<EventHandlerConfig> mEvtHandlerCfgs;
+
+        /// <summary>
+        /// 可以影响的side
+        /// </summary>
+        public List<ActorSide> mEffectSide;
 
         public List<KVPair<GValueType, float>> GetConsumes()
         {
@@ -165,5 +170,7 @@ namespace DC.SkillSystem
         {
             return mEffectAndTransformNames;
         }
+
     }
+
 }

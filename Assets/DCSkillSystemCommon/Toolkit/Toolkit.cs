@@ -81,4 +81,20 @@ namespace DC
         }
 
     }
+
+    public static class DCGameObjectExtension
+    {
+
+        public static T GetOrAdd<T>(this GameObject gobj) where T : Component
+        {
+            var t = gobj.GetComponent<T>();
+            if (t == null)
+            {
+                t = gobj.AddComponent<T>();
+            }
+
+            return t;
+        }
+
+    }
 }

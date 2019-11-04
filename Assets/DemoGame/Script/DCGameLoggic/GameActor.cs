@@ -6,6 +6,7 @@ using DC.AI;
 using DC.Collections.Generic;
 using DC.SkillSystem;
 using DC.ValueSys;
+using UnityEngine.AI;
 
 namespace DC.GameLogic
 {
@@ -31,6 +32,8 @@ namespace DC.GameLogic
 
         private HeroCfg mHeroCfg;
 
+        private NavMeshAgent mNavMeshAgent;
+
         private NavTraceTarget mNavTraceTarget;
 
         private NavArrivePosition mNavArrivePosition;
@@ -40,6 +43,16 @@ namespace DC.GameLogic
         protected override void Awake()
         {
             base.Awake();
+            mValueComponent.OnValueChange = OnComponentValueChange;
+            mNavMeshAgent = GetComponent<NavMeshAgent>();
+        }
+
+        void OnComponentValueChange(GValueType type, int old, int cur)
+        {
+            if (type == GValueType.move_speed)
+            {
+                mNavMeshAgent.speed = cur;
+            }
         }
 
         public void Attack()
@@ -103,7 +116,7 @@ namespace DC.GameLogic
             return mBuffCmpnt;
         }
 
-        public IValueComponent GetValueComponent()
+        public ValueComponent GetValueComponent()
         {
             return mValueComponent;
         }

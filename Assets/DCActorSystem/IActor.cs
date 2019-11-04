@@ -16,7 +16,7 @@ namespace DC.ActorSystem
         
         BuffCmpnt GetBuffCmpnt();
 
-        IValueComponent GetValueComponent();
+        ValueComponent GetValueComponent();
 
         void Attack();
 
@@ -60,4 +60,30 @@ namespace DC.ActorSystem
         void FaceTo(Transform targetTf);
         void FaceTo(Vector3 direction);
     }
+
+    public class ActorData
+    {
+        public int mHp;
+        public int mHpRecover;
+        public int mMp;
+        public int mMpRecover;
+
+        public int mPhysicAttack;
+        public int mMagicAttack;
+
+        public int mPhysicDefense;
+        public int mMagicDefense;
+
+        //穿透
+        public int mPhysicWeaken;
+        public int mMagicWeaken;
+
+        public int mAttackSpeed;
+        public int mMoveSpeed;
+        /// <summary>
+        /// 暴击
+        /// </summary>
+        public int mCritRate;
+    }
+
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DC.Collections.Generic;
 
 namespace DC.ValueSys
@@ -21,16 +22,42 @@ namespace DC.ValueSys
     public interface IValueComponent
     {
         int GetValue(GValueType type);
+        void SetValue(GValueType type, int value);
+        int this[GValueType type] { get; set; }
     }
 
     public class ValueComponent : IValueComponent
     {
         private Dictionary<GValueType, int> mDicTypeToValue = new Dictionary<GValueType, int>();
 
+        public Action<GValueType, int, int> OnValueChange;
+
         public int GetValue(GValueType type)
         {
-            return mDicTypeToValue.GetVal(type);
+            if (mDicTypeToValue.TryGetValue(type, out var value))
+            {
+                return value;
+            }
+
+            return 0;
         }
+
+        public void SetValue(GValueType type, int value)
+        {
+            var old = GetValue(type);
+            mDicTypeToValue[type] = value;
+            if (null != OnValueChange)
+            {
+                OnValueChange(type, old, value);
+            }
+        }
+
+        public int this[GValueType type]
+        {
+            get { return GetValue(type); }
+            set { SetValue(type,value);}
+        }
+
     }
 
     public enum DamageType

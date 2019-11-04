@@ -15,5 +15,18 @@ namespace DC.AI
         {
 
         }
+
+        public static Vector3 ComputeTargetPosition(Vector3 curPos, Vector3 planPos)
+        {
+            var ray = new Ray(curPos, (planPos - curPos).normalized);
+
+            if (Physics.Raycast(ray, Vector3.Distance(planPos, curPos)))
+            {
+
+            }
+
+            return planPos;
+        }
+
     }
 }

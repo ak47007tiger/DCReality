@@ -32,6 +32,18 @@ namespace DC.SkillSystem
             return mTargets;
         }
 
+        public bool IsTarget(IActor actor)
+        {
+            if (Toolkit.IsNullOrEmpty(mTargets)) return false;
+            return mTargets.Contains(actor);
+        }
+
+        public IActor GetTarget()
+        {
+            if (Toolkit.IsNullOrEmpty(mTargets)) return null;
+            return mTargets[0];
+        }
+
         public void SetTargetActors(List<IActor> targets)
         {
             mTargets = targets;

@@ -102,7 +102,7 @@ namespace DC.GameLogic
             skillTf.position = skillBirthTf.position;
             skillTf.forward = skillBirthTf.forward;
 
-            skill.Apply();
+            skill.Create();
 
             return true;
         }

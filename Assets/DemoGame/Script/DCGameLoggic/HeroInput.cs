@@ -10,6 +10,7 @@ namespace DC.GameLogic
     /// <summary>
     /// 选择技能
     /// 选择目标
+    /// 更像是一个hero对象
     /// </summary>
     public class HeroInput : GameElement
     {
