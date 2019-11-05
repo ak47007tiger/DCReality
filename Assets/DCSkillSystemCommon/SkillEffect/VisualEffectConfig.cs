@@ -21,13 +21,6 @@ namespace DC.SkillSystem
         multi_point,
     }
 
-    public enum LocalPosType
-    {
-        skill,
-        caster,
-        target,
-    }
-
     public enum TransformType
     {
         world,
@@ -41,12 +34,12 @@ namespace DC.SkillSystem
     {
         public string mEffectPath;
 
-        public LocalPosType mPosType;
+        public TransformType mTransformType;
 
         public Vector3 mLocalPosOfXX;
 
-        public VFXPointType mEffectPosType;
+        public int mPointCnt = 1;
 
-        public TransformType mTransformType;
+        public float mDuration;
     }
 }

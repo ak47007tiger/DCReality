@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DC.ActorSystem;
 using DC.DCResourceSystem;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DC.SkillSystem
 {
@@ -123,7 +124,6 @@ namespace DC.SkillSystem
             switch (mHandlerCfg.mType)
             {
                 case EffectType.visual_effect:
-                    var vEFXCfg = mHandlerCfg.mVisualEffectCfg;
 
 //                    BaseEffect.PlayVisualEffect();
                     break;
@@ -132,9 +132,64 @@ namespace DC.SkillSystem
                 case EffectType.buff:
                     break;
                 case EffectType.effect_target:
-                    mSkill.DoSkillEffect();
+                    mSkill.DoSkillEffectForTimer();
                     break;
             }
+        }
+
+        public void DoVFXAction(Skill skill, ICaster caster, List<IActor> actors)
+        {
+            var cfg = mHandlerCfg.mVisualEffectCfg;
+            switch (cfg.mTransformType)
+            {
+                case TransformType.skill:
+                    break;
+                case TransformType.caster:
+                    break;
+                case TransformType.target:
+                    break;
+                case TransformType.world:
+                    break;
+            }
+        }
+
+        public void CreateVFX(Transform anchorTf, List<IActor> targets)
+        {
+            var cfg = mHandlerCfg.mVisualEffectCfg;
+            Vector3 worldPos;
+            if (null == anchorTf)
+            {
+                worldPos = cfg.mLocalPosOfXX;
+            }
+            else
+            {
+                worldPos = anchorTf.localToWorldMatrix.MultiplyPoint(cfg.mLocalPosOfXX);
+            }
+
+            var prefab = ResourceSys.Instance.Load<GameObject>(cfg.mEffectPath);
+            var vfx = Object.Instantiate(prefab, worldPos, Quaternion.identity);
+            if (cfg.mPointCnt > 1)
+            {
+                //设置节点位置
+                var tf = vfx.transform;
+                var cnt = Mathf.Min(cfg.mPointCnt, targets.Count, tf.childCount);
+                for (var i = 0; i < cnt; i++)
+                {
+                    var childTf = tf.GetChild(i);
+                    childTf.position = targets[i].GetTransform().position;
+                }
+                //隐藏多余节点
+                cnt = Mathf.Min(cfg.mPointCnt, targets.Count);
+                for (var i = cnt; i < tf.childCount; i++)
+                {
+                    var childTf = tf.GetChild(i);
+                    childTf.gameObject.SetActive(false);
+                }
+            }
+            DCTimer.RunAction(cfg.mDuration, () =>
+            {
+                Object.Destroy(vfx);
+            });
         }
 
     }

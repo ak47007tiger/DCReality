@@ -133,7 +133,7 @@ namespace DC.SkillSystem
 
         private void SetupBulletTimerStep2()
         {
-            var frameTimer = new DCFrameTimer(1, DoSkillEffect, -1);
+            var frameTimer = new DCFrameTimer(1, DoSkillEffectForTimer, -1);
             frameTimer.CreatePhysic();
             mTimerToDestroy.Add(frameTimer);
         }
@@ -203,7 +203,7 @@ namespace DC.SkillSystem
             }
 
             //normal类型是直接起效，所以直接施加影响到目标
-            DoSkillEffect();
+            DoSkillEffectForTimer();
         }
 
         private void AddHandleToDic(HandlerType type, BaseEvtHandler handler)
@@ -314,8 +314,14 @@ namespace DC.SkillSystem
             }
         }
 
-        public void DoSkillEffect()
+        public void DoSkillEffectForTimer()
         {
+            if (mHitCnt > mSkillCfg.mHitCnt)
+            {
+                LogDC.Log("skill hit max");
+                return;
+            }
+
             var halfExtents = mBoxCollider.Value.size * 0.5f;
             var center = CacheTransform.position;
             var allHit = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation,
@@ -453,7 +459,7 @@ namespace DC.SkillSystem
             {
                 if (mHitCnt < mSkillCfg.mHitCnt)
                 {
-                    DoSkillEffect();
+                    DoSkillEffectForTimer();
                 }
                 mDoSkillEffectRemaingCnt--;
             }

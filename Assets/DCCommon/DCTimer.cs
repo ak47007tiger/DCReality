@@ -1,12 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using DC.Collections.Generic;
 using UnityEngine;
 
 namespace DC
 {
+    public class ActionRecord
+    {
+        private float mTickedDuration;
+        public Action mAction;
+        public float mDelay;
+
+        public ActionRecord(float delay, Action action)
+        {
+            mDelay = delay;
+            mAction = action;
+        }
+
+        public bool IsComplete()
+        {
+            return mTickedDuration >= mDelay;
+        }
+
+        public void Update()
+        {
+            mTickedDuration += Time.deltaTime;
+        }
+
+        public void Notify()
+        {
+            if (mAction != null) mAction();
+        }
+    }
+
     public class DCTimer : SingletonMono<DCTimer>
     {
         HashSet<DCBaseTimer> mTimerSet = new HashSet<DCBaseTimer>();
+        List<DCBaseTimer> mTimersToInvoke = new List<DCBaseTimer>();
         HashSet<DCBaseTimer> mToDelTimerSet = new HashSet<DCBaseTimer>();
 
         /// <summary>
@@ -17,17 +47,52 @@ namespace DC
 
         List<Action> mNextFixedUpdate = new List<Action>();
 
+        HashSet<ActionRecord> mActionRecords = new HashSet<ActionRecord>();
+        HashSet<ActionRecord> mActionRecordsToDel = new HashSet<ActionRecord>();
+
         void Update()
         {
             foreach (var timer in mTimerSet)
             {
                 timer.Update();
             }
+            //避免在timer的update中更改集合内容
+            foreach (var timer in mTimersToInvoke)
+            {
+                timer.mOnEnd();
+            }
 
             if (mToDelTimerSet.Count > 0)
             {
                 mTimerSet.RemoveWhere(Match);
+                mToDelTimerSet.Clear();
             }
+
+            foreach (var actionRecord in mActionRecords)
+            {
+                actionRecord.Update();
+                if (actionRecord.IsComplete())
+                {
+                    mActionRecordsToDel.Add(actionRecord);
+                }
+            }
+
+            //防止action update的时候有往集合里面增加的操作
+            if (mActionRecordsToDel.Count > 0)
+            {
+                mActionRecords.RemoveWhere(MatchDelRecord);
+                foreach (var record in mActionRecordsToDel)
+                {
+                    record.Notify();
+                }
+                mActionRecordsToDel.Clear();
+            }
+            
+        }
+
+        private bool MatchDelRecord(ActionRecord record)
+        {
+            return mActionRecordsToDel.Contains(record);
         }
 
         void FixedUpdate()
@@ -78,6 +143,16 @@ namespace DC
         public static void RunNextFixedUpdate(Action action)
         {
             Instance.mNextFixedUpdate.Add(action);
+        }
+
+        public static void RunAction(float delay, Action action)
+        {
+            Instance.mActionRecords.Add(new ActionRecord(delay, action));
+        }
+
+        public static void AddToInvoke(DCBaseTimer timer)
+        {
+            Instance.mTimersToInvoke.Add(timer);
         }
     }
 
@@ -165,7 +240,10 @@ namespace DC
 
         protected virtual void Invoke()
         {
-            if (null != mOnEnd) mOnEnd();
+            if (null != mOnEnd)
+            {
+                DCTimer.AddToInvoke(this);
+            }
         }
     }
 
