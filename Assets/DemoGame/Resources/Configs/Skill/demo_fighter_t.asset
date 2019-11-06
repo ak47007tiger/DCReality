@@ -25,14 +25,14 @@ MonoBehaviour:
   mSpeed: 0
   mTimer: 0
   mAffectInterval: 0.5
-  mEffectDelay: 0
+  mEffectDelay: 100
   mDieAfterDone: 0
   mEvtHandlerCfgs:
   - mHandlerType: 2
     mEffectDelay: 0
     mHandleMaxCnt: 1
     mInterval: 0
-    mType: 2
+    mEffectType: 2
     mVisualEffectCfg:
       mEffectPath: 
       mTransformType: 0
@@ -42,5 +42,6 @@ MonoBehaviour:
     mChildSkillId: 0
     mTranslateFxConfig:
       mTransformType: 3
-      mDuration: 1
+      mSpeed: 12
+      mImmediately: 0
   mEffectSide: 

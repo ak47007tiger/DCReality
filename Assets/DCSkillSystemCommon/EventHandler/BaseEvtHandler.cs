@@ -39,21 +39,23 @@ namespace DC.SkillSystem
         /// <param name="objs"></param>
         public virtual void OnEvt(params object[] objs)
         {
+            LogDC.LogEx("on evt", mHandlerCfg.mHandlerType);
+
             switch (mHandlerCfg.mHandlerType)
             {
                 case HandlerType.after_create:
                     DoAction(null);
                     break;
                 case HandlerType.on_cast_target:
-                    break;
-                case HandlerType.time:
+                    DoAction((List<IActor>) objs[2]);
                     break;
             }
         }
 
         protected virtual void DoAction(List<IActor> targets)
         {
-            switch (mHandlerCfg.mType)
+            LogDC.LogEx("on action", mHandlerCfg.mEffectType);
+            switch (mHandlerCfg.mEffectType)
             {
                 case EffectType.visual_effect:
                     DoVFXAction(mSkill, targets);
@@ -69,7 +71,15 @@ namespace DC.SkillSystem
                 case EffectType.animation:
 
                     break;
+                case EffectType.buff:
+                    DoBuffAction(targets);
+                    break;
             }
+        }
+
+        public void DoBuffAction(List<IActor> targets)
+        {
+
         }
 
         public void DoAnimationFx()
@@ -98,11 +108,19 @@ namespace DC.SkillSystem
         {
             var cfg = mHandlerCfg.mTranslateFxConfig;
             var targetPos = mSkill.CacheTransform.position;
+            var speed = cfg.mSpeed;
 
-            var tfArrivePosition = targetTf.gameObject.GetOrAdd<TfArrivePosition>();
-            var distance = Vector3.Distance(targetPos, targetTf.position);
-            var speed = distance / cfg.mDuration;
-            tfArrivePosition.StartTrace(targetPos, SystemPreset.move_stop_distance, speed);
+            LogDC.LogEx(targetTf.name, targetPos, speed);
+
+            if (cfg.mImmediately)
+            {
+                targetTf.position = targetPos;
+            }
+            else
+            {
+                var tfArrivePosition = targetTf.gameObject.GetOrAdd<TfArrivePosition>();
+                tfArrivePosition.StartTrace(targetPos, SystemPreset.move_stop_distance, speed);
+            }
         }
 
         public void DoVFXAction(Skill skill, List<IActor> actors)

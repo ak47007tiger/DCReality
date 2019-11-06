@@ -71,6 +71,7 @@ namespace DC.SkillSystem
             var skillCfgs = ResourceSys.Instance.LoadAll<SkillCfg>(SystemPreset.path_skill_cfgs);
             foreach (var skillCfg in skillCfgs)
             {
+                skillCfg.OnCreate();
                 mIdToSkillCfg.Add(skillCfg.mId, skillCfg);
             }
         }

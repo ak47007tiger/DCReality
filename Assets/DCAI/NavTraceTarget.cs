@@ -8,41 +8,11 @@ using UnityEngine.AI;
 
 namespace DC.AI
 {
-    public class NavTraceTarget : BaseMonoBehaviour
+    public class NavTraceTarget : NavBase
     {
         public Transform mTargetTf;
 
-        public float mStopDistance = 1;
-
-        public NavMeshAgent mNavMeshAgent;
-
-        private bool mStop;
-
         public Action<NavTraceTarget, float> mOnCatchTarget;
-
-        public bool IsStop()
-        {
-            return mStop;
-        }
-
-        public void SetStop(bool value)
-        {
-            mStop = value;
-
-            if (value)
-            {
-                mNavMeshAgent.destination = CacheTransform.position;
-            }
-            else
-            {
-                mNavMeshAgent.destination = mTargetTf.position;
-            }
-        }
-
-        void Awake()
-        {
-            mNavMeshAgent = GetComponent<NavMeshAgent>();
-        }
 
         void Update()
         {
@@ -64,7 +34,7 @@ namespace DC.AI
             mNavMeshAgent.destination = GetTargetPos();
         }
 
-        private Vector3 GetTargetPos()
+        public override Vector3 GetTargetPos()
         {
             return mTargetTf.position;
         }
@@ -73,7 +43,7 @@ namespace DC.AI
         {
             mTargetTf = targetTf;
             mStopDistance = stopDistance;
-            mStop = false;
+            SetStop(false);
         }
 
         public static Tuple<bool,float> CatchTarget(Transform targetTf, Transform curTf, float stopDistance)

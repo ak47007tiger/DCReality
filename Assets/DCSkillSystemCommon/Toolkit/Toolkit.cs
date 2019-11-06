@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using DC.ActorSystem;
 using DC.Collections.Generic;
 using DC.GameLogic;
 using UnityEngine;
@@ -80,6 +82,18 @@ namespace DC
             return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
         }
 
+        public static ActorSide GetOpSide(ActorSide actorSide)
+        {
+            switch (actorSide)
+            {
+                case ActorSide.blue:
+                    return ActorSide.red;
+                case ActorSide.red:
+                    return ActorSide.blue;
+            }
+            return ActorSide.neutral;
+        }
+
     }
 
     public static class DCGameObjectExtension
@@ -96,5 +110,14 @@ namespace DC
             return t;
         }
 
+    }
+
+    public static class DCMonoBehaviourExtension
+    {
+        public static bool TryGetComponent<T>(this MonoBehaviour mono, out T t) where T : Component
+        {
+            t = mono.GetComponent<T>();
+            return t != null;
+        }
     }
 }

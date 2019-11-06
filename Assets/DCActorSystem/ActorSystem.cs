@@ -43,6 +43,13 @@ namespace DC.ActorSystem
         red,
     }
 
+    public enum SideRelation
+    {
+        neutral,
+        friend,
+        enemy,
+    }
+
     public enum EffectType
     {
         neutral,

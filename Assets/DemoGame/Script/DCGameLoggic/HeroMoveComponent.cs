@@ -4,6 +4,12 @@ using UnityEngine.AI;
 
 namespace DC.GameLogic
 {
+    /*
+     
+        nav移动导致 transform 移动不好用，因为限制了位置
+        需要在使用 transform 移动时停止nav agent
+     */
+
     public class HeroMoveComponent : GameElement
     {
         public NavMeshAgent mNavMeshAgent;
@@ -35,6 +41,7 @@ namespace DC.GameLogic
             }
 
             mNavMeshAgent.SetDestination(pos);
+            mNavMeshAgent.isStopped = false;
         }
     }
 }

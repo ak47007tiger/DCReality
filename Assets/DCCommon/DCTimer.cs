@@ -5,69 +5,44 @@ using UnityEngine;
 
 namespace DC
 {
-    public class ActionRecord
-    {
-        private float mTickedDuration;
-        public Action mAction;
-        public float mDelay;
-
-        public ActionRecord(float delay, Action action)
-        {
-            mDelay = delay;
-            mAction = action;
-        }
-
-        public bool IsComplete()
-        {
-            return mTickedDuration >= mDelay;
-        }
-
-        public void Update()
-        {
-            mTickedDuration += Time.deltaTime;
-        }
-
-        public void Notify()
-        {
-            if (mAction != null) mAction();
-        }
-    }
-
     public class DCTimer : SingletonMono<DCTimer>
     {
         HashSet<DCBaseTimer> mTimerSet = new HashSet<DCBaseTimer>();
-        List<DCBaseTimer> mTimersToInvoke = new List<DCBaseTimer>();
         HashSet<DCBaseTimer> mToDelTimerSet = new HashSet<DCBaseTimer>();
+        List<DCBaseTimer> mTimersToInvoke = new List<DCBaseTimer>();
 
         /// <summary>
         /// 物理帧执行
         /// </summary>
         HashSet<DCBaseTimer> mPhysicTimerSet = new HashSet<DCBaseTimer>();
         HashSet<DCBaseTimer> mToDelPhysicTimerSet = new HashSet<DCBaseTimer>();
+        List<DCBaseTimer> mPhysicTimersToInvoke = new List<DCBaseTimer>();
 
         List<Action> mNextFixedUpdate = new List<Action>();
+        List<Action> mNextFixedUpdateToInvokes = new List<Action>();
 
         HashSet<ActionRecord> mActionRecords = new HashSet<ActionRecord>();
         HashSet<ActionRecord> mActionRecordsToDel = new HashSet<ActionRecord>();
 
         void Update()
         {
-            foreach (var timer in mTimerSet)
-            {
-                timer.Update();
-            }
-            //避免在timer的update中更改集合内容
-            foreach (var timer in mTimersToInvoke)
-            {
-                timer.mOnEnd();
-            }
-
+            //update 类型的timer
+            //delete first
             if (mToDelTimerSet.Count > 0)
             {
-                mTimerSet.RemoveWhere(Match);
+                mTimerSet.RemoveWhere(MatchForUpdate);
                 mToDelTimerSet.Clear();
             }
 
+            mTimersToInvoke.AddRange(mTimerSet);
+            LogDC.LogEx("timer count ", mTimersToInvoke.Count);
+            foreach (var timer in mTimersToInvoke)
+            {
+                timer.Update();
+            }
+            mTimersToInvoke.Clear();
+
+            //延时执行部分
             foreach (var actionRecord in mActionRecords)
             {
                 actionRecord.Update();
@@ -97,23 +72,31 @@ namespace DC
 
         void FixedUpdate()
         {
-            foreach (var timer in mPhysicTimerSet)
+            //delete first
+            if (mToDelPhysicTimerSet.Count > 0)
+            {
+                mTimerSet.RemoveWhere(MatchForFixedUpdate);
+                mToDelPhysicTimerSet.Clear();
+            }
+
+            mPhysicTimersToInvoke.AddRange(mPhysicTimerSet);
+            LogDC.LogEx("physic timer count ", mPhysicTimersToInvoke.Count);
+            foreach (var timer in mPhysicTimersToInvoke)
             {
                 timer.Update();
             }
+            mPhysicTimersToInvoke.Clear();
 
-            if (mToDelPhysicTimerSet.Count > 0)
-            {
-                mTimerSet.RemoveWhere(Match);
-            }
-
-            foreach (var action in mNextFixedUpdate)
+            //avoid执行中添加新action
+            mNextFixedUpdateToInvokes.AddRange(mNextFixedUpdate);
+            foreach (var action in mNextFixedUpdateToInvokes)
             {
                 if (action != null) action();
             }
+            mNextFixedUpdateToInvokes.Clear();
         }
 
-        private bool Match(DCBaseTimer obj)
+        private bool MatchForUpdate(DCBaseTimer obj)
         {
             return mToDelTimerSet.Contains(obj);
         }
@@ -128,6 +111,11 @@ namespace DC
             if (null == Instance) return;
 
             Instance.mToDelTimerSet.Add(timer);
+        }
+
+        private bool MatchForFixedUpdate(DCBaseTimer obj)
+        {
+            return mToDelPhysicTimerSet.Contains(obj);
         }
 
         public static void AddPhysic(DCBaseTimer timer)
@@ -148,11 +136,6 @@ namespace DC
         public static void RunAction(float delay, Action action)
         {
             Instance.mActionRecords.Add(new ActionRecord(delay, action));
-        }
-
-        public static void AddToInvoke(DCBaseTimer timer)
-        {
-            Instance.mTimersToInvoke.Add(timer);
         }
     }
 
@@ -242,7 +225,7 @@ namespace DC
         {
             if (null != mOnEnd)
             {
-                DCTimer.AddToInvoke(this);
+                mOnEnd();
             }
         }
     }
@@ -306,6 +289,34 @@ namespace DC
                 //for next loop
                 mTrackedDuration = 0;
             }
+        }
+    }
+
+    public class ActionRecord
+    {
+        private float mTickedDuration;
+        public Action mAction;
+        public float mDelay;
+
+        public ActionRecord(float delay, Action action)
+        {
+            mDelay = delay;
+            mAction = action;
+        }
+
+        public bool IsComplete()
+        {
+            return mTickedDuration >= mDelay;
+        }
+
+        public void Update()
+        {
+            mTickedDuration += Time.deltaTime;
+        }
+
+        public void Notify()
+        {
+            if (mAction != null) mAction();
         }
     }
 }

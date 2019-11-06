@@ -3,31 +3,15 @@ using UnityEngine;
 
 namespace DC.AI
 {
-    public class TfMoveToDirection : BaseMonoBehaviour
+    public class TfMoveToDirection : TfBase
     {
         public float mDuration;
+
         public Vector3 mDirection;
-
-        private bool mStop;
-
-        [HideInInspector]
-        public float mSpeed;
 
         private float mTickedDuration;
 
-        public bool StopAfterCatchTarget = true;
-
         public Action<TfMoveToDirection> mOnEnd;
-
-        public bool IsStop()
-        {
-            return mStop;
-        }
-
-        public void SetStop(bool value)
-        {
-            mStop = value;
-        }
 
         public void StartMove(Vector3 direction, float duration, float speed)
         {
@@ -35,6 +19,7 @@ namespace DC.AI
             mDuration = duration;
             mSpeed = speed;
             mTickedDuration = 0;
+            SetStop(false);
         }
 
         void Update()
@@ -54,10 +39,10 @@ namespace DC.AI
 
             mTickedDuration += Time.deltaTime;
 
-            CacheTransform.position = ComputeNextPosition(CacheTransform.position, mDirection, mSpeed);
+            CacheTransform.position = ComputeNextPositionWithDir(CacheTransform.position, mDirection, mSpeed);
         }
 
-        public static Vector3 ComputeNextPosition(Vector3 curPos,Vector3 direction, float speed)
+        public static Vector3 ComputeNextPositionWithDir(Vector3 curPos,Vector3 direction, float speed)
         {
             return curPos + (direction * speed * Time.deltaTime);
         }

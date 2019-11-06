@@ -4,44 +4,27 @@ using UnityEngine;
 
 namespace DC.AI
 {
-    public class TfArrivePosition : BaseMonoBehaviour
+    public class TfArrivePosition : TfBase
     {
         public float mStopDistance = 1;
 
-        private bool mStop;
-
         public Action<TfArrivePosition, float> mOnCatchTarget;
 
-        [HideInInspector]
-        public float mSpeed;
-
-        public bool StopAfterCatchTarget = true;
-
         public Vector3 mTargetPos;
-
-        public bool IsStop()
-        {
-            return mStop;
-        }
-
-        public void SetStop(bool value)
-        {
-            mStop = value;
-        }
 
         public void StartTrace(Vector3 targetPos, float stopDistance, float speed)
         {
             mTargetPos = targetPos;
             mStopDistance = stopDistance;
             mSpeed = speed;
-            mStop = false;
+            SetStop(false);
         }
 
         void Update()
         {
             if (mStop) return;
 
-            var catchTarget = TfTraceTarget.CatchTarget(mTargetPos, CacheTransform.position, mStopDistance);
+            var catchTarget = TfTraceTarget.IsCatchTargetWithPos(mTargetPos, CacheTransform.position, mStopDistance);
             if (catchTarget.Item1)
             {
                 if (StopAfterCatchTarget)
@@ -56,7 +39,7 @@ namespace DC.AI
                 return;
             }
 
-            CacheTransform.position = TfTraceTarget.ComputeNextPosition(CacheTransform.position, mTargetPos, mSpeed);
+            CacheTransform.position = TfTraceTarget.ComputeNextPositionWithPos(CacheTransform.position, mTargetPos, mSpeed);
         }
 
     }

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: demo_fighter_e
   m_EditorClassIdentifier: 
   mId: 4
+  mName: 
+  mDesc: 
   mDuration: 4
   mHitCnt: 100
   mTargetType: 2
@@ -21,5 +23,9 @@ MonoBehaviour:
   mPrefabPath: Skill/bullet_demo
   mSkillType: 1
   mSpeed: 6
+  mTimer: 1
   mAffectInterval: 0
+  mEffectDelay: 0
   mDieAfterDone: 0
+  mEvtHandlerCfgs: []
+  mEffectSide: 

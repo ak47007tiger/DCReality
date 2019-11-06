@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using UnityEngine;
 using DC.ActorSystem;
 using DC.AI;
@@ -34,12 +36,15 @@ namespace DC.SkillSystem
 
         private List<DCBaseTimer> mTimerToDestroy = new List<DCBaseTimer>();
 
-        private int mDoSkillEffectRemaingCnt = 1;
-
         private List<BaseEvtHandler> mEvthandlerList = new List<BaseEvtHandler>();
 
         private Dictionary<HandlerType, List<BaseEvtHandler>> mTypeToHandlerList =
             new Dictionary<HandlerType, List<BaseEvtHandler>>();
+
+        /// <summary>
+        /// 可以影响的side
+        /// </summary>
+        private HashSet<ActorSide> mEffectSide = new HashSet<ActorSide>();
 
         protected void Awake()
         {
@@ -71,9 +76,57 @@ namespace DC.SkillSystem
             return mSkillCfg;
         }
 
+        public bool IsInEffectSide(ActorSide side)
+        {
+            return mEffectSide.Contains(side);
+        }
+
         public void SetSkillCfg(SkillCfg skillCfg)
         {
             mSkillCfg = skillCfg;
+
+            var side = GetCaster().GetActor().GetActorSide();
+
+            mEffectSide.Clear();
+
+            var relations = skillCfg.mEffectSideRelations;
+
+            if (side == ActorSide.neutral)
+            {
+                foreach (var relation in relations)
+                {
+                    switch (relation)
+                    {
+                        case SideRelation.enemy:
+                            mEffectSide.Add(ActorSide.red);
+                            mEffectSide.Add(ActorSide.blue);
+                            break;
+                        case SideRelation.neutral:
+                            mEffectSide.Add(ActorSide.neutral);
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                var opSide = Toolkit.GetOpSide(side);
+
+                foreach (var relation in relations)
+                {
+                    switch (relation)
+                    {
+                        case SideRelation.enemy:
+                            mEffectSide.Add(opSide);
+                            break;
+                        case SideRelation.friend:
+                            mEffectSide.Add(side);
+                            break;
+                        case SideRelation.neutral:
+                            mEffectSide.Add(ActorSide.neutral);
+                            break;
+                    }
+                }
+            }
         }
 
         public bool AllowCastTo(IActor actor)
@@ -101,13 +154,13 @@ namespace DC.SkillSystem
                 case SkillTargetType.Actor:
                 {
                     var transformTraceTarget = gameObject.AddComponent<TfTraceTarget>();
-                    transformTraceTarget.StartTrace(mCastCfg.mTargets[0].GetTransform(), 0.5f, mSkillCfg.mSpeed);
+                    transformTraceTarget.StartTrace(mCastCfg.mTargets[0].GetTransform(), SystemPreset.move_stop_distance, mSkillCfg.mSpeed);
                     break;
                 }
                 case SkillTargetType.Position:
                 {
                     var arriveCmp = gameObject.AddComponent<TfArrivePosition>();
-                    arriveCmp.StartTrace(mCastCfg.mTargetPosition, 0.5f, mSkillCfg.mSpeed);
+                    arriveCmp.StartTrace(mCastCfg.mTargetPosition, SystemPreset.move_stop_distance, mSkillCfg.mSpeed);
                     break;
                 }
                 case SkillTargetType.Direction:
@@ -136,8 +189,8 @@ namespace DC.SkillSystem
 
         private void SetupBulletTimerStep2()
         {
-            var frameTimer = new DCFrameTimer(1, DoSkillEffectForTimer, -1);
-            frameTimer.CreatePhysic();
+            var frameTimer = new DCFrameTimer(1, DoSkillEffectForTimer, -1)
+                .CreatePhysic();
             mTimerToDestroy.Add(frameTimer);
         }
 
@@ -187,7 +240,7 @@ namespace DC.SkillSystem
 
         private void PostDoSkillEffect()
         {
-            mDoSkillEffectRemaingCnt++;
+            DCTimer.RunNextFixedUpdate(DoSkillEffectForTimer);
         }
 
         private void CreateNormal()
@@ -283,6 +336,8 @@ namespace DC.SkillSystem
                     break;
             }
 
+            LogDC.Log("on create skill " + mSkillCfg.mId);
+
             if (mTypeToHandlerList.TryGetValue(HandlerType.after_create, out var list))
             {
                 foreach (var handler in list)
@@ -311,6 +366,7 @@ namespace DC.SkillSystem
 
         void OnDestroy()
         {
+            LogDC.LogEx("destroy timer", mTimerToDestroy.Count);
             foreach (var timer in mTimerToDestroy)
             {
                 timer.Destroy();
@@ -324,8 +380,13 @@ namespace DC.SkillSystem
                 SkillSys.Instance.DestroySkill(this);
                 return;
             }
-
             mTickedLife += Time.deltaTime;
+
+            if (mHitCnt >= mSkillCfg.mHitCnt && mSkillCfg.mDieAfterDone)
+            {
+                SkillSys.Instance.DestroySkill(this);
+                return;
+            }
 
             if (mTypeToHandlerList.TryGetValue(HandlerType.time, out var list))
             {
@@ -354,7 +415,7 @@ namespace DC.SkillSystem
 
             if (!Toolkit.IsNullOrEmpty(allHit))
             {
-                LogDC.Log("get hit: " + allHit.Length);
+                LogDC.Log("get hit cnt: " + allHit.Length);
 
                 switch (mSkillCfg.mSkillType)
                 {
@@ -462,7 +523,7 @@ namespace DC.SkillSystem
             }
 
             //side过滤
-            if (mSkillCfg.mEffectSide.Contains(hitActor.GetActorSide()))
+            if (IsInEffectSide(hitActor.GetActorSide()))
             {
                 //生效事件
                 if (mTypeToHandlerList.TryGetValue(HandlerType.on_cast_target, out var handleList))
@@ -477,19 +538,6 @@ namespace DC.SkillSystem
 
         void FixedUpdate()
         {
-            if (mDoSkillEffectRemaingCnt > 0)
-            {
-                if (mHitCnt < mSkillCfg.mHitCnt)
-                {
-                    DoSkillEffectForTimer();
-                }
-                mDoSkillEffectRemaingCnt--;
-            }
-
-            if (mHitCnt >= mSkillCfg.mHitCnt && mSkillCfg.mDieAfterDone)
-            {
-                SkillSys.Instance.DestroySkill(this);
-            }
         }
 
     }

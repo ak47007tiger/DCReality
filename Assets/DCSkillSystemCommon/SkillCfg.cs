@@ -159,9 +159,9 @@ namespace DC.SkillSystem
         public List<EventHandlerConfig> mEvtHandlerCfgs;
 
         /// <summary>
-        /// 可以影响的side
+        /// 可以影响到的关系
         /// </summary>
-        public List<ActorSide> mEffectSide;
+        public List<SideRelation> mEffectSideRelations;
 
         public List<KVPair<GValueType, float>> GetConsumes()
         {
@@ -173,6 +173,10 @@ namespace DC.SkillSystem
             return mEffectAndTransformNames;
         }
 
+        public void OnCreate()
+        {
+
+        }
     }
 
 }

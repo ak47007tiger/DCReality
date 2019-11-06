@@ -83,7 +83,7 @@ namespace DC.SkillSystem
         #endregion
 
         #region action
-        public EffectType mType;
+        public EffectType mEffectType;
         public VisualEffectCfg mVisualEffectCfg;
         public int mChildSkillId;
         public TranslateFxConfig mTranslateFxConfig;
