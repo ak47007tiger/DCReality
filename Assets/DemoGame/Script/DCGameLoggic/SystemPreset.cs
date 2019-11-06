@@ -12,5 +12,7 @@ namespace DC.GameLogic
         {
             return tag_env_ground.Equals(tag);
         }
+
+        public static float move_stop_distance = 0.1f;
     }
 }

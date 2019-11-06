@@ -139,20 +139,22 @@ namespace DC.SkillSystem
         /// </summary>
         public float mSpeed;
 
+        public bool mTimer = true;
+
         /// <summary>
         /// 区域技能生效间隔
         /// </summary>
         public float mAffectInterval;
 
         /// <summary>
-        /// 生效后死亡
-        /// </summary>
-        public bool mDieAfterDone = true;
-
-        /// <summary>
         /// 技能施加影响的延迟
         /// </summary>
         public float mEffectDelay;
+
+        /// <summary>
+        /// 生效后死亡
+        /// </summary>
+        public bool mDieAfterDone = true;
 
         public List<EventHandlerConfig> mEvtHandlerCfgs;
 

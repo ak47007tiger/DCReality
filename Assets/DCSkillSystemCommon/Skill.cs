@@ -118,16 +118,19 @@ namespace DC.SkillSystem
                 }
             }
 
-            //因为要检查是否获取目标，所以子弹类型每帧更新
-            if (mSkillCfg.mEffectDelay > 0)
+            if (mSkillCfg.mTimer)
             {
-                var delayTimer = new DCDurationTimer(mSkillCfg.mEffectDelay, SetupBulletTimerStep2)
-                    .SetAutoDestroy(true).CreateNormal();
-                mTimerToDestroy.Add(delayTimer);
-            }
-            else
-            {
-                SetupBulletTimerStep2();
+                //因为要检查是否获取目标，所以子弹类型每帧更新
+                if (mSkillCfg.mEffectDelay > 0)
+                {
+                    var delayTimer = new DCDurationTimer(mSkillCfg.mEffectDelay, SetupBulletTimerStep2)
+                        .SetAutoDestroy(true).CreateNormal();
+                    mTimerToDestroy.Add(delayTimer);
+                }
+                else
+                {
+                    SetupBulletTimerStep2();
+                }
             }
         }
 
@@ -154,15 +157,18 @@ namespace DC.SkillSystem
             }
 
             //area类型，1 每过一段时间起效一次 2 经过延迟后直接起效
-            if (mSkillCfg.mEffectDelay > 0)
+            if (mSkillCfg.mTimer)
             {
-                var delayTimer = new DCDurationTimer(mSkillCfg.mEffectDelay, SetupAreaTimerStep2)
-                    .SetAutoDestroy(true).CreateNormal();
-                mTimerToDestroy.Add(delayTimer);
-            }
-            else
-            {
-                SetupAreaTimerStep2();
+                if (mSkillCfg.mEffectDelay > 0)
+                {
+                    var delayTimer = new DCDurationTimer(mSkillCfg.mEffectDelay, SetupAreaTimerStep2)
+                        .SetAutoDestroy(true).CreateNormal();
+                    mTimerToDestroy.Add(delayTimer);
+                }
+                else
+                {
+                    SetupAreaTimerStep2();
+                }
             }
         }
 
@@ -194,6 +200,7 @@ namespace DC.SkillSystem
                 }
                 case SkillTargetType.Position:
                 {
+                    CacheTransform.position = mCastCfg.mTargetPosition;
                     break;
                 }
                 case SkillTargetType.Direction:
@@ -240,6 +247,13 @@ namespace DC.SkillSystem
                         mEvthandlerList.Add(handler.SetConfig(handlerConfig).SetSkill(this));
                         break;
                     }
+                    case HandlerType.after_create:
+                    {
+                        var handler = new BaseEvtHandler();
+                        AddHandleToDic(handlerConfig.mHandlerType, handler);
+                        mEvthandlerList.Add(handler.SetConfig(handlerConfig).SetSkill(this));
+                        break;
+                    }
                 }
             }
         }
@@ -267,6 +281,14 @@ namespace DC.SkillSystem
                 case SkillType.normal:
                     CreateNormal();
                     break;
+            }
+
+            if (mTypeToHandlerList.TryGetValue(HandlerType.after_create, out var list))
+            {
+                foreach (var handler in list)
+                {
+                    handler.OnEvt(this);
+                }
             }
         }
 
@@ -424,7 +446,7 @@ namespace DC.SkillSystem
             {
                 foreach (var handler in list)
                 {
-                    handler.OnEvt(this, CastTargetType.multi, list);
+                    handler.OnEvt(this, CastTargetType.multi, actors);
                 }
             }
         }

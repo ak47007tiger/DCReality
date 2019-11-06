@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using DC.ActorSystem;
+using DC.AI;
 using DC.DCResourceSystem;
+using DC.GameLogic;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace DC.SkillSystem
 {
@@ -61,6 +62,10 @@ namespace DC.SkillSystem
         none,
         time,
         /// <summary>
+        /// 技能创建后
+        /// </summary>
+        after_create,
+        /// <summary>
         /// 技能生效时
         /// </summary>
         on_cast_target,
@@ -81,117 +86,9 @@ namespace DC.SkillSystem
         public EffectType mType;
         public VisualEffectCfg mVisualEffectCfg;
         public int mChildSkillId;
+        public TranslateFxConfig mTranslateFxConfig;
+
         #endregion
-    }
-
-    public class BaseEvtHandler
-    {
-        public Skill mSkill;
-
-        public EventHandlerConfig mHandlerCfg;
-
-        public BaseEvtHandler SetSkill(Skill skill)
-        {
-            mSkill = skill;
-            return this;
-        }
-
-        public BaseEvtHandler SetConfig(EventHandlerConfig cfg)
-        {
-            mHandlerCfg = cfg;
-            return this;
-        }
-
-        /// <summary>
-        /// time tick
-        /// </summary>
-        public virtual void Update()
-        {
-
-        }
-
-        /// <summary>
-        /// 某种事件发生
-        /// </summary>
-        /// <param name="objs"></param>
-        public virtual void OnEvt(params object[] objs)
-        {
-
-        }
-
-        protected virtual void DoAction(List<IActor> targets)
-        {
-            switch (mHandlerCfg.mType)
-            {
-                case EffectType.visual_effect:
-
-//                    BaseEffect.PlayVisualEffect();
-                    break;
-                case EffectType.child_skill:
-                    break;
-                case EffectType.buff:
-                    break;
-                case EffectType.effect_target:
-                    mSkill.DoSkillEffectForTimer();
-                    break;
-            }
-        }
-
-        public void DoVFXAction(Skill skill, ICaster caster, List<IActor> actors)
-        {
-            var cfg = mHandlerCfg.mVisualEffectCfg;
-            switch (cfg.mTransformType)
-            {
-                case TransformType.skill:
-                    break;
-                case TransformType.caster:
-                    break;
-                case TransformType.target:
-                    break;
-                case TransformType.world:
-                    break;
-            }
-        }
-
-        public void CreateVFX(Transform anchorTf, List<IActor> targets)
-        {
-            var cfg = mHandlerCfg.mVisualEffectCfg;
-            Vector3 worldPos;
-            if (null == anchorTf)
-            {
-                worldPos = cfg.mLocalPosOfXX;
-            }
-            else
-            {
-                worldPos = anchorTf.localToWorldMatrix.MultiplyPoint(cfg.mLocalPosOfXX);
-            }
-
-            var prefab = ResourceSys.Instance.Load<GameObject>(cfg.mEffectPath);
-            var vfx = Object.Instantiate(prefab, worldPos, Quaternion.identity);
-            if (cfg.mPointCnt > 1)
-            {
-                //设置节点位置
-                var tf = vfx.transform;
-                var cnt = Mathf.Min(cfg.mPointCnt, targets.Count, tf.childCount);
-                for (var i = 0; i < cnt; i++)
-                {
-                    var childTf = tf.GetChild(i);
-                    childTf.position = targets[i].GetTransform().position;
-                }
-                //隐藏多余节点
-                cnt = Mathf.Min(cfg.mPointCnt, targets.Count);
-                for (var i = cnt; i < tf.childCount; i++)
-                {
-                    var childTf = tf.GetChild(i);
-                    childTf.gameObject.SetActive(false);
-                }
-            }
-            DCTimer.RunAction(cfg.mDuration, () =>
-            {
-                Object.Destroy(vfx);
-            });
-        }
-
     }
 
 }
