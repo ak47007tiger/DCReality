@@ -1,4 +1,5 @@
 ﻿using DC.ActorSystem;
+using DC.AI;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,20 +13,20 @@ namespace DC.GameLogic
 
     public class HeroMoveComponent : GameElement
     {
-        public NavMeshAgent mNavMeshAgent;
+        public NavArrivePosition mNavArrivePosition;
 
         protected override void Awake()
         {
             base.Awake();
 
-            mNavMeshAgent = GetComponent<NavMeshAgent>();
+            mNavArrivePosition = gameObject.GetOrAdd<NavArrivePosition>();
 
             MsgSys.Instance.Add<Vector3>(GameEvent.ClickEnvGround, OnClickEnvGround);
         }
 
         void Start()
         {
-            mNavMeshAgent.speed = Actor.GetHeroCfg().mSpeed;
+            mNavArrivePosition.mNavMeshAgent.speed = Actor.GetHeroCfg().mSpeed;
         }
 
         void OnClickEnvGround(Vector3 pos)
@@ -40,8 +41,7 @@ namespace DC.GameLogic
                 Actor.StopAutoMove();
             }
 
-            mNavMeshAgent.SetDestination(pos);
-            mNavMeshAgent.isStopped = false;
+            mNavArrivePosition.StartTrace(pos, SystemPreset.move_stop_distance);
         }
     }
 }

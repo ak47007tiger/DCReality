@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mHeroCfg: {fileID: 0}
-  mMeshAgent: {fileID: 0}
 --- !u!114 &1338676455887232509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,7 +72,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 32
   avoidancePriority: 50
   m_AngularSpeed: 1000
   m_StoppingDistance: 0
@@ -96,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 873dc45a38b1e154f967e2ff3ad945fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mNavMeshAgent: {fileID: 0}
+  mNavArrivePosition: {fileID: 0}
 --- !u!65 &1998430854886533284
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -105,7 +104,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5318933030967389736}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}

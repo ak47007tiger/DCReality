@@ -23,8 +23,6 @@ namespace DC.GameLogic
         private HeroInput_State mIdle = new HeroInput_Idle();
         private HeroInput_State mDeployCast = new HeroInput_DeployCast();
 
-        public NavMeshAgent mMeshAgent;
-
         protected override void Awake()
         {
             base.Awake();
@@ -33,12 +31,6 @@ namespace DC.GameLogic
         public void SetForward(Vector3 forward)
         {
             CacheTransform.forward = forward;
-        }
-
-        public void MoveTo(Vector3 position)
-        {
-            SetForward((position - CacheTransform.position).normalized);
-            mMeshAgent.destination = position;
         }
 
         void Update()

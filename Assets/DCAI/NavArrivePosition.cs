@@ -15,6 +15,7 @@ namespace DC.AI
         {
             mTargetPos = targetPos;
             mStopDistance = stopDistance;
+            mNavMeshAgent.destination = GetTargetPos();
             SetStop(false);
         }
 
@@ -34,9 +35,7 @@ namespace DC.AI
                 {
                     mOnCatchTarget(this, catchTarget.Item2);
                 }
-                return;
             }
-            mNavMeshAgent.destination = GetTargetPos();
         }
 
         public override Vector3 GetTargetPos()

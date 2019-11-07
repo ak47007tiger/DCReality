@@ -59,6 +59,7 @@ namespace DC.SkillSystem
         public void SetCaster(ICaster caster)
         {
             mCaster = caster;
+            UpdateEffectSide();
         }
 
         public CastCfg GetCastCfg()
@@ -85,11 +86,21 @@ namespace DC.SkillSystem
         {
             mSkillCfg = skillCfg;
 
+            UpdateEffectSide();
+        }
+
+        private void UpdateEffectSide()
+        {
+            if (null == mCaster || null == mSkillCfg)
+            {
+                return;
+            }
+
             var side = GetCaster().GetActor().GetActorSide();
 
             mEffectSide.Clear();
 
-            var relations = skillCfg.mEffectSideRelations;
+            var relations = mSkillCfg.mEffectSideRelations;
 
             if (side == ActorSide.neutral)
             {
@@ -404,14 +415,20 @@ namespace DC.SkillSystem
                 LogDC.Log("skill hit max");
                 return;
             }
-
-            var halfExtents = mBoxCollider.Value.size * 0.5f;
-            var center = CacheTransform.position;
-            var allHit = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation,
-                halfExtents.x * 2);
-            var bound = new Bounds(CacheTransform.position, mBoxCollider.Value.size);
-
-            DebugExtension.DebugBounds(bound, Color.green);
+            RaycastHit[] allHit;
+            if (null == mBoxCollider)
+            {
+                allHit = new RaycastHit[0];
+            }
+            else
+            {
+                var halfExtents = mBoxCollider.Value.size * 0.5f;
+                var center = CacheTransform.position;
+                allHit = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation,
+                    halfExtents.x * 2);
+                var bound = new Bounds(CacheTransform.position, mBoxCollider.Value.size);
+                DebugExtension.DebugBounds(bound, Color.green);
+            }
 
             if (!Toolkit.IsNullOrEmpty(allHit))
             {

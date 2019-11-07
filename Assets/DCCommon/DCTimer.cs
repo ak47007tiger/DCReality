@@ -75,7 +75,7 @@ namespace DC
             //delete first
             if (mToDelPhysicTimerSet.Count > 0)
             {
-                mTimerSet.RemoveWhere(MatchForFixedUpdate);
+                mPhysicTimerSet.RemoveWhere(MatchForFixedUpdate);
                 mToDelPhysicTimerSet.Clear();
             }
 

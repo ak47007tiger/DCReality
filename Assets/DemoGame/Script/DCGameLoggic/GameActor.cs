@@ -32,8 +32,6 @@ namespace DC.GameLogic
 
         private HeroCfg mHeroCfg;
 
-        private NavMeshAgent mNavMeshAgent;
-
         private NavTraceTarget mNavTraceTarget;
 
         private NavArrivePosition mNavArrivePosition;
@@ -44,14 +42,13 @@ namespace DC.GameLogic
         {
             base.Awake();
             mValueComponent.OnValueChange = OnComponentValueChange;
-            mNavMeshAgent = GetComponent<NavMeshAgent>();
         }
 
         void OnComponentValueChange(GValueType type, int old, int cur)
         {
             if (type == GValueType.move_speed)
             {
-                mNavMeshAgent.speed = cur;
+                gameObject.GetOrAdd<NavArrivePosition>().mNavMeshAgent.speed = cur;
             }
         }
 
@@ -163,10 +160,7 @@ namespace DC.GameLogic
 
         public void TryArrive(Vector3 targetPos, float stopDistance, Action<NavArrivePosition, float> onArrive)
         {
-            if (mNavArrivePosition == null)
-            {
-                mNavArrivePosition = gameObject.AddComponent<NavArrivePosition>();
-            }
+            mNavArrivePosition = gameObject.GetOrAdd<NavArrivePosition>();
 
             mNavArrivePosition.mOnCatchTarget = onArrive;
             mNavArrivePosition.StartTrace(targetPos, stopDistance);

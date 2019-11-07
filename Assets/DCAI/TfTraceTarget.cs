@@ -44,13 +44,34 @@ namespace DC.AI
             mTargetTf = targetTf;
             mStopDistance = stopDistance;
             mSpeed = speed;
-            SetStop(true);
+            SetStop(false);
         }
 
         public static Tuple<bool, float> IsCatchTargetWithPos(Vector3 targetPos, Vector3 curPos, float stopDistance)
         {
             var distance = Vector3.Distance(targetPos, curPos);
             return new Tuple<bool, float>(distance < stopDistance, distance);
+        }
+
+        public static bool IsArriveWithPos(Vector3 previousPos, Vector3 curPos, Vector3 targetPos,
+            float stopDistance)
+        {
+            //小于一个距离或者超过
+            var distance = Vector3.Distance(targetPos, curPos);
+            var arrive = distance < stopDistance;
+            if (arrive)
+            {
+                return true;
+            }
+
+            //同向
+            if (Vector3.Dot(curPos - previousPos, curPos - targetPos) > 0)
+            {
+            }
+            
+
+
+            return false;
         }
 
         public static Vector3 ComputeNextPositionWithTf(Transform traceTf, Transform targetTf, float speed)

@@ -44,4 +44,4 @@ MonoBehaviour:
       mTransformType: 3
       mSpeed: 12
       mImmediately: 0
-  mEffectSide: 
+  mEffectSideRelations: 
