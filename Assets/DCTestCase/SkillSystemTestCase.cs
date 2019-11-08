@@ -31,72 +31,22 @@ namespace DC.SkillSystem
     {
         public void NormalAttack()
         {
-            IActor actor = null;
-            ICaster caster = null;
-            SkillCfg normalAttackCfg = null;
-            //get from user input
-            CastCfg castCfg = null;
-
-            var targets = GetTargetSystem().GetTargets(actor, caster, normalAttackCfg);
-            castCfg.SetTargetActors(targets);
-
-            caster.Cast(normalAttackCfg, castCfg);
         }
 
         public void NormalAttackTarget()
         {
-            ICaster caster = null;
-            SkillCfg normalAttackCfg = null;
-            //get from user input
-            CastCfg castCfg = null;
-
-            //get from user input
-            List<IActor> targets = null;
-            castCfg.SetTargetActors(targets);
-
-            caster.Cast(normalAttackCfg, castCfg);
         }
 
         public void CastToActor()
         {
-            ICaster caster = null;
-            SkillCfg skillCfg = null;
-            //get from user input
-            CastCfg castCfg = null;
-
-            //get from user input
-            List<IActor> targets = null;
-            castCfg.SetTargetActors(targets);
-
-            caster.Cast(skillCfg, castCfg);
         }
 
         public void CastToDirection()
         {
-            ICaster caster = null;
-            SkillCfg skillCfg = null;
-            //get from user input
-            CastCfg castCfg = null;
-
-            //get from user input
-            var direction = Vector3.zero;
-            castCfg.SetDirection(direction);
-
-            caster.Cast(skillCfg, castCfg);
         }
 
         public void CastToPosition()
         {
-            ICaster caster = null;
-            SkillCfg skillCfg = null;
-            //get from user input
-            CastCfg castCfg = null;
-
-            //get from user input
-            var position = Vector3.zero;
-            castCfg.SetDirection(position);
-
-            caster.Cast(skillCfg, castCfg);
         }
 
         public void CastComposeSkill()
@@ -114,25 +64,8 @@ namespace DC.SkillSystem
             throw new System.NotImplementedException();
         }
 
-        List<Trigger> mTriggerList = new List<Trigger>();
         public void TimeTrigger()
         {
-            foreach (var trigger in mTriggerList)
-            {
-                trigger.Update();
-            }
-        }
-    }
-
-    public class Trigger
-    {
-        public bool mOnce;
-        public void Update()
-        {
-            if (mOnce)
-            {
-                return;
-            }
         }
     }
     

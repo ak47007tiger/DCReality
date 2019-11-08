@@ -63,17 +63,19 @@ namespace DC.GameLogic
                     var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
 
                     LogDC.LogEx("press  ", code);
+                    mCastCfg = new CastCfg();
+                    mCastCfg.mFromKey = code;
 
                     //不需要目标 直接释放技能
                     if (skillCfg.mTargetType == SkillTargetType.None)
                     {
-                        Caster.Cast(skillCfg);
+                        mSelectedSkillCfg = skillCfg;
+                        Caster.Cast(skillCfg, mCastCfg);
                     }
                     else
                     {
                         //选中某个技能 准备调参
                         mSelectedSkillCfg = skillCfg;
-                        mCastCfg = new CastCfg();
                         LogDC.LogEx("prepare skill ", skillId);
                     }
                 }

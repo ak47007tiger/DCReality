@@ -18,6 +18,15 @@ namespace DC.SkillSystem
 
         根据时间流逝释放skill的行为
         根据监听到的事件skill来处理
+
+        2次激活的技能
+            press key
+            if hero has skill process
+                do skill next
+                    get last key skill target as target
+            else
+                do key skill
+        n次激活的技能
      */
 
     public class Skill : BaseMonoBehaviour, ISkill
@@ -240,7 +249,8 @@ namespace DC.SkillSystem
         {
             if (mSkillCfg.mAffectInterval > 0)
             {
-                var intervalTimer = new DCDurationTimer(mSkillCfg.mAffectInterval, PostDoSkillEffect, - 1).CreateNormal();
+                var intervalTimer = new DCDurationTimer(mSkillCfg.mAffectInterval, PostDoSkillEffect, - 1)
+                    .CreateNormal();
                 mTimerToDestroy.Add(intervalTimer);
             }
             else
@@ -444,6 +454,7 @@ namespace DC.SkillSystem
                         break;
                 }
             }
+            
         }
 
         void DoBulletSkillEffect(RaycastHit[] allHit)

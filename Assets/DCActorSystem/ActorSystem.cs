@@ -25,7 +25,7 @@ namespace DC.ActorSystem
         public IActor CreateActor(int id)
         {
             //dic[key] if not has key, it will throw exception
-            return mIdToActor.GetVal(id);
+            return mIdToActor.GetValEx(id);
         }
     }
 

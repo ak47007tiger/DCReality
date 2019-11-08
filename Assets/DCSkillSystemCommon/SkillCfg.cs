@@ -64,6 +64,8 @@ namespace DC.SkillSystem
             r, damage, 地形
         死歌 
             r, damage
+        锤石
+            q，animation，buff，二次激活
         装备技能
             女妖面纱, buff
             金身, buff

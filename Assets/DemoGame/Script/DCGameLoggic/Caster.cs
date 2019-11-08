@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DC.SkillSystem;
 using DC.ActorSystem;
+using DC.Collections.Generic;
 using DC.ValueSys;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ namespace DC.GameLogic
 {
     public class Caster : GameElement, ICaster
     {
+        private Dictionary<KeyCode, Skill> mCodeToSkill = new Dictionary<KeyCode, Skill>();
+
         protected override void Awake()
         {
             base.Awake();
@@ -33,10 +36,14 @@ namespace DC.GameLogic
             throw new System.NotImplementedException();
         }
 
-        public bool Cast(SkillCfg skillCfg)
+        public Skill GetSkill(KeyCode key)
         {
-            var castCfg = GetCastSystem().GetDefaultCastCfg(skillCfg);
-            return Cast(skillCfg, castCfg);
+            return mCodeToSkill.GetValEx(key);
+        }
+
+        public void SetSkill(KeyCode key, Skill skill)
+        {
+            mCodeToSkill[key] = skill;
         }
 
         public bool Cast(SkillCfg skillCfg, CastCfg castCfg)
@@ -102,6 +109,7 @@ namespace DC.GameLogic
             skillTf.position = skillBirthTf.position;
             skillTf.forward = skillBirthTf.forward;
 
+            
             skill.Create();
 
             return true;

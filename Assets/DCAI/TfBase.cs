@@ -24,7 +24,7 @@ namespace DC.AI
 
             if (!value && this.TryGetComponent<NavMeshAgent>(out var agent))
             {
-                agent.isStopped = true;
+                agent.enabled = false;
             }
         }
     }

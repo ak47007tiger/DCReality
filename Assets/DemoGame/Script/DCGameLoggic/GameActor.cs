@@ -52,22 +52,6 @@ namespace DC.GameLogic
             }
         }
 
-        public void Attack()
-        {
-            var targetSys = GetTargetSystem();
-            SkillCfg normalAttackSkillCfg = null;
-            var targets = targetSys.GetTargets(this, GetCaster(), normalAttackSkillCfg);
-            Attack(targets);
-        }
-
-        public void Attack(List<IActor> targets)
-        {
-            SkillCfg normalAttackSkillCfg = null;
-            CastCfg normalAttackCastCfg = null;
-
-            GetCaster().Cast(normalAttackSkillCfg, normalAttackCastCfg);
-        }
-
         public void SetModel(string model)
         {
             mModelPath = model;
@@ -198,7 +182,7 @@ namespace DC.GameLogic
 
         public Transform GetActorPos(ActorPos pos)
         {
-            return mPosToTf.GetVal(pos);
+            return mPosToTf.GetValEx(pos);
         }
 
         public Transform GetTransform()

@@ -31,11 +31,7 @@ namespace DC.SkillSystem
     /*
      
         影响数值
-            需要一个计算架构用来计算buff对用户数据的影响
-                ActorData src;
-                ActorData dst;
-                for buff in buffs
-                    buff.Process(src,dst)
+            
         影响交互操作
 
         速度

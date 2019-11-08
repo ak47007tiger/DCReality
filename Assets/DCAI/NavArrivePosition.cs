@@ -15,8 +15,8 @@ namespace DC.AI
         {
             mTargetPos = targetPos;
             mStopDistance = stopDistance;
-            mNavMeshAgent.destination = GetTargetPos();
             SetStop(false);
+            mNavMeshAgent.destination = GetTargetPos();
         }
 
         void Update()

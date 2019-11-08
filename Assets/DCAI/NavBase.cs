@@ -39,7 +39,7 @@ namespace DC.AI
 //                mNavMeshAgent.destination = GetTargetPos();
 //            }
 
-            mNavMeshAgent.isStopped = value;
+            mNavMeshAgent.enabled = !value;
         }
 
         public virtual Vector3 GetTargetPos()

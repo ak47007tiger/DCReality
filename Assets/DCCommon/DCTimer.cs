@@ -34,13 +34,16 @@ namespace DC
                 mToDelTimerSet.Clear();
             }
 
-            mTimersToInvoke.AddRange(mTimerSet);
-            LogDC.LogEx("timer count ", mTimersToInvoke.Count);
-            foreach (var timer in mTimersToInvoke)
+            if (mTimerSet.Count > 0)
             {
-                timer.Update();
+                mTimersToInvoke.AddRange(mTimerSet);
+                LogDC.LogEx("timer count ", mTimersToInvoke.Count);
+                foreach (var timer in mTimersToInvoke)
+                {
+                    timer.Update();
+                }
+                mTimersToInvoke.Clear();
             }
-            mTimersToInvoke.Clear();
 
             //延时执行部分
             foreach (var actionRecord in mActionRecords)
@@ -79,16 +82,20 @@ namespace DC
                 mToDelPhysicTimerSet.Clear();
             }
 
-            mPhysicTimersToInvoke.AddRange(mPhysicTimerSet);
-            LogDC.LogEx("physic timer count ", mPhysicTimersToInvoke.Count);
-            foreach (var timer in mPhysicTimersToInvoke)
+            if (mPhysicTimerSet.Count > 0)
             {
-                timer.Update();
+                mPhysicTimersToInvoke.AddRange(mPhysicTimerSet);
+                LogDC.LogEx("physic timer count ", mPhysicTimersToInvoke.Count);
+                foreach (var timer in mPhysicTimersToInvoke)
+                {
+                    timer.Update();
+                }
+                mPhysicTimersToInvoke.Clear();
             }
-            mPhysicTimersToInvoke.Clear();
 
             //avoid执行中添加新action
             mNextFixedUpdateToInvokes.AddRange(mNextFixedUpdate);
+            mNextFixedUpdate.Clear();
             foreach (var action in mNextFixedUpdateToInvokes)
             {
                 if (action != null) action();
@@ -161,8 +168,10 @@ namespace DC
 
         public void Destroy()
         {
+            LogDC.Log("Destroy 1");
             if (mDestroyed) return;
             mDestroyed = true;
+            LogDC.Log("Destroy 2");
 
             if (mPhysic)
             {
@@ -210,7 +219,7 @@ namespace DC
             if (mPause) return;
 
             //all loop completed
-            if (mTargetLoop > 0 && mTrackedLoop == mTargetLoop && mAutoDestroy)
+            if (mTargetLoop > 0 && mTrackedLoop >= mTargetLoop && mAutoDestroy)
             {
                 Destroy();
                 return;
@@ -232,7 +241,6 @@ namespace DC
 
     public class DCFrameTimer : DCBaseTimer
     {
-
         public int mTargetCnt;
         private int mTrackedCnt;
 

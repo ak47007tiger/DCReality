@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: demo_fighter_r
   m_EditorClassIdentifier: 
   mId: 5
-  mDuration: 4
+  mName: 
+  mDesc: 
+  mDuration: 2
   mHitCnt: 100
   mTargetType: 3
   mMaxTargetCnt: 1
@@ -21,5 +23,9 @@ MonoBehaviour:
   mPrefabPath: Skill/demo_skill_area
   mSkillType: 2
   mSpeed: 0
+  mTimer: 1
   mAffectInterval: 0.5
+  mEffectDelay: 0
   mDieAfterDone: 0
+  mEvtHandlerCfgs: []
+  mEffectSideRelations: 

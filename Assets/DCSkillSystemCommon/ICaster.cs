@@ -7,13 +7,6 @@ namespace DC.SkillSystem
     public interface ICaster
     {
         /// <summary>
-        /// cast with default cast config
-        /// </summary>
-        /// <param name="skillCfg"></param>
-        /// <returns></returns>
-        bool Cast(SkillCfg skillCfg);
-
-        /// <summary>
         /// cast with specific cast config
         /// </summary>
         /// <param name="skillCfg"></param>
@@ -50,5 +43,8 @@ namespace DC.SkillSystem
         CastMsg CdEnough(ISkill skill);
 
         Transform GetCastTransform(string name);
+
+        Skill GetSkill(KeyCode key);
+        void SetSkill(KeyCode key, Skill skill);
     }
 }

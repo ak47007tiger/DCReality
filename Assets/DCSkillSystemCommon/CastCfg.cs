@@ -18,6 +18,8 @@ namespace DC.SkillSystem
 
     public class CastCfg : ICastCfg
     {
+        public static readonly CastCfg Empty = new CastCfg();
+
         public List<IActor> mTargets;
         public Vector3 mDirection;
         public Vector3 mTargetPosition;
@@ -26,6 +28,7 @@ namespace DC.SkillSystem
         /// </summary>
         public int mPower;
         public List<int> mExtParams;
+        public KeyCode mFromKey;
 
         public List<IActor> GetTargetActors()
         {
