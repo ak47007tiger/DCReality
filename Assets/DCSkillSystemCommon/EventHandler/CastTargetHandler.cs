@@ -13,20 +13,18 @@ namespace DC.SkillSystem
     {
         public override void OnEvt(params object[] objs)
         {
-            Skill skill = (Skill) objs[0];
+            /*Skill skill = (Skill) objs[0];
             CastTargetType type = (CastTargetType) objs[1];
 
             if (type == CastTargetType.single)
             {
                 IActor target = (IActor) objs[2];
-                
             }
             else
             {
                 List<IActor> targets = (List<IActor>) objs[2];
-                
-            }
-
+            }*/
+            base.OnEvt(objs);
         }
 
     }

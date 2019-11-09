@@ -59,7 +59,7 @@ namespace DC.ActorSystem
 
     /*
      
-        需要一个计算架构用来计算buff对用户数据的影响
+        一个计算架构用来计算buff对用户数据的影响
                 ActorData src;
                 ActorData dst;
                 for buff in buffs

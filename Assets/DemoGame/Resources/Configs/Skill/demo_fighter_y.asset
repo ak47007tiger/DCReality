@@ -20,7 +20,7 @@ MonoBehaviour:
   mTargetType: 3
   mMaxTargetCnt: 4
   mCastRange: 5
-  mPrefabPath: Skill/demo_skill_empty
+  mPrefabPath: Skill/demo_skill_empty_x4
   mSkillType: 2
   mSpeed: 0
   mTimer: 0
@@ -33,6 +33,22 @@ MonoBehaviour:
     mHandleMaxCnt: 1
     mInterval: 0
     mEffectType: 1
+    mVisualEffectCfg:
+      mEffectPath: effect/demo_skill_linked
+      mTransformType: 0
+      mLocalPosOfXX: {x: 0, y: 0, z: 0}
+      mPointCnt: 4
+      mDuration: 2
+    mChildSkillId: 0
+    mTranslateFxConfig:
+      mTransformType: 3
+      mSpeed: 12
+      mImmediately: 0
+  - mHandlerType: 2
+    mEffectDelay: 0
+    mHandleMaxCnt: 1
+    mInterval: 0
+    mEffectType: 8
     mVisualEffectCfg:
       mEffectPath: Skill/demo_skill_linked
       mTransformType: 0

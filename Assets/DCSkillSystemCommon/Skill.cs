@@ -330,6 +330,7 @@ namespace DC.SkillSystem
                     }
                 }
             }
+            LogDC.LogEx("init handlers ", mTypeToHandlerList.Keys.Count, mEvthandlerList.Count);
         }
 
         public void Create()
@@ -524,7 +525,6 @@ namespace DC.SkillSystem
                     actors.Add(actor);
                 }
             }
-            actors.Sort();
             TargetSelector.Shared.Sort(actors, mCaster.GetActor().GetTransform().position);
             while (actors.Count > mSkillCfg.mMaxTargetCnt)
             {
@@ -533,6 +533,8 @@ namespace DC.SkillSystem
 
             if (mTypeToHandlerList.TryGetValue(HandlerType.on_cast_target, out var list))
             {
+                LogDC.LogEx("on area skill cast target", list.Count);
+
                 foreach (var handler in list)
                 {
                     handler.OnEvt(this, CastTargetType.multi, actors);

@@ -155,7 +155,7 @@ namespace DC.SkillSystem
             {
                 worldPos = anchorTf.localToWorldMatrix.MultiplyPoint(cfg.mLocalPosOfXX);
             }
-
+            LogDC.LogEx("display vfx: ", cfg.mEffectPath);
             var prefab = ResourceSys.Instance.Load<GameObject>(cfg.mEffectPath);
             var vfx = Object.Instantiate(prefab, worldPos, Quaternion.identity);
             //链状技能
