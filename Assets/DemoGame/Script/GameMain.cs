@@ -37,7 +37,10 @@ namespace DC
             //create hero
             CreateDemoHeroFighter();
 
-            CreateDemoEnemyFighter();
+            CreateDemoEnemyFighter(new Vector3(-2, 0, 0));
+            CreateDemoEnemyFighter(new Vector3(-4, 0, 0));
+            CreateDemoEnemyFighter(new Vector3(-4, 0, 2));
+            CreateDemoEnemyFighter(new Vector3(-2, 0, -2));
         }
 
         private void CreateDemoHeroFighter()
@@ -60,7 +63,7 @@ namespace DC
             hero.transform.position = new Vector3(2,0,0);
         }
 
-        private void CreateDemoEnemyFighter()
+        private void CreateDemoEnemyFighter(Vector3 pos)
         {
             var fighterCfg = MockSystem.Instance.DemoEnemyFighterCfg();
             fighterCfg.BuildDerivedData();
@@ -75,7 +78,7 @@ namespace DC
             actor.UpdateModel();
 
             hero.GetComponent<HeroInput>().mHeroCfg = fighterCfg;
-            hero.transform.position = new Vector3(-2, 0, 0);
+            hero.transform.position = pos;
         }
     }
 }

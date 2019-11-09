@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d33763f48fcf524ba5fcb1b03fc7c2c, type: 3}
   m_Name: demo_enemy_fighter
   m_EditorClassIdentifier: 
-  mAttackRange: 1.5
   mPassiveSkillId: 0
   mSkillList: 01000000
   mKeyToSkillPairList:
   - Key: 97
     Value: 1
-  mModelPath: Model/Actor/_actor_property_pos
+  mModelPath: Model/Actor/_actor_property_pos_red
   mPrefabPath: actor/demo_hero_enemy_fighter
   mName: 
   mDesc: 
