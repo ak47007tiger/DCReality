@@ -27,6 +27,9 @@ MonoBehaviour:
   mAffectInterval: 0.5
   mEffectDelay: 100
   mDieAfterDone: 0
+  mEffectSideRelations: 0000000002000000
+  mAreaTargetSortType: 0
+  mAreaHitType: 1
   mEvtHandlerCfgs:
   - mHandlerType: 3
     mEffectDelay: 0
@@ -60,4 +63,3 @@ MonoBehaviour:
       mTransformType: 3
       mSpeed: 12
       mImmediately: 0
-  mEffectSideRelations: 0000000002000000

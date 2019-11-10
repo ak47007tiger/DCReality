@@ -419,6 +419,60 @@ namespace DC.SkillSystem
             }
         }
 
+        public bool GetNearestTarget(Vector3 center, List<RaycastHit> ignore, out RaycastHit nearestHit)
+        {
+            var halfExtents = mBoxCollider.Value.size * 0.5f;
+            var allHits = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation,
+                halfExtents.x * 2);
+            if (allHits == null || allHits.Length == 0)
+            {
+                nearestHit = new RaycastHit();
+                return false;
+            }
+            var tempList = new List<RaycastHit>();
+            for (var i = 0; i < allHits.Length; i++)
+            {
+                var hit = allHits[i];
+                var actor = hit.transform.GetComponent<IActor>();
+                if (actor == null)
+                {
+                    continue;
+                }
+                var side = actor.GetActorSide();
+                if (!IsInEffectSide(side))
+                {
+                    continue;
+                }
+                if (ignore.Find((item) => item.transform == hit.transform).transform != null)
+                {
+                    continue;
+                }
+                tempList.Add(hit);
+            }
+
+            if (tempList.Count == 0)
+            {
+                nearestHit = new RaycastHit();
+                return false;
+            }
+
+            allHits = tempList.ToArray();
+
+            nearestHit = allHits[0];
+            var dp = Vector3.Distance(nearestHit.transform.position, center);
+            for (var i = 1; i < allHits.Length; i++)
+            {
+                var dc = Vector3.Distance(allHits[i].transform.position, center);
+                if (dc < dp)
+                {
+                    nearestHit = allHits[i];
+                    dp = dc;
+                }
+            }
+
+            return true;
+        }
+
         public void DoSkillEffectForTimer()
         {
             if (mHitCnt > mSkillCfg.mHitCnt)
@@ -433,12 +487,27 @@ namespace DC.SkillSystem
             }
             else
             {
-                var halfExtents = mBoxCollider.Value.size * 0.5f;
-                var center = CacheTransform.position;
-                allHit = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation,
-                    halfExtents.x * 2);
-                var bound = new Bounds(CacheTransform.position, mBoxCollider.Value.size);
-                DebugExtension.DebugBounds(bound, Color.green);
+                if (mSkillCfg.mAreaHitType == AreaHitType.Normal)
+                {
+                    var halfExtents = mBoxCollider.Value.size * 0.5f;
+                    var center = CacheTransform.position;
+                    allHit = Physics.BoxCastAll(center, halfExtents, CacheTransform.forward, CacheTransform.rotation,
+                        halfExtents.x * 2);
+                    var bound = new Bounds(CacheTransform.position, mBoxCollider.Value.size);
+                    DebugExtension.DebugBounds(bound, Color.green);
+                }
+                else
+                {
+                    var listHitItems = new List<RaycastHit>();
+                    var curCastPos = CacheTransform.position;
+                    while (GetNearestTarget(curCastPos, listHitItems, out var nearest) && listHitItems.Count < mSkillCfg.mMaxTargetCnt)
+                    {
+                        listHitItems.Add(nearest);
+                        curCastPos = nearest.transform.position;
+                    }
+
+                    allHit = listHitItems.ToArray();
+                }
             }
 
             if (!Toolkit.IsNullOrEmpty(allHit))
@@ -525,7 +594,12 @@ namespace DC.SkillSystem
                     actors.Add(actor);
                 }
             }
-            TargetSelector.Shared.Sort(actors, mCaster.GetActor().GetTransform().position);
+
+            if (mSkillCfg.mAreaTargetSortType == AreaTargetSortType.Normal)
+            {
+                TargetSelector.Shared.Sort(actors, mCaster.GetActor().GetTransform().position);
+            }
+
             while (actors.Count > mSkillCfg.mMaxTargetCnt)
             {
                 actors.RemoveAt(actors.Count - 1);

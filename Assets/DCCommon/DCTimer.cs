@@ -116,7 +116,7 @@ namespace DC
         public static void RemoveNormal(DCBaseTimer timer)
         {
             if (null == Instance) return;
-
+            LogDC.Log("add to remove");
             Instance.mToDelTimerSet.Add(timer);
         }
 

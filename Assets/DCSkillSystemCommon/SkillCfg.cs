@@ -110,6 +110,18 @@ namespace DC.SkillSystem
         real,
     }
 
+    public enum AreaTargetSortType
+    {
+        Normal,
+        Empty,
+    }
+
+    public enum AreaHitType
+    {
+        Normal,
+        Nearest,
+    }
+
     [CreateAssetMenu(fileName = "SkillCfg", menuName = "DC/ScriptableObjects/SkillCfg", order = 1)]
     public class SkillCfg : ScriptableObject, ISkillCfg
     {
@@ -158,12 +170,16 @@ namespace DC.SkillSystem
         /// </summary>
         public bool mDieAfterDone = true;
 
-        public List<EventHandlerConfig> mEvtHandlerCfgs;
-
         /// <summary>
         /// 可以影响到的关系
         /// </summary>
         public List<SideRelation> mEffectSideRelations;
+
+        public AreaTargetSortType mAreaTargetSortType = AreaTargetSortType.Normal;
+
+        public AreaHitType mAreaHitType = AreaHitType.Normal;
+
+        public List<EventHandlerConfig> mEvtHandlerCfgs;
 
         public List<KVPair<GValueType, float>> GetConsumes()
         {

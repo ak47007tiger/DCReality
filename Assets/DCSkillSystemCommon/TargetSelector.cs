@@ -5,6 +5,44 @@ using UnityEngine;
 
 namespace DC.SkillSystem
 {
+    /// <summary>
+    /// 从目标位置开始，找到距离最近的一个a，然后找距离a最近的b，然后找距离b最近的c直到所有都找到
+    /// </summary>
+    public class NearestTargetSelector
+    {
+        public static readonly NearestTargetSelector Shared = new NearestTargetSelector();
+
+        public void Sort(List<IActor> list, Vector3 castPos)
+        {
+            List<IActor> tempList = new List<IActor>();
+            var curPos = castPos;
+            while (list.Count > 0)
+            {
+                var item = FindItem(list, curPos);
+                list.Remove(item);
+                tempList.Add(item);
+                curPos = item.GetTransform().position;
+            }
+            list.AddRange(tempList);
+        }
+
+        public IActor FindItem(List<IActor> list, Vector3 castPos)
+        {
+            var result = list[0];
+            var dp = Vector3.Distance(result.GetTransform().position, castPos);
+            for (var i = 1; i < list.Count; i++)
+            {
+                var dc = Vector3.Distance(list[0].GetTransform().position, castPos);
+                if (dc < dp)
+                {
+                    result = list[i];
+                    dp = dc;
+                }
+            }
+            return result;
+        }
+    }
+
     public class TargetSelector
     {
         public static readonly TargetSelector Shared = new TargetSelector();
