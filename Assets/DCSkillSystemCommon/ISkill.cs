@@ -26,5 +26,7 @@ namespace DC.SkillSystem
         void Create();
 
         Transform GetTransform();
+
+        float GetTickedLife();
     }
 }

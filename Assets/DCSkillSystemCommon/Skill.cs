@@ -386,6 +386,11 @@ namespace DC.SkillSystem
             return CacheTransform;
         }
 
+        public float GetTickedLife()
+        {
+            return mTickedLife;
+        }
+
         void OnDestroy()
         {
             LogDC.LogEx("destroy timer", mTimerToDestroy.Count);

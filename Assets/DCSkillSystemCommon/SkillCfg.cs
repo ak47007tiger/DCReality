@@ -77,6 +77,9 @@ namespace DC.SkillSystem
 
         存活时间
         生效次数
+
+        二次激活的技能
+            激活
      */
     public interface ISkillCfg
     {
@@ -128,7 +131,9 @@ namespace DC.SkillSystem
         public int mId;
         public string mName;
         public string mDesc;
+        public float mCdDuration;
         public float mDuration;
+        public string mUiIcon;
         public int mHitCnt = 1;
         public List<KVPair<GValueType, float>> mConsumeList;
         public List<KVPair<GValueType, float>> mValueEffectList;
