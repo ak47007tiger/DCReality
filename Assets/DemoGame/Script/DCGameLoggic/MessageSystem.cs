@@ -53,46 +53,81 @@ namespace DC.GameLogic
         }
     }
 
-    public class MsgSys : Singleton<MsgSys>
+    public class MsgSys
     {
-        public void Send(GameEvent evt, params object[] objs)
+        public static void Send(GameEvent evt, params object[] objs)
         {
             MessageSystem.Instance.Send((int) evt, objs);
         }
 
-        public void AddDelegate(GameEvent type, Delegate action)
+        public static void AddDelegate(GameEvent type, Delegate action)
         {
             MessageSystem.Instance.AddDelegate((int) type, action);
         }
 
-        public void Add(GameEvent type, Action action)
+        public static void RemoveDelegate(GameEvent type, Delegate action)
+        {
+            MessageSystem.Instance.Remove((int) type, action);
+        }
+
+        public static void Add(GameEvent type, Action action)
         {
             AddDelegate(type, action);
         }
 
-        public void Add<T>(GameEvent type, Action<T> action)
+        public static void Add<T>(GameEvent type, Action<T> action)
         {
             AddDelegate(type, action);
         }
 
-        public void Add<T1, T2>(GameEvent type, Action<T1, T2> action)
+        public static void Add<T1, T2>(GameEvent type, Action<T1, T2> action)
         {
             AddDelegate(type, action);
         }
 
-        public void Add<T1, T2, T3>(GameEvent type, Action<T1, T2, T3> action)
+        public static void Add<T1, T2, T3>(GameEvent type, Action<T1, T2, T3> action)
         {
             AddDelegate(type, action);
         }
 
-        public void Add<T1, T2, T3, T4>(GameEvent type, Action<T1, T2, T3, T4> action)
+        public static void Add<T1, T2, T3, T4>(GameEvent type, Action<T1, T2, T3, T4> action)
         {
             AddDelegate(type, action);
         }
 
-        public void Add<T1, T2, T3, T4, T5>(GameEvent type, Action<T1, T2, T3, T4, T5> action)
+        public static void Add<T1, T2, T3, T4, T5>(GameEvent type, Action<T1, T2, T3, T4, T5> action)
         {
             AddDelegate(type, action);
+        }
+
+        public static void Remove(GameEvent type, Action action)
+        {
+            RemoveDelegate(type, action);
+        }
+
+        public static void Remove<T>(GameEvent type, Action<T> action)
+        {
+            RemoveDelegate(type, action);
+        }
+
+        public static void Remove<T1, T2>(GameEvent type, Action<T1, T2> action)
+        {
+            RemoveDelegate(type, action);
+        }
+
+        public static void Remove<T1, T2, T3>(GameEvent type, Action<T1, T2, T3> action)
+        {
+            RemoveDelegate(type, action);
+        }
+
+        public static void Remove<T1, T2, T3, T4>(GameEvent type, Action<T1, T2, T3, T4> action)
+        {
+            RemoveDelegate(type, action);
+        }
+
+        public static void Remove<T1, T2, T3, T4, T5>(GameEvent type, Action<T1, T2, T3, T4, T5> action)
+        {
+            RemoveDelegate(type, action);
         }
     }
 
@@ -124,6 +159,17 @@ namespace DC.GameLogic
         public void AddDelegate(int type, Delegate action)
         {
             GetOrCreateHandler(type).Add(action);
+        }
+
+        public void Remove(int type, Delegate action)
+        {
+            var handler = GetHandler(type);
+            if (handler == null)
+            {
+                return;
+            }
+
+            handler.Remove(action);
         }
 
         public void Add(int type, Action action)

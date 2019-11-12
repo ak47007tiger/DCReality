@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DC.GameLogic;
 using DC.SkillSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DC
+namespace DC.UI
 {
     public class FightUI : BaseMonoBehaviour
     {
@@ -37,57 +38,4 @@ namespace DC
     /*
      *
      */
-
-    /// <summary>
-    /// cd
-    /// 按键发送
-    /// 技能图标
-    /// </summary>
-    public class SkillItemUI : BaseMonoBehaviour
-    {
-        public KeyCode mSendKeyCode;
-
-        public Skill mCurrentSkill;
-
-        /// <summary>
-        /// 刚释放是1，cd完0
-        /// </summary>
-        /// <returns></returns>
-        public float GetCdPercentage()
-        {
-            if (mCurrentSkill == null)
-            {
-                return 0;
-            }
-
-            var p = mCurrentSkill.GetTickedLife() / mCurrentSkill.GetSkillCfg().mCdDuration;
-            p = Mathf.Max(1, p);
-            return 1 - p;
-        }
-
-        public void OnSkillCreate(Skill skill)
-        {
-            mCurrentSkill = skill;
-        }
-
-        public void DoCdAnimation()
-        {
-
-        }
-
-        public void SetIcon(Sprite sprite)
-        {
-
-        }
-
-        public void SetSilence(bool silence)
-        {
-
-        }
-
-        public void OnIconClick()
-        {
-            
-        }
-    }
 }

@@ -237,6 +237,18 @@ namespace DC
                 mOnEnd();
             }
         }
+
+        public abstract float GetPercentage();
+
+        public float GetLoopPercentage()
+        {
+            return (float) mTrackedLoop / mTargetLoop;
+        }
+
+        public bool IsEnd()
+        {
+            return mTargetLoop > 0 && mTrackedLoop >= mTargetLoop;
+        }
     }
 
     public class DCFrameTimer : DCBaseTimer
@@ -271,6 +283,11 @@ namespace DC
                 mTrackedCnt = 0;
             }
         }
+
+        public override float GetPercentage()
+        {
+            return Mathf.Min((float) mTrackedCnt / mTargetCnt, 1);
+        }
     }
 
     public class DCDurationTimer : DCBaseTimer
@@ -297,6 +314,11 @@ namespace DC
                 //for next loop
                 mTrackedDuration = 0;
             }
+        }
+
+        public override float GetPercentage()
+        {
+            return Mathf.Min(mTrackedDuration / mTargetDuration , 1);
         }
     }
 

@@ -6,9 +6,9 @@ using UnityEngine;
 namespace DC.GameLogic
 {
     [Serializable]
-    public class KeyToKill : KVPair<KeyCode, int>
+    public class KeyToKill : KVPair<KeyCode, List<int>>
     {
-        public KeyToKill(KeyCode key, int value) : base(key, value)
+        public KeyToKill(KeyCode key, List<int> value) : base(key, value)
         {
         }
     }
@@ -32,7 +32,7 @@ namespace DC.GameLogic
         public float mSpeed;
 
         private List<KeyCode> mSkillKeyList = new List<KeyCode>();
-        private Dictionary<KeyCode, int> mKeyToSkillId = new Dictionary<KeyCode, int>();
+        private Dictionary<KeyCode, List<int>> mKeyToSkillId = new Dictionary<KeyCode, List<int>>();
 
         public void BuildDerivedData()
         {
@@ -47,11 +47,21 @@ namespace DC.GameLogic
             return mSkillKeyList;
         }
 
-        public int GetSkillId(KeyCode position)
+        public int GetSkillId(KeyCode position, int index = 0)
         {
-            if (mKeyToSkillId.TryGetValue(position, out var id))
+            if (mKeyToSkillId.TryGetValue(position, out var ids))
             {
-                return id;
+                return ids[index];
+            }
+
+            return 0;
+        }
+
+        public int GetNextSkill(KeyCode position, int skillId)
+        {
+            if (mKeyToSkillId.TryGetValue(position, out var ids))
+            {
+                return ids[ids.IndexOf(skillId) + 1];
             }
 
             return 0;

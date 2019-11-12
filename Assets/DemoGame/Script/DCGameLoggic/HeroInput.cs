@@ -26,6 +26,12 @@ namespace DC.GameLogic
         protected override void Awake()
         {
             base.Awake();
+            MsgSys.Add<KeyCode>(GameEvent.KeyCodeEvt, OnKeyEvent);
+        }
+
+        void OnDestroy()
+        {
+            MsgSys.Remove<KeyCode>(GameEvent.KeyCodeEvt, OnKeyEvent);
         }
 
         public void SetForward(Vector3 forward)
@@ -59,26 +65,44 @@ namespace DC.GameLogic
                 //准备技能 设置释放参数 or 直接释放
                 if (Input.GetKeyDown(code))
                 {
-                    var skillId = mHeroCfg.GetSkillId(code);
-                    var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
-
-                    LogDC.LogEx("press  ", code);
-                    mCastCfg = new CastCfg();
-                    mCastCfg.mFromKey = code;
-
-                    //不需要目标 直接释放技能
-                    if (skillCfg.mTargetType == SkillTargetType.None)
-                    {
-                        mSelectedSkillCfg = skillCfg;
-                        Caster.Cast(skillCfg, mCastCfg);
-                    }
-                    else
-                    {
-                        //选中某个技能 准备调参
-                        mSelectedSkillCfg = skillCfg;
-                        LogDC.LogEx("prepare skill ", skillId);
-                    }
+                    OnKeyEvent(code);
                 }
+            }
+        }
+
+        public void OnKeyEvent(KeyCode code)
+        {
+            LogDC.LogEx("press  ", code);
+
+            var currentSkill = Caster.GetSkill(code);
+
+            int skillId;
+            mCastCfg = new CastCfg();
+            mCastCfg.mFromKey = code;
+
+            if (currentSkill != null)
+            {
+                skillId = mHeroCfg.GetNextSkill(code, currentSkill.GetSkillCfg().mId);
+                mCastCfg.mIsSubSkill = true;
+            }
+            else
+            {
+                skillId = mHeroCfg.GetSkillId(code);
+            }
+
+            var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
+
+            //不需要目标 直接释放技能
+            if (skillCfg.mTargetType == SkillTargetType.None)
+            {
+                mSelectedSkillCfg = skillCfg;
+                Caster.Cast(skillCfg, mCastCfg);
+            }
+            else
+            {
+                //选中某个技能 准备调参
+                mSelectedSkillCfg = skillCfg;
+                LogDC.LogEx("prepare skill ", skillId);
             }
         }
 
@@ -243,11 +267,6 @@ namespace DC.GameLogic
         {
             mSelectedSkillCfg = null;
             mCastCfg = null;
-        }
-
-        public bool Attack()
-        {
-            return false;
         }
 
         void SetState(HeroInput_State state)

@@ -132,7 +132,14 @@ namespace DC.SkillSystem
         public string mName;
         public string mDesc;
         public float mCdDuration;
+        /// <summary>
+        /// 存活时间
+        /// </summary>
         public float mDuration;
+        /// <summary>
+        /// 释放后不立即cd要等待的时间
+        /// </summary>
+        public float mCdWaitDuration;
         public string mUiIcon;
         public int mHitCnt = 1;
         public List<KVPair<GValueType, float>> mConsumeList;

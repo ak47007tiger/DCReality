@@ -14,18 +14,33 @@ namespace DC.ActorSystem
 {
     public interface IActorSystem
     {
-        IActor CreateActor(int id);
-        
+        IActor GetActor(int id);
+
+        IActor GetMainActor();
+
+        void SetMainActor(IActor actor);
     }
 
     public class ActorSys : Singleton<ActorSys>, IActorSystem
     {
         private Dictionary<int, IActor> mIdToActor = new Dictionary<int, IActor>();
 
-        public IActor CreateActor(int id)
+        private IActor mMainActor;
+
+        public IActor GetActor(int id)
         {
             //dic[key] if not has key, it will throw exception
             return mIdToActor.GetValEx(id);
+        }
+
+        public IActor GetMainActor()
+        {
+            return mMainActor;
+        }
+
+        public void SetMainActor(IActor actor)
+        {
+            mMainActor = actor;
         }
     }
 

@@ -367,6 +367,8 @@ namespace DC.SkillSystem
                     handler.OnEvt(this);
                 }
             }
+
+            MsgSys.Send(GameEvent.SkillEvt, this);
         }
 
         private void OnTraceTransformEnd(TfTraceTarget cmp, float distance)
@@ -398,6 +400,7 @@ namespace DC.SkillSystem
             {
                 timer.Destroy();
             }
+            mCaster.RemoveSkill(mCastCfg.mFromKey);
         }
 
         void Update()

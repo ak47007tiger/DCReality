@@ -29,6 +29,10 @@ namespace DC.SkillSystem
         public int mPower;
         public List<int> mExtParams;
         public KeyCode mFromKey;
+        /// <summary>
+        /// 多段技能的后续技能
+        /// </summary>
+        public bool mIsSubSkill;
 
         public List<IActor> GetTargetActors()
         {

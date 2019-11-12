@@ -46,6 +46,11 @@ namespace DC.GameLogic
             mCodeToSkill[key] = skill;
         }
 
+        public void RemoveSkill(KeyCode key)
+        {
+            mCodeToSkill.Remove(key);
+        }
+
         public bool Cast(SkillCfg skillCfg, CastCfg castCfg)
         {
             LogDC.LogEx("cast", skillCfg.mId);

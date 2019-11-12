@@ -21,7 +21,7 @@ namespace DC.GameLogic
 
             mNavArrivePosition = gameObject.GetOrAdd<NavArrivePosition>();
 
-            MsgSys.Instance.Add<Vector3>(GameEvent.ClickEnvGround, OnClickEnvGround);
+            MsgSys.Add<Vector3>(GameEvent.ClickEnvGround, OnClickEnvGround);
         }
 
         void Start()
