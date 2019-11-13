@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72743abc7ce2a67438ebc159eca189f1, type: 3}
+  m_Name: demo_fighter_5
+  m_EditorClassIdentifier: 
+  mId: 5
+  mName: 
+  mDesc: 
+  mCdDuration: 0
+  mDuration: 2
+  mCdWaitDuration: 0
+  mUiIcon: 
+  mHitCnt: 100
+  mTargetType: 3
+  mMaxTargetCnt: 1
+  mCastRange: 6
+  mPrefabPath: Skill/demo_skill_area
+  mSkillType: 2
+  mSpeed: 0
+  mTimer: 1
+  mAffectInterval: 0.5
+  mEffectDelay: 0
+  mDieAfterDone: 0
+  mEffectSideRelations: 
+  mAreaTargetSortType: 0
+  mAreaHitType: 0
+  mEvtHandlerCfgs: []

@@ -21,6 +21,9 @@ namespace DC.UI
 
         public Image mImgSilenceCover;
 
+        public Button mSkillBtn;
+
+        [HideInInspector]
         public SkillCfg mSkillCfg;
 
         private DCDurationTimer mWaitCdTimer;

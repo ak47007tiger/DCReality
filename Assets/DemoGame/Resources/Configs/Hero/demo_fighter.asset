@@ -16,19 +16,19 @@ MonoBehaviour:
   mSkillList: 01000000020000000300000004000000050000000600000007000000
   mKeyToSkillPairList:
   - Key: 97
-    Value: 1
+    Value: 01000000
   - Key: 113
-    Value: 2
+    Value: 02000000
   - Key: 119
-    Value: 3
+    Value: 03000000
   - Key: 101
-    Value: 4
+    Value: 04000000
   - Key: 114
-    Value: 5
+    Value: 05000000
   - Key: 116
-    Value: 6
+    Value: 06000000
   - Key: 121
-    Value: 7
+    Value: 07000000
   mModelPath: Model/Actor/_actor_property_pos_blue
   mPrefabPath: actor/demo_hero_fighter
   mName: 

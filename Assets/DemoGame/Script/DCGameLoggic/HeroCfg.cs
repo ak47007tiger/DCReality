@@ -17,7 +17,10 @@ namespace DC.GameLogic
     public class HeroCfg : ScriptableObject
     {
         public int mPassiveSkillId;
+
         public List<int> mSkillList = new List<int>();
+
+        [Header("按键和对应技能")]
         public List<KeyToKill> mKeyToSkillPairList = new List<KeyToKill>();
 
         /// <summary>
