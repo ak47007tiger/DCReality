@@ -12,7 +12,7 @@ namespace DC.GameLogic
     /// 选择目标
     /// 更像是一个hero对象
     /// </summary>
-    public class HeroInput : GameElement
+    public class HeroEntity : GameElement
     {
         public HeroCfg mHeroCfg;
 

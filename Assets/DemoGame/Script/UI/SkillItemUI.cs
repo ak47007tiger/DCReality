@@ -1,4 +1,5 @@
-﻿using DC.GameLogic;
+﻿using DC.DCResourceSystem;
+using DC.GameLogic;
 using DC.SkillSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,6 +35,8 @@ namespace DC.UI
         {
             mImgSilenceCover.enabled = false;
             mImgCdCover.fillAmount = 0;
+
+            mSkillBtn.onClick.AddListener(OnIconClick);
         }
 
         void OnDestroy()
@@ -47,6 +50,13 @@ namespace DC.UI
             {
                 mImgCdCover.fillAmount = GetCdPercentage();
             }
+        }
+
+        public void UpdateUi(SkillCfg skillCfg)
+        {
+            mSkillCfg = skillCfg;
+
+            ResourceSys.Instance.SetImage(mImgSkill, skillCfg.mUiIcon);
         }
 
         /// <summary>

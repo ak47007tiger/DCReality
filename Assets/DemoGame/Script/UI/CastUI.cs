@@ -1,4 +1,5 @@
-﻿using DC.GameLogic;
+﻿using DC.ActorSystem;
+using DC.GameLogic;
 using DC.SkillSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,12 +19,44 @@ namespace DC.UI
 
         void Awake()
         {
-
+            MsgSys.Add<SkillCfg>(GameEvent.CastEvt, OnPrepareCast);
         }
 
         void OnDestroy()
         {
+            MsgSys.Remove<SkillCfg>(GameEvent.CastEvt, OnPrepareCast);
+        }
 
+        void Update()
+        {
+            var mainActor = ActorSys.Instance.GetMainActor();
+            if (mainActor != null)
+            {
+                var position = mainActor.GetTransform().position;
+
+            }
+        }
+
+        public void OnPrepareCast(SkillCfg skillCfg)
+        {
+            if (skillCfg.mTargetType == SkillTargetType.Position || skillCfg.mTargetType == SkillTargetType.Direction)
+            {
+                mImgArrow.enabled = true;
+            }
+            else
+            {
+                mImgRange.enabled = true;
+            }
+
+            if ((skillCfg.mSkillType == SkillType.area || skillCfg.mSkillType == SkillType.bullet) && skillCfg.mCastRange > 0)
+            {
+            }
+        }
+
+        public void OnCastEnd()
+        {
+            mImgRange.enabled = false;
+            mImgArrow.enabled = false;
         }
 
         public float WorldSizeToUiSize(float world)

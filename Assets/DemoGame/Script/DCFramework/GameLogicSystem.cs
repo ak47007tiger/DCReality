@@ -124,9 +124,4 @@ namespace DC.GameLogic
             }
         }
     }
-
-    public class HeroElement : GameElement
-    {
-
-    }
 }

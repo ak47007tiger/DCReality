@@ -14,5 +14,9 @@
         /// 技能cd结束
         /// </summary>
         SkillEvt,
+        /// <summary>
+        /// 施法事件
+        /// </summary>
+        CastEvt,
     }
 }

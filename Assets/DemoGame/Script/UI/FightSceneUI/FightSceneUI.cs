@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DC.ActorSystem;
 using DC.GameLogic;
 using DC.SkillSystem;
 using UnityEngine;
@@ -7,12 +8,13 @@ using UnityEngine.UI;
 
 namespace DC.UI
 {
-    public class FightUI : BaseMonoBehaviour
+    public class FightSceneUI : BaseMonoBehaviour
     {
         public Image mMousePoint;
 
         void Awake()
         {
+            
         }
 
         void Update()

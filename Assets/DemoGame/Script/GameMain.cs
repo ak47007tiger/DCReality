@@ -59,7 +59,7 @@ namespace DC
             actor.SetModel(fighterCfg.mModelPath);
             actor.UpdateModel();
 
-            hero.GetComponent<HeroInput>().mHeroCfg = fighterCfg;
+            hero.GetComponent<HeroEntity>().mHeroCfg = fighterCfg;
             hero.transform.position = new Vector3(2,0,0);
         }
 
@@ -77,7 +77,7 @@ namespace DC
             actor.SetModel(fighterCfg.mModelPath);
             actor.UpdateModel();
 
-            hero.GetComponent<HeroInput>().mHeroCfg = fighterCfg;
+            hero.GetComponent<HeroEntity>().mHeroCfg = fighterCfg;
             hero.transform.position = pos;
         }
     }
