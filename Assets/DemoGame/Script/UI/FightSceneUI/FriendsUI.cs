@@ -1,6 +1,6 @@
 ﻿namespace DC.UI
 {
-    public class FriendsUI : BaseMonoBehaviour
+    public class FriendsUI : BaseUI
     {
 
     }

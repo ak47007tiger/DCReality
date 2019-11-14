@@ -2,7 +2,7 @@
 
 namespace DC.UI
 {
-    public class SelectedActorUI : BaseMonoBehaviour
+    public class SelectedActorUI : BaseUI
     {
         public Text mName;
         public Image mIcon;

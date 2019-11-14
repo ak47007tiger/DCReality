@@ -10,25 +10,6 @@ using DC.GameLogic;
 
 namespace DC.SkillSystem
 {
-    /*
-        区域型技能
-        移动型技能
-
-        放一个技能打多个目标 这个技能不能是指向性的
-
-        根据时间流逝释放skill的行为
-        根据监听到的事件skill来处理
-
-        2次激活的技能
-            press key
-            if hero has skill process
-                do skill next
-                    get last key skill target as target
-            else
-                do key skill
-        n次激活的技能
-     */
-
     public class Skill : BaseMonoBehaviour, ISkill
     {
         private ICaster mCaster;

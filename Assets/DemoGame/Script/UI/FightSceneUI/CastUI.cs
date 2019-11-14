@@ -11,11 +11,15 @@ namespace DC.UI
     /// 范围，一个圈
     /// 方向，箭头
     /// </summary>
-    public class CastUI : BaseMonoBehaviour
+    public class CastUI : BaseUI
     {
         public Image mImgRange;
 
         public Image mImgArrow;
+
+        public SkillCfg mSkillCfg;
+
+        public TargetUI mTargetUi;
 
         void Awake()
         {
@@ -29,12 +33,60 @@ namespace DC.UI
 
         void Update()
         {
+            if (null == mSkillCfg)
+            {
+                return;
+            }
+
             var mainActor = ActorSys.Instance.GetMainActor();
             if (mainActor != null)
             {
-                var position = mainActor.GetTransform().position;
-
+                var ray = DCGraphics.Instance.MainCamera.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out var casthit))
+                {
+                    switch (mSkillCfg.mTargetType)
+                    {
+                        case SkillTargetType.Position:
+                            OnWatchPosition(mainActor, casthit);
+                            break;
+                        case SkillTargetType.Direction:
+                            OnWatchDirection(mainActor, casthit);
+                            break;
+                        case SkillTargetType.Actor:
+                            OnWatchTarget(mainActor, casthit);
+                            break;
+                    }
+                }
+                //计算目标方向
             }
+        }
+
+        private void OnWatchTarget(IActor mainActor,RaycastHit casthit)
+        {
+            mTargetUi.ShowCastTarget(Input.mousePosition);
+        }
+
+        private void OnWatchPosition(IActor mainActor, RaycastHit casthit)
+        {
+            var position = mainActor.GetTransform().position;
+            position.y = 0;
+
+            var point = casthit.point;
+            point.y = 0;
+
+            var dir = (point - position).normalized;
+        }
+
+        private void OnWatchDirection(IActor mainActor, RaycastHit casthit)
+        {
+            var position = mainActor.GetTransform().position;
+            position.y = 0;
+
+            var point = casthit.point;
+            point.y = 0;
+
+            var dir = (point - position).normalized;
+
         }
 
         public void OnPrepareCast(SkillCfg skillCfg)

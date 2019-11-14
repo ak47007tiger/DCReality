@@ -4,7 +4,7 @@ using DC.SkillSystem;
 
 namespace DC.UI
 {
-    public class SkillsUI : BaseMonoBehaviour
+    public class SkillsUI : BaseUI
     {
         public SkillItemUI[] mSkillItemUis;
 

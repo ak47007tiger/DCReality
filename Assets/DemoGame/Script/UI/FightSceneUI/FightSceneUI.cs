@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace DC.UI
 {
-    public class FightSceneUI : BaseMonoBehaviour
+    public class FightSceneUI : BaseUI
     {
         public Image mMousePoint;
 

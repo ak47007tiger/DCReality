@@ -31,6 +31,7 @@ namespace DC.GameLogic
         public string mPrefabPath;
         public string mName;
         public string mDesc;
+        public string mUiIcon;
 
         public float mSpeed;
 

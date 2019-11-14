@@ -12,7 +12,7 @@ namespace DC.UI
     /// 技能图标
     /// 某种按键的技能生效时发送消息，这里接受，同步显示信息到ui
     /// </summary>
-    public class SkillItemUI : BaseMonoBehaviour
+    public class SkillItemUI : BaseUI
     {
         public KeyCode mSendKeyCode;
 

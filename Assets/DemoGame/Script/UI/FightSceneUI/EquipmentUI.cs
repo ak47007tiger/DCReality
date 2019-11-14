@@ -1,6 +1,6 @@
 ﻿namespace DC.UI
 {
-    public class EquipmentUI : BaseMonoBehaviour
+    public class EquipmentUI : BaseUI
     {
 
     }

@@ -1,6 +1,6 @@
 ﻿namespace DC.UI
 {
-    public class FightSceneHeroItem : BaseMonoBehaviour
+    public class FightSceneHeroItem : BaseUI
     {
 
     }
