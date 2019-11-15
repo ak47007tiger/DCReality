@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DC.DCResourceSystem;
 
 namespace DC.GameLogic
 {
@@ -10,7 +11,8 @@ namespace DC.GameLogic
 
         public void Init()
         {
-
+            var path = "Configs/Hero";
+            mHeroCfgs.AddRange(ResourceSys.Instance.LoadAll<HeroCfg>(path));
         }
     }
 }
