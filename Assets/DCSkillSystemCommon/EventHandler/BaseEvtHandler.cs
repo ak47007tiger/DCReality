@@ -79,7 +79,13 @@ namespace DC.SkillSystem
 
         public void DoBuffAction(List<IActor> targets)
         {
+            var buffCfg = BuffConfigMgr.Instance.GetBuffCfg(mHandlerCfg.mBuffCfgId);
+            var buff = BuffConfigMgr.Instance.GetBuff(mHandlerCfg.mBuffCfgId);
 
+            foreach (var target in targets)
+            {
+                target.GetBuffCmpnt().AddBuff(buff);
+            }
         }
 
         public void DoAnimationFx()

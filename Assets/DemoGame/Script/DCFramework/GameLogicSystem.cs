@@ -99,16 +99,16 @@ namespace DC.GameLogic
 
     public class GameElement : GameContextObject
     {
-        private CacheItem<IActor> mCacheActor;
-        private CacheItem<ICaster> mCacheCaster;
+        private CacheItem<GameActor> mCacheActor;
+        private CacheItem<Caster> mCacheCaster;
 
         protected virtual void Awake()
         {
-            mCacheActor = new CacheItem<IActor>(GetComponent<IActor>);
-            mCacheCaster = new CacheItem<ICaster>(GetComponent<ICaster>);
+            mCacheActor = new CacheItem<GameActor>(GetComponent<GameActor>);
+            mCacheCaster = new CacheItem<Caster>(GetComponent<Caster>);
         }
 
-        public IActor Actor
+        public GameActor Actor
         {
             get
             {
@@ -116,7 +116,7 @@ namespace DC.GameLogic
             }
         }
 
-        public ICaster Caster
+        public Caster Caster
         {
             get
             {

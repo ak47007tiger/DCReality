@@ -220,11 +220,13 @@ namespace DC.GameLogic
             if (null != mNavTraceTarget)
             {
                 mNavTraceTarget.SetStop(true);
+                mNavTraceTarget.mOnCatchTarget = null;
             }
 
             if (null != mNavArrivePosition)
             {
                 mNavArrivePosition.SetStop(true);
+                mNavArrivePosition.mOnCatchTarget = null;
             }
         }
 

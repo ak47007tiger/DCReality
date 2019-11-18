@@ -194,6 +194,8 @@ namespace DC.GameLogic
         private Vector3 mLastCastPosition;
         private void OnArrive(NavArrivePosition arrive, float distance)
         {
+            arrive.mOnCatchTarget = null;
+
             var castCfg = new CastCfg();
             castCfg.SetTargetPosition(mLastCastPosition);
             Caster.Cast(mSelectedSkillCfg, castCfg);
@@ -201,6 +203,8 @@ namespace DC.GameLogic
 
         private void OnCatchActor(NavTraceTarget tracer, float distance)
         {
+            tracer.mOnCatchTarget = null;
+
             CastSelectedSkill(tracer.mTargetTf.GetComponent<IActor>());
         }
 
