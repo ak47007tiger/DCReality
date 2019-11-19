@@ -14,5 +14,10 @@ namespace DC.GameLogic
         }
 
         public static readonly float move_stop_distance = 0.3f;
+
+        public static string GetConfigPath<T>()
+        {
+            return "Configs/" + typeof(T).Name;
+        }
     }
 }

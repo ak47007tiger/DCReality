@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DC.UI
 {
-    public class HeroSelectUI : BaseUI
+    public class SelectHeroUI : BaseUI
     {
         
     }

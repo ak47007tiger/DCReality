@@ -16,6 +16,8 @@ namespace DC.GameLogic
     [CreateAssetMenu(fileName = "HeroCfg", menuName = "DC/ScriptableObjects/HeroCfg", order = 1)]
     public class HeroCfg : ScriptableObject
     {
+        public int mId;
+
         public int mPassiveSkillId;
 
         public List<int> mSkillList = new List<int>();
