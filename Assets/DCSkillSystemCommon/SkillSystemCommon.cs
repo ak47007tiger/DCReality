@@ -35,8 +35,6 @@ namespace DC.SkillSystem
 
         void RemoveSkill(ISkill skill);
 
-        SkillCfg GetSkillCfg(int skillId);
-
         /// <summary>
         /// 释放设定
         /// 数值计算
@@ -64,16 +62,10 @@ namespace DC.SkillSystem
     {
         private HashSet<ISkill> mAllActiveSkill = new HashSet<ISkill>();
 
-        Dictionary<int, SkillCfg> mIdToSkillCfg = new Dictionary<int, SkillCfg>();
 
         public void Init()
         {
-            var skillCfgs = ResourceSys.Instance.LoadAll<SkillCfg>(SystemPreset.path_skill_cfgs);
-            foreach (var skillCfg in skillCfgs)
-            {
-                skillCfg.OnCreate();
-                mIdToSkillCfg.Add(skillCfg.mId, skillCfg);
-            }
+            
         }
 
         public ISkill CreateSkill(SkillCfg cfg)
@@ -115,16 +107,6 @@ namespace DC.SkillSystem
             if (skill == null) return;
 
             mAllActiveSkill.Remove(skill);
-        }
-
-        public SkillCfg GetSkillCfg(int skillId)
-        {
-            if (mIdToSkillCfg.TryGetValue(skillId, out var cfg))
-            {
-                return cfg;
-            }
-
-            return null;
         }
 
         public void OnSkillCreate(ISkill skill)

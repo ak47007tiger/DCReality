@@ -5,7 +5,6 @@ using DC.Collections.Generic;
 using DC.DCResourceSystem;
 using DC.UI;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace DC
 {
@@ -48,7 +47,6 @@ namespace DC
             return null;
         }
 
-
         public BaseUI GetUi(string uiName)
         {
             var baseUi = mKeyToUi.GetValEx(uiName);
@@ -63,24 +61,43 @@ namespace DC
         public T ShowUi<T>(params object[] param) where T : BaseUI
         {
             var uiName = GetUiName<T>();
-            return ShowUi(uiName) as T;
+            return ShowUi(uiName, param) as T;
         }
 
-        public BaseUI ShowUi(string uiName)
+        public BaseUI ShowUi(string uiName, params object[] param)
         {
             var baseUi = mKeyToUi.GetValEx(uiName);
             if (null != baseUi)
             {
+                baseUi.OnShow();
                 return baseUi;
             }
 
             var assetPath = GetAssetPath(uiName);
             var prefab = ResourceSys.Instance.Load<GameObject>(assetPath);
+
             var instance = Instantiate(prefab, UiRoot);
-            var tUi = instance.GetComponent<BaseUI>();
-            mKeyToUi.Add(uiName, tUi);
-            mUiStack.Push(tUi);
-            return tUi;
+            baseUi = instance.GetComponent<BaseUI>();
+            baseUi.Init(param);
+
+            mKeyToUi.Add(uiName, baseUi);
+            mUiStack.Push(baseUi);
+
+            return baseUi;
+        }
+
+        public void HideUi<T>()
+        {
+            HideUi(GetUiName(typeof(T)));
+        }
+
+        public void HideUi(string uiName)
+        {
+            var baseUi = GetUi(uiName);
+            if (null != baseUi)
+            {
+                baseUi.OnHide();
+            }
         }
 
         public void CloseUi<T>()
@@ -101,7 +118,14 @@ namespace DC
             mKeyToUi.Remove(uiName);
 
             //destroy
+            baseUi.Destroy();
             Destroy(baseUi);
+
+            //pop top window
+            if (mUiStack.Count > 0)
+            {
+                ShowUi(GetUiName(mUiStack.Peek().GetType()));
+            }
         }
 
         public void RemoveFromStack(BaseUI baseUi)
@@ -126,12 +150,12 @@ namespace DC
 
         public static string GetUiName<T>()
         {
-            return typeof(T).Name;
+            return GetUiName(typeof(T));
         }
 
         public static string GetUiName(Type type)
         {
-            return type.Name;
+            return type.Name + "ViewGen";
         }
 
         public static string GetAssetPath(string name)

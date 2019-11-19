@@ -21,7 +21,7 @@ namespace DC.UI
             {
                 var key = keyToSkill[i].Key;
                 var value = keyToSkill[i].Value[0];
-                var skillCfg = SkillSys.Instance.GetSkillCfg(value);
+                var skillCfg = SkillConfigMgr.Instance.GetSkillCfg(value);
 
                 var viewItem = mSkillItemUis[i];
                 viewItem.mSendKeyCode = key;

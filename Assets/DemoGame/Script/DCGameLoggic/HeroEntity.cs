@@ -90,7 +90,7 @@ namespace DC.GameLogic
                 skillId = mHeroCfg.GetSkillId(code);
             }
 
-            var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
+            var skillCfg = SkillConfigMgr.Instance.GetSkillCfg(skillId);
 
             //不需要目标 直接释放技能
             if (skillCfg.mTargetType == SkillTargetType.None)
@@ -248,7 +248,7 @@ namespace DC.GameLogic
                     if (target != null)
                     {
                         var skillId = mHeroCfg.GetSkillId(KeyCode.A);
-                        var skillCfg = GetSkillSystem().GetSkillCfg(skillId);
+                        var skillCfg = SkillConfigMgr.Instance.GetSkillCfg(skillId);
                         mSelectedSkillCfg = skillCfg;
                         PrepareCastSelectedSkill(mSelectedSkillCfg, hit.transform, Vector3.zero);
                     }

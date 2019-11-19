@@ -7,6 +7,26 @@
 
         }
 
+        public virtual void Update(params object[] param)
+        {
+
+        }
+
+        public virtual void OnShow()
+        {
+
+        }
+
+        public virtual void OnHide()
+        {
+
+        }
+
+        public virtual void Destroy()
+        {
+
+        }
+
         public virtual void Close()
         {
             UiManager.CloseUi(UIManager.GetUiName(GetType()));

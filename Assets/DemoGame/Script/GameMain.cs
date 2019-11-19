@@ -4,6 +4,7 @@ using System.IO;
 using DC.ActorSystem;
 using DC.GameLogic;
 using DC.DCResourceSystem;
+using DC.UI;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,8 +33,14 @@ namespace DC
 
             GetSkillSystem().Init();
 
+            UIManager.Instance.ShowUi<SelectHeroUI>();
+
             //load scene
 
+        }
+
+        void Test()
+        {
             //create hero
             CreateDemoHeroFighter();
 
