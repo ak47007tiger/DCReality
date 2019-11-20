@@ -10,14 +10,33 @@ namespace DC
 {
     public class ViewFinderEditor : Editor
     {
+        private static ViewScriptGenerator ScriptGenerator = new ViewScriptGenerator();
+
+        [MenuItem("Assets/DC/ViewFinder/GenerateScriptToClipboard", priority = 1)]
+        public static void GenerateScriptToClipboard()
+        {
+            var root = Selection.activeGameObject;
+            var rootTf = root.transform;
+        }
+
+        [MenuItem("Assets/DC/ViewFinder/GenerateScriptFile", priority = 1)]
+        public static void GenerateScriptFile()
+        {
+            var root = Selection.activeGameObject;
+            var rootTf = root.transform;
+
+            ScriptGenerator.GenerateScriptFile(rootTf);
+        }
+    }
+
+    public class ViewScriptGenerator
+    {
         public static readonly string prefix_id = "id_";
         public static readonly string prefix_go = "go_";
         public static readonly string prefix_tf = "tf_";
         public static readonly string prefix_cm = "cm_";
         //ignore
         public static readonly string prefix_it = "it_";
-
-        private static readonly int id_sub_start_index = prefix_id.Length;
 
         public static readonly List<Type> support_compoent = new List<Type>
         {
@@ -49,20 +68,7 @@ namespace DC
 }
 ";
 
-        public static ViewFinderSetting GetSetting()
-        {
-            return AssetDatabase.LoadAssetAtPath<ViewFinderSetting>(
-                "Assets/Editor Default Resources/ViewFinderSetting.asset");
-        }
-
-        [MenuItem("Assets/DC/ViewFinder/GenerateScriptToClipboard", priority = 49)]
-        public static void GenerateScriptToClipboard()
-        {
-
-        }
-
-        [MenuItem("Assets/DC/ViewFinder/GenerateScriptFile")]
-        public static void GenerateScriptFile()
+        public string GenerateScript(Transform rootTf)
         {
             /*
              
@@ -72,16 +78,11 @@ namespace DC
                 path type
 
              */
-            var root = Selection.activeGameObject;
-            var rootTf = root.transform;
+
             var dictionary = new Dictionary<string, Transform>();
             SearchAllTarget(ref dictionary, rootTf);
 
-            var className = root.name + "Gen";
-            if (className.StartsWith(prefix_it))
-            {
-                className = className.Substring(prefix_it.Length);
-            }
+            var className = GetClassName(rootTf);
 
             var fieldStrBuffer = new StringBuilder();
             var findStrBuffer = new StringBuilder();
@@ -96,7 +97,7 @@ namespace DC
 
                 var path = GetPathOfRoot(rootTf, tf);
 
-                var fieldName = name.Substring(id_sub_start_index);
+                var fieldName = name.Substring(name.IndexOf('_') + 1);
 
                 if (name.StartsWith(prefix_cm))
                 {
@@ -128,16 +129,26 @@ namespace DC
                     FillGameObjectContent("GameObject", path, fieldName, fieldStrBuffer, findStrBuffer);
                 }
 
-                fieldStrBuffer.Append('\n');
-                findStrBuffer.Append('\n');
+                fieldStrBuffer.Append("\r\n");
+                findStrBuffer.Append("\r\n");
             }
 
             var classScript = new StringBuilder(class_template)
                     .Replace("#className", className)
                     .Replace("#fieldStr", fieldStrBuffer.ToString())
                     .Replace("#findStr", findStrBuffer.ToString());
+
+            return classScript.ToString();
+        }
+
+        public void GenerateScriptFile(Transform rootTf)
+        {
+            var className = GetClassName(rootTf);
+
+            var generateScript = GenerateScript(rootTf);
+
             //save to file
-            var setting = GetSetting();
+            var setting = ViewFinderSetting.GetSetting();
 
             var dir = Path.Combine(Application.dataPath, setting.mScriptSavePath);
             if (!Directory.Exists(dir))
@@ -146,12 +157,63 @@ namespace DC
             }
             var filePath = dir + "/" + className + ".cs";
             Debug.Log("save script: " + filePath);
-            File.WriteAllText(filePath, classScript.ToString(), Encoding.UTF8);
-            
+            File.WriteAllText(filePath, generateScript, Encoding.UTF8);
+
             //refresh asset
             var assetPath = "Assets/" + setting.mScriptSavePath + "/" + className + ".cs";
             Debug.Log("import: " + assetPath);
             AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.Default);
+        }
+
+        public string GetClassName(Transform rootTf)
+        {
+            var className = rootTf.name + "Gen";
+            if (className.StartsWith(prefix_it))
+            {
+                className = className.Substring(prefix_it.Length);
+            }
+
+            return className;
+        }
+
+        public void FillComponentContent(string typeName, string path, string fieldName, StringBuilder fieldStrBuffer, StringBuilder findStrBuffer)
+        {
+            var fieldStr = string.Format("public {0} {1}{2};", typeName, fieldName, typeName);
+            fieldStrBuffer.Append('\t');
+            fieldStrBuffer.Append('\t');
+            fieldStrBuffer.Append(fieldStr);
+            fieldStrBuffer.Append("\r\n");
+
+            var fieldNameType = fieldName + typeName;
+            var findStr = string.Format(
+                "{0} = transform.Find(\"{1}\").GetComponent<{2}>();",
+                fieldNameType, path, typeName);
+
+            findStrBuffer.Append('\t');
+            findStrBuffer.Append('\t');
+            findStrBuffer.Append('\t');
+            findStrBuffer.Append(findStr);
+            findStrBuffer.Append("\r\n");
+        }
+
+        public void FillGameObjectContent(string typeName, string path, string fieldName, StringBuilder fieldStrBuffer, StringBuilder findStrBuffer)
+        {
+            var fieldStr = string.Format("public {0} {1}{2};", typeName, fieldName, typeName);
+            fieldStrBuffer.Append('\t');
+            fieldStrBuffer.Append('\t');
+            fieldStrBuffer.Append(fieldStr);
+            fieldStrBuffer.Append("\r\n");
+
+            var fieldNameType = fieldName + typeName;
+            var findStr = string.Format(
+                "{0} = transform.Find(\"{1}\").gameObject;",
+                fieldNameType, path);
+
+            findStrBuffer.Append('\t');
+            findStrBuffer.Append('\t');
+            findStrBuffer.Append('\t');
+            findStrBuffer.Append(findStr);
+            findStrBuffer.Append("\r\n");
         }
 
         public static string GetPathOfRoot(Transform root, Transform leaf)
@@ -164,46 +226,6 @@ namespace DC
             }
 
             return GetPathOfRoot(root, leaf.parent) + "/" + childName;
-        }
-
-        public static void FillComponentContent(string typeName, string path, string fieldName, StringBuilder fieldStrBuffer, StringBuilder findStrBuffer)
-        {
-            var fieldStr = string.Format("public {0} {1}{2};", typeName, fieldName, typeName);
-            fieldStrBuffer.Append('\t');
-            fieldStrBuffer.Append('\t');
-            fieldStrBuffer.Append(fieldStr);
-            fieldStrBuffer.Append('\n');
-
-            var fieldNameType = fieldName + typeName;
-            var findStr = string.Format(
-                "{0} = transform.Find(\"{1}\").GetComponent<{2}>();",
-                fieldNameType, path, typeName);
-
-            findStrBuffer.Append('\t');
-            findStrBuffer.Append('\t');
-            findStrBuffer.Append('\t');
-            findStrBuffer.Append(findStr);
-            findStrBuffer.Append('\n');
-        }
-
-        public static void FillGameObjectContent(string typeName, string path, string fieldName, StringBuilder fieldStrBuffer, StringBuilder findStrBuffer)
-        {
-            var fieldStr = string.Format("public {0} {1}{2};", typeName, fieldName, typeName);
-            fieldStrBuffer.Append('\t');
-            fieldStrBuffer.Append('\t');
-            fieldStrBuffer.Append(fieldStr);
-            fieldStrBuffer.Append('\n');
-
-            var fieldNameType = fieldName + typeName;
-            var findStr = string.Format(
-                "{0} = transform.Find(\"{1}\").gameObject;",
-                fieldNameType, path);
-
-            findStrBuffer.Append('\t');
-            findStrBuffer.Append('\t');
-            findStrBuffer.Append('\t');
-            findStrBuffer.Append(findStr);
-            findStrBuffer.Append('\n');
         }
 
         public static void SearchAllTarget(ref Dictionary<string, Transform> dic, Transform root)
@@ -221,8 +243,8 @@ namespace DC
                     || objectName.StartsWith(prefix_cm))
                 {
                     dic.Add(objectName, childTf);
-                    SearchAllTarget(ref dic, childTf);
                 }
+                SearchAllTarget(ref dic, childTf);
             }
         }
     }
@@ -258,7 +280,7 @@ namespace DC
         public Image mHeaderImage;
         public Button mConfirmButton;
 
-        public void Init(Transform rootTf)
+        public override void Init(Transform rootTf)
         {
             base.Init(rootTf);
 

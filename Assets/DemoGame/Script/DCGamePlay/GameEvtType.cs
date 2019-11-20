@@ -19,4 +19,9 @@
         /// </summary>
         CastEvt,
     }
+
+    public enum UIEvent
+    {
+        Start = 1000000,
+    }
 }

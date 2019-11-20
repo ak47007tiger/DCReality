@@ -7,7 +7,7 @@
 
         }
 
-        public virtual void Update(params object[] param)
+        public virtual void UpdateUi(params object[] param)
         {
 
         }

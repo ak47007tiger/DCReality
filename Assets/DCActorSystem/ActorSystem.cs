@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DC.Collections.Generic;
+using DC.GameLogic;
 using UnityEngine;
 using DC.SkillSystem;
 using DC.ValueSys;
@@ -14,31 +15,31 @@ namespace DC.ActorSystem
 {
     public interface IActorSystem
     {
-        IActor GetActor(int id);
+        GameActor GetActor(int id);
 
-        IActor GetMainActor();
+        GameActor GetMainActor();
 
-        void SetMainActor(IActor actor);
+        void SetMainActor(GameActor actor);
     }
 
     public class ActorSys : Singleton<ActorSys>, IActorSystem
     {
-        private Dictionary<int, IActor> mIdToActor = new Dictionary<int, IActor>();
+        private Dictionary<int, GameActor> mIdToActor = new Dictionary<int, GameActor>();
 
-        private IActor mMainActor;
+        private GameActor mMainActor;
 
-        public IActor GetActor(int id)
+        public GameActor GetActor(int id)
         {
             //dic[key] if not has key, it will throw exception
             return mIdToActor.GetValEx(id);
         }
 
-        public IActor GetMainActor()
+        public GameActor GetMainActor()
         {
             return mMainActor;
         }
 
-        public void SetMainActor(IActor actor)
+        public void SetMainActor(GameActor actor)
         {
             mMainActor = actor;
         }

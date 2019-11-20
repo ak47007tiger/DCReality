@@ -28,7 +28,7 @@ namespace DC
             {
                 if (null == _mUiRoot)
                 {
-                    _mUiRoot = GameObject.Find("UIRoot").transform;
+                    _mUiRoot = GameObject.Find("UIRoot").transform.Find("UICanvas");
                 }
 
                 return _mUiRoot;
@@ -155,7 +155,7 @@ namespace DC
 
         public static string GetUiName(Type type)
         {
-            return type.Name + "ViewGen";
+            return type.Name;
         }
 
         public static string GetAssetPath(string name)

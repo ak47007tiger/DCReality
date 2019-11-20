@@ -26,47 +26,4 @@ namespace DC.SkillSystem
 
         void TimeTrigger();
     }
-
-    public class TSkillSystemTestCaseImpl : GameContextObject, ITestCase
-    {
-        public void NormalAttack()
-        {
-        }
-
-        public void NormalAttackTarget()
-        {
-        }
-
-        public void CastToActor()
-        {
-        }
-
-        public void CastToDirection()
-        {
-        }
-
-        public void CastToPosition()
-        {
-        }
-
-        public void CastComposeSkill()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void CastToActorWithSelfBuff()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void CastToActorWithOppositeBuff()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void TimeTrigger()
-        {
-        }
-    }
-    
 }

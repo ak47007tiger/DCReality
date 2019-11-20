@@ -16,7 +16,7 @@ namespace DC.GameLogic
 
         private Dictionary<SkillCfg, ISkill> mCfgToSkill;
 
-        private bool mIsPlayer;
+        private int mActorId;
 
         private ValueComponent mValueComponent = new ValueComponent();
 
@@ -87,6 +87,16 @@ namespace DC.GameLogic
             }
         }
 
+        public int GetActorId()
+        {
+            return mActorId;
+        }
+
+        public void SetActorId(int actorId)
+        {
+            mActorId = actorId;
+        }
+
         public ICaster GetCaster()
         {
             return Caster;
@@ -152,12 +162,7 @@ namespace DC.GameLogic
 
         public bool IsPlayer()
         {
-            return mIsPlayer;
-        }
-
-        public void SetIsPlayer(bool player)
-        {
-            mIsPlayer = player;
+            return ActorSys.Instance.GetMainActor() == this;
         }
 
         public ActorSide GetActorSide()

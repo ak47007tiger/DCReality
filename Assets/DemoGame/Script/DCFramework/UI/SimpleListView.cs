@@ -3,46 +3,85 @@ using UnityEngine;
 
 namespace DC.GameLogic.UI
 {
-    public abstract class SimpleListView<D,V> where V : SimpleListItemView<D>
+    public interface IListViewFuncs<D,V>
     {
-        public abstract SimpleListViewAdapter<D> GetAdapter();
+        List<D> GetDataFunc();
 
-        public abstract V CreateViewItem();
+        V CreateViewItemFunc(int index);
 
-        public abstract Transform GetListRootTf();
+        void UpdateItemUiFunc(D itemData, V itemUi);
+    }
+
+    public class SimpleListView<D,V>
+    {
+        public delegate List<D> GetDataFunc();
+
+        public delegate V CreateViewItemFunc(int index);
+
+        public delegate void UpdateItemUiFunc(D data, V itemUi);
 
         List<V> mViewList = new List<V>();
 
-        void Awake()
-        {
+        public GetDataFunc mGetData;
 
+        public CreateViewItemFunc mCreateViewItem;
+
+        public UpdateItemUiFunc mUpdateItemUi;
+
+        public void Init(IListViewFuncs<D, V> listFuncs)
+        {
+            mGetData = listFuncs.GetDataFunc;
+            mCreateViewItem = listFuncs.CreateViewItemFunc;
+            mUpdateItemUi = listFuncs.UpdateItemUiFunc;
         }
 
-        void Start()
+        public void Init(GetDataFunc GetData, CreateViewItemFunc CreateViewItem, 
+            UpdateItemUiFunc UpdateItemUi)
         {
-            
+            mGetData = GetData;
+            mCreateViewItem = CreateViewItem;
+            mUpdateItemUi = UpdateItemUi;
         }
 
         public void Create()
         {
             mViewList.Clear();
 
-            var dataList = GetAdapter().GetDataList();
+            var dataList = mGetData();
             for (var i = 0; i < dataList.Count; i++)
             {
-                var viewItem = CreateViewItem();
+                var viewItem = mCreateViewItem(i);
                 var dataItem = dataList[i];
-                viewItem.UpdateUi(dataItem);
+                mUpdateItemUi(dataItem, viewItem);
                 mViewList.Add(viewItem);
             }
         }
 
+        public void UpdateUi()
+        {
+            var dataList = mGetData();
+            for (var i = 0; i < dataList.Count; i++)
+            {
+                var viewItem = mViewList[i];
+                var dataItem = dataList[i];
+                mUpdateItemUi(dataItem, viewItem);
+            }
+        }
+
+        public void UpdateUi(int index)
+        {
+            var dataList = mGetData();
+            var viewItem = mViewList[index];
+            var dataItem = dataList[index];
+            mUpdateItemUi(dataItem, viewItem);
+        }
+
         public void DestroyView()
         {
-            for (var i = 0; i < mViewList.Count; i++)
+            /*for (var i = 0; i < mViewList.Count; i++)
             {
                 Object.Destroy(mViewList[i].gameObject);
-            }
+            }*/
             mViewList.Clear();
         }
 

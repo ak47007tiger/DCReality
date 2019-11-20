@@ -59,44 +59,6 @@ namespace DC.GameLogic
         }
     }
 
-    public class SystemProvider : Singleton<SystemProvider>, ISystemProvider
-    {
-        public IActorSystem GetActorSystem()
-        {
-            return ActorSys.Instance;
-        }
-
-        public ITargetSystem GetTargetSystem()
-        {
-            return TargetSys.Instance;
-        }
-
-        public ISkillSystem GetSkillSystem()
-        {
-            return SkillSys.Instance;
-        }
-
-        public ICastSystem GetCastSystem()
-        {
-            return CastSys.Instance;
-        }
-
-        public IPhysicSystem GetPhysicSystem()
-        {
-            return PhysicSys.Instance;
-        }
-
-        public IEffectSystem GetEffectSystem()
-        {
-            return EffectSys.Instance;
-        }
-
-        public IResourceSystem GetResourceSystem()
-        {
-            return ResourceSys.Instance;
-        }
-    }
-
     public class GameElement : GameContextObject
     {
         private CacheItem<GameActor> mCacheActor;

@@ -10,6 +10,9 @@ namespace DC.ActorSystem
 {
     public interface IActor
     {
+        int GetActorId();
+        void SetActorId(int actorId);
+
         #region skill system
 
         ICaster GetCaster();
@@ -35,7 +38,6 @@ namespace DC.ActorSystem
         void TryArrive(Vector3 targetPos, float stopDistance, Action<NavArrivePosition, float> onArrive);
 
         bool IsPlayer();
-        void SetIsPlayer(bool player);
 
         ActorSide GetActorSide();
         void SetActorSide(ActorSide side);
