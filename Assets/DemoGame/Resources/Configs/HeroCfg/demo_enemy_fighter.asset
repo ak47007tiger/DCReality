@@ -20,7 +20,7 @@ MonoBehaviour:
     Value: 
   mModelPath: Model/Actor/_actor_property_pos_red
   mPrefabPath: actor/demo_hero_enemy_fighter
-  mName: 
+  mName: hero2
   mDesc: 
   mUiIcon: 
   mSpeed: 4

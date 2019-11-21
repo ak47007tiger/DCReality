@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72743abc7ce2a67438ebc159eca189f1, type: 3}
   m_Name: demo_fighter_8
   m_EditorClassIdentifier: 
-  mId: 6
+  mId: 8
   mName: 
   mDesc: 
   mCdDuration: 0

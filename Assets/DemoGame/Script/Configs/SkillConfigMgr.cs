@@ -10,7 +10,7 @@ namespace DC.GameLogic
 
         public SkillConfigMgr()
         {
-            var skillCfgs = ResourceSys.Instance.LoadAll<SkillCfg>(SystemPreset.path_skill_cfgs);
+            var skillCfgs = ResourceSys.Instance.LoadAll<SkillCfg>(SystemPreset.GetConfigPath<SkillCfg>());
             foreach (var skillCfg in skillCfgs)
             {
                 skillCfg.OnCreate();

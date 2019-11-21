@@ -17,6 +17,8 @@ namespace DC.ActorSystem
     {
         GameActor GetActor(int id);
 
+        void AddActor(int id, GameActor actor);
+
         GameActor GetMainActor();
 
         void SetMainActor(GameActor actor);
@@ -32,6 +34,11 @@ namespace DC.ActorSystem
         {
             //dic[key] if not has key, it will throw exception
             return mIdToActor.GetValEx(id);
+        }
+
+        public void AddActor(int id, GameActor actor)
+        {
+            mIdToActor[id] = actor;
         }
 
         public GameActor GetMainActor()

@@ -12,8 +12,47 @@ namespace DC.GameLogic
     /// </summary>
     public class FightScene : Singleton<FightScene>
     {
+        public void Init(HeroCfg player, HeroCfg ai)
+        {
+            {
+                var actor = CreateHero(player, PlayerDataMgr.Instance.GetMainActorId());
+                actor.SetActorSide(ActorSide.blue);
+                var birthPosition = GetBirthPosition(0, ActorSide.blue);
+                actor.transform.position = birthPosition;
 
-        public GameActor CreateActor(HeroCfg heroCfg, int actorId)
+                ActorSys.Instance.AddActor(actor.GetActorId(), actor);
+
+                ActorSys.Instance.SetMainActor(actor);
+            }
+
+            for (var i = 0; i < 5; i++)
+            {
+                var actor = CreateHero(ai, PlayerDataMgr.Instance.GenerateActorId());
+                actor.SetActorSide(ActorSide.red);
+                var birthPosition = GetBirthPosition(i, ActorSide.red);
+                actor.transform.position = birthPosition;
+
+                ActorSys.Instance.AddActor(actor.GetActorId(), actor);
+            }
+        }
+
+        public GameActor CreateHero(HeroCfg heroCfg, int actorId)
+        {
+            var heroPrefab = ResourceSys.Instance.Load<GameObject>(heroCfg.mPrefabPath);
+
+            var hero = Object.Instantiate(heroPrefab, GameMain.Instance.RootTf);
+
+            var actor = hero.GetComponent<GameActor>();
+            actor.SetHeroCfg(heroCfg);
+            actor.SetModel(heroCfg.mModelPath);
+            actor.UpdateModel();
+
+            hero.GetComponent<HeroEntity>().mHeroCfg = heroCfg;
+
+            return actor;
+        }
+
+        public GameActor CreateNpc(NPCConfig npcCfg, int actorId)
         {
             return null;
         }
@@ -28,11 +67,14 @@ namespace DC.GameLogic
             {
                 var blueCenter = new Vector3(4,0,4);
                 blueCenter.x -= (index * 2);
+                return blueCenter;
             }
-            else if (ActorSide.red == side)
+
+            if (ActorSide.red == side)
             {
-                var blueCenter = new Vector3(4, 0, -4);
-                blueCenter.x -= (index * 2);
+                var redCenter = new Vector3(4, 0, -4);
+                redCenter.x -= (index * 2);
+                return redCenter;
             }
 
             return Vector3.zero;
@@ -41,7 +83,6 @@ namespace DC.GameLogic
         private void CreateDemoHeroFighter()
         {
             var fighterCfg = MockSystem.Instance.DemoFighterCfg();
-            fighterCfg.BuildDerivedData();
 
             var heroPrefab = ResourceSys.Instance.Load<GameObject>(fighterCfg.mPrefabPath);
 
@@ -54,6 +95,7 @@ namespace DC.GameLogic
             actor.UpdateModel();
 
             hero.GetComponent<HeroEntity>().mHeroCfg = fighterCfg;
+
             hero.transform.position = new Vector3(2, 0, 0);
         }
 

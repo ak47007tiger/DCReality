@@ -8,8 +8,8 @@ namespace DC.GameLogic
 {
     public interface ISystemProvider
     {
-        IActorSystem GetActorSystem();
-        ITargetSystem GetTargetSystem();
+        ActorSys GetActorSystem();
+        TargetSys GetTargetSystem();
 
         ISkillSystem GetSkillSystem();
         ICastSystem GetCastSystem();
@@ -23,12 +23,12 @@ namespace DC.GameLogic
 
     public class GameContextObject : BaseMonoBehaviour, ISystemProvider
     {
-        public IActorSystem GetActorSystem()
+        public ActorSys GetActorSystem()
         {
             return ActorSys.Instance;
         }
 
-        public ITargetSystem GetTargetSystem()
+        public TargetSys GetTargetSystem()
         {
             return TargetSys.Instance;
         }

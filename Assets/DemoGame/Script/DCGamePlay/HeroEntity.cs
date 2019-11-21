@@ -19,19 +19,22 @@ namespace DC.GameLogic
         private SkillCfg mSelectedSkillCfg;
         private CastCfg mCastCfg;
 
-        private HeroInput_State mState;
-        private HeroInput_State mIdle = new HeroInput_Idle();
-        private HeroInput_State mDeployCast = new HeroInput_DeployCast();
-
         protected override void Awake()
         {
             base.Awake();
-            MsgSys.Add<KeyCode>(GameEvent.KeyCodeEvt, OnKeyEvent);
+
+            if (Actor.IsPlayer())
+            {
+                MsgSys.Add<KeyCode>(GameEvent.KeyCodeEvt, OnKeyEvent);
+            }
         }
 
         void OnDestroy()
         {
-            MsgSys.Remove<KeyCode>(GameEvent.KeyCodeEvt, OnKeyEvent);
+            if (Actor.IsPlayer())
+            {
+                MsgSys.Remove<KeyCode>(GameEvent.KeyCodeEvt, OnKeyEvent);
+            }
         }
 
         public void SetForward(Vector3 forward)
@@ -91,6 +94,11 @@ namespace DC.GameLogic
             }
 
             var skillCfg = SkillConfigMgr.Instance.GetSkillCfg(skillId);
+            if (null == skillCfg)
+            {
+                LogDC.LogEx("no such skill: ", skillId);
+                return;
+            }
 
             //不需要目标 直接释放技能
             if (skillCfg.mTargetType == SkillTargetType.None)
@@ -271,26 +279,6 @@ namespace DC.GameLogic
         {
             mSelectedSkillCfg = null;
             mCastCfg = null;
-        }
-
-        void SetState(HeroInput_State state)
-        {
-            mState = state;
-        }
-
-        class HeroInput_State
-        {
-            protected virtual void Update()
-            {
-            }
-        }
-
-        class HeroInput_Idle : HeroInput_State
-        {
-        }
-
-        class HeroInput_DeployCast : HeroInput_State
-        {
         }
     }
 }

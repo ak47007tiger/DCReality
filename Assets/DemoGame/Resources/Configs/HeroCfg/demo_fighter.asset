@@ -32,7 +32,7 @@ MonoBehaviour:
     Value: 07000000
   mModelPath: Model/Actor/_actor_property_pos_blue
   mPrefabPath: actor/demo_hero_fighter
-  mName: 
+  mName: hero1
   mDesc: 
   mUiIcon: 
   mSpeed: 4

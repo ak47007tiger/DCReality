@@ -20,6 +20,10 @@ namespace DC.GameLogic
         {
             var configPath = SystemPreset.GetConfigPath<HeroCfg>();
             var heroCfgs = ResourceSys.Instance.LoadAll<HeroCfg>(configPath);
+            for (var i = 0; i < heroCfgs.Length; i++)
+            {
+                heroCfgs[i].BuildDerivedData();
+            }
             mHeroCfgs.AddRange(heroCfgs);
             mIdToHeroCfg = ConfigToolkit.ListToDictionary(heroCfgs, (v) => v.mId);
         }

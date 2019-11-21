@@ -39,6 +39,7 @@ namespace DC.UI
             if (mMy == null)
             {
                 mMy = mCur;
+                return;
             }
 
             if (null == mAi)
@@ -46,16 +47,10 @@ namespace DC.UI
                 mAi = mCur;
             }
 
-            if (null != mAi)
-            {
-                //to fight scene
-                SceneManager.LoadScene("FightScene");
-                FightScene.Instance.CreateActor(mMy, PlayerDataMgr.Instance.GetMainActorId());
-
-                FightScene.Instance.CreateActor(mAi, PlayerDataMgr.Instance.GenerateActorId());
-
-                Close();
-            }
+            //to fight scene
+            SceneManager.LoadScene("FightScene");
+            FightScene.Instance.Init(mMy, mAi);
+            Close();
         }
 
         public List<HeroCfg> GetDataFunc()
