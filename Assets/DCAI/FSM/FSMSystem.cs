@@ -161,14 +161,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
         /// This method decides if the state should transition to another on its list
         /// NPC is a reference to the object that is controlled by this class
         /// </summary>
-        public abstract void Reason();
+        public abstract void Reason(object data);
 
         /// <summary>
         /// This method controls the behavior of the NPC in the game World.
         /// Every action, movement or communication the NPC does should be placed here
         /// NPC is a reference to the object that is controlled by this class
         /// </summary>
-        public abstract void Act();
+        public abstract void Act(object data);
 
     } // class FSMState
 
