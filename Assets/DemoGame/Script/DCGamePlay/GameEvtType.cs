@@ -1,4 +1,6 @@
-﻿namespace DC.GameLogic
+﻿using DC.SkillSystem;
+
+namespace DC.GameLogic
 {
     public enum GameEvent
     {
@@ -18,10 +20,38 @@
         /// 施法事件
         /// </summary>
         CastEvt,
+        /// <summary>
+        /// 复活
+        /// </summary>
+        AliveEvt,
     }
 
     public enum UIEvent
     {
         Start = 1000000,
+    }
+
+    public enum BuffOperate
+    {
+        Add,
+        Remove,
+        Update,
+    }
+
+    public class BuffEvt
+    {
+        public Buff mBuff;
+        public BuffOperate mOperate;
+
+        public BuffEvt()
+        {
+
+        }
+
+        public BuffEvt(Buff buff, BuffOperate operate)
+        {
+            mBuff = buff;
+            mOperate = operate;
+        }
     }
 }

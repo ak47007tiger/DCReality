@@ -19,9 +19,15 @@ namespace DC.GameLogic
         private SkillCfg mSelectedSkillCfg;
         private CastCfg mCastCfg;
 
+        private FSMSystem mHeroFsm;
+
         protected override void Awake()
         {
             base.Awake();
+
+            var idleState = new HeroIdleState();
+
+            mHeroFsm = new FSMSystem();
 
             if (Actor.IsPlayer())
             {
@@ -69,6 +75,7 @@ namespace DC.GameLogic
                 if (Input.GetKeyDown(code))
                 {
                     OnKeyEvent(code);
+                    break;
                 }
             }
         }

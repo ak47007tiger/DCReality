@@ -39,17 +39,22 @@ namespace DC.SkillSystem
 
     public enum BuffType
     {
-        /// <summary>
-        /// 速度
-        /// </summary>
-        move_speed,
+        hp,
+        mp,
+
         physic_attack,
         magic_attack,
         physic_defense,
         magic_defense,
         physic_weaken,
         magic_weaken,
+        /// <summary>
+        /// 免伤
+        /// </summary>
         immune_damage,
+
+        can_not_move,
+
         can_not_select,
         /// <summary>
         /// 反伤
@@ -58,12 +63,22 @@ namespace DC.SkillSystem
         /// <summary>
         /// 晕眩
         /// </summary>
-        stun,
-        hp,
-        mp,
+        dizzy,
+        
         invisible,
-        //攻击特效
-        special_attack
+        /// <summary>
+        /// 攻击特效
+        /// 附带最大生命值
+        /// 附带蓝量
+        /// 附带魔法伤害
+        /// 附带真实伤害
+        /// </summary>
+        special_attack,
+
+        /// <summary>
+        /// 死亡状态
+        /// </summary>
+        die,
     }
 
     public interface IBuffCfg

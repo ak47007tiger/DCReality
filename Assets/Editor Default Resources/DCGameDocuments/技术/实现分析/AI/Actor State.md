@@ -7,6 +7,30 @@
 - Dizzy
 - Die
 
+## flow
+- idle to skill
+  - ste up move position
+  - set up skill
+  - cast skill
+
+## SkillState的move和IdleState的move
+- 一般的移动，仅仅是移动，到达目的地后会停下
+- 技能的移动伴随着回调，到达后释放技能
+
+## input
+- evt
+  - move evt
+  - skill evt
+  - buff evt
+  - alive evt
+  - die evt
+- evt queue
+
+## 一个有动画的技能的生效过程
+- 播放前摇动画
+- 技能生效
+- 播放后摇动画
+
 ## 状态机是用来做什么的？
 - 不同的状态根据输入有不同的表现
 - 部分输入可以改变状态
@@ -50,3 +74,8 @@
 - 移动到敌人并且敌人在攻击范围内会自动攻击
 - 放技能中进行移动，放完技能会移动到指定位置
 - 一个位移技能会取消另一个正在释放的位移技能
+
+## 有关死亡的处理
+- 扣血到负值之后死亡
+- 扣血事件
+- 轮询血量
