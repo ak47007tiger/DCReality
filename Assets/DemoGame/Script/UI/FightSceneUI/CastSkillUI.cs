@@ -11,11 +11,17 @@ namespace DC.UI
     /// 范围，一个圈
     /// 方向，箭头
     /// </summary>
-    public class CastUI : BaseUI
+    public class CastSkillUI : BaseUI
     {
-        public Image mImgRange;
+        public SpriteRenderer mImgRange;
 
-        public Image mImgArrow;
+        public Transform mArrowTf;
+        public SpriteRenderer mImgArrow;
+
+        /// <summary>
+        /// position类型
+        /// </summary>
+        public SpriteRenderer mImgArea;
 
         public SkillCfg mSkillCfg;
 
@@ -23,6 +29,10 @@ namespace DC.UI
 
         void Awake()
         {
+            mImgRange.enabled = false;
+            mImgArrow.enabled = false;
+            mImgArea.enabled = false;
+
             MsgSys.Add<SkillCfg>(GameEvent.CastEvt, OnPrepareCast);
         }
 
@@ -42,18 +52,18 @@ namespace DC.UI
             if (mainActor != null)
             {
                 var ray = DCGraphics.Instance.MainCamera.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out var casthit))
+                if (Physics.Raycast(ray, out var castHit))
                 {
                     switch (mSkillCfg.mTargetType)
                     {
                         case SkillTargetType.Position:
-                            OnWatchPosition(mainActor, casthit);
+                            OnWatchPosition(mainActor, castHit);
                             break;
                         case SkillTargetType.Direction:
-                            OnWatchDirection(mainActor, casthit);
+                            OnWatchDirection(mainActor, castHit);
                             break;
                         case SkillTargetType.Actor:
-                            OnWatchTarget(mainActor, casthit);
+                            OnWatchTarget(mainActor, castHit);
                             break;
                     }
                 }
@@ -63,18 +73,19 @@ namespace DC.UI
 
         private void OnWatchTarget(IActor mainActor,RaycastHit casthit)
         {
-            mTargetUi.ShowCastTarget(Input.mousePosition);
+            var point = casthit.point;
+            point.y = 1;
+
+            mImgArea.transform.position = point;
+            //            mTargetUi.ShowCastTarget(Input.mousePosition);
         }
 
         private void OnWatchPosition(IActor mainActor, RaycastHit casthit)
         {
-            var position = mainActor.GetTransform().position;
-            position.y = 0;
-
             var point = casthit.point;
-            point.y = 0;
+            point.y = 1;
 
-            var dir = (point - position).normalized;
+            mImgArea.transform.position = point;
         }
 
         private void OnWatchDirection(IActor mainActor, RaycastHit casthit)
@@ -86,22 +97,61 @@ namespace DC.UI
             point.y = 0;
 
             var dir = (point - position).normalized;
+//            mArrowTf.forward = dir;
+//            mArrowTf.Rotate();
+//            Vector3.RotateTowards(Vector3.zero, Vector3.zero, 1, 1);
 
+            var localDir = transform.worldToLocalMatrix.MultiplyVector(dir);
+
+            var rotation = Quaternion.FromToRotation(new Vector3(0, -1, 0), localDir);
+            //如果父节点有个转换，那么怎么计算无关父节点的子节点的旋转
+//            mImgArrow.transform.rotation = rotation;
+            mImgArrow.transform.localRotation = rotation;
+            /*var localEulerAngles = mImgArrow.transform.localEulerAngles;
+            mImgArrow.transform.localEulerAngles = localEulerAngles;*/
+            //            mImgArrow.transform.localRotation = rotation;
+
+            //            Debug.DrawRay(position, point - position, Color.blue);
+            Debug.DrawLine(position, point);
+
+            /*var quaternion = Quaternion.Euler(dir);
+            var rotate = mImgArrow.transform.localEulerAngles;
+            var quaternionEulerAngles = quaternion.eulerAngles;
+            rotate.z = quaternionEulerAngles.z;
+            mImgArrow.transform.localEulerAngles = rotate;*/
+
+//            mImgArrow.transform.localRotation = dir;
         }
 
         public void OnPrepareCast(SkillCfg skillCfg)
         {
-            if (skillCfg.mTargetType == SkillTargetType.Position || skillCfg.mTargetType == SkillTargetType.Direction)
+            mSkillCfg = skillCfg;
+
+            mImgRange.enabled = false;
+            mImgArrow.enabled = false;
+            mImgArea.enabled = true;
+
+            if (skillCfg.mTargetType == SkillTargetType.Direction)
             {
+                if (SystemPreset.max_skill_cast_range < mSkillCfg.mCastRange)
+                {
+                    mImgRange.enabled = true;
+                }
                 mImgArrow.enabled = true;
             }
-            else
+
+            if (skillCfg.mTargetType == SkillTargetType.Position)
             {
+                mImgArea.enabled = true;
                 mImgRange.enabled = true;
             }
 
-            if ((skillCfg.mSkillType == SkillType.area || skillCfg.mSkillType == SkillType.bullet) && skillCfg.mCastRange > 0)
+            if (skillCfg.mTargetType == SkillTargetType.Actor)
             {
+                mImgArea.enabled = true;
+                mImgArea.transform.localScale = Vector3.one;
+
+                mImgRange.enabled = true;
             }
         }
 
@@ -109,6 +159,8 @@ namespace DC.UI
         {
             mImgRange.enabled = false;
             mImgArrow.enabled = false;
+            mImgArea.enabled = false;
+            mSkillCfg = null;
         }
 
         public float WorldSizeToUiSize(float world)
@@ -138,4 +190,5 @@ namespace DC.UI
         }
 
     }
+
 }

@@ -140,6 +140,14 @@ namespace DC
             Instance.mNextFixedUpdate.Add(action);
         }
 
+        public static void RemoveNextFixedUpdate(Action action)
+        {
+            if (null != Instance)
+            {
+                Instance.mNextFixedUpdate.Remove(action);
+            }
+        }
+
         public static void RunAction(float delay, Action action)
         {
             Instance.mActionRecords.Add(new ActionRecord(delay, action));

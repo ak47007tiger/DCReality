@@ -63,6 +63,15 @@ namespace DC.SkillSystem
         /// 存活时间
         /// </summary>
         public float mDuration;
+
+        /// <summary>
+        /// 前摇动画时间
+        /// </summary>
+        public float mPreCastDuration;
+        /// <summary>
+        /// 后摇动画时间
+        /// </summary>
+        public float mAfterCastDuration;
         /// <summary>
         /// 释放后不立即cd要等待的时间
         /// </summary>
@@ -82,6 +91,11 @@ namespace DC.SkillSystem
         /// </summary>
         /// <returns></returns>
         public float mCastRange;
+
+        /// <summary>
+        /// 生效区域范围
+        /// </summary>
+        public float mRayCastRange;
 
         public string mPrefabPath;
 
@@ -133,6 +147,11 @@ namespace DC.SkillSystem
         public void OnCreate()
         {
 
+        }
+
+        public string GetUiIconPath()
+        {
+            return "Texture/icon_skill/" + mUiIcon;
         }
     }
 

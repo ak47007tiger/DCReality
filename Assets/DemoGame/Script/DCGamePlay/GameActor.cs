@@ -38,9 +38,19 @@ namespace DC.GameLogic
 
         private BuffCmpnt mBuffCmpnt = new BuffCmpnt();
 
+        public NavArrivePosition NavArrivePosition
+        {
+            get { return mNavArrivePosition; }
+        }
+
         protected override void Awake()
         {
             base.Awake();
+            mNavArrivePosition = gameObject.GetOrAdd<NavArrivePosition>();
+        }
+
+        void Start()
+        {
             mValueComponent.OnValueChange = OnComponentValueChange;
         }
 
@@ -154,8 +164,6 @@ namespace DC.GameLogic
 
         public void TryArrive(Vector3 targetPos, float stopDistance, Action<NavArrivePosition, float> onArrive)
         {
-            mNavArrivePosition = gameObject.GetOrAdd<NavArrivePosition>();
-
             mNavArrivePosition.mOnCatchTarget = onArrive;
             mNavArrivePosition.StartTrace(targetPos, stopDistance);
         }

@@ -4,6 +4,8 @@ namespace DC.GameLogic
 {
     public class SystemPreset
     {
+        public static float max_skill_cast_range = 200;
+
         public static readonly string tag_env_ground = "env_ground";
 
         public static bool IsGround(string tag)

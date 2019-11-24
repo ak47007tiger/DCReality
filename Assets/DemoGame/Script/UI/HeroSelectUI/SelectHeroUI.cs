@@ -32,6 +32,9 @@ namespace DC.UI
             mHeroListView.Create();
 
             mView.confirmButton.onClick.AddListener(OnConfirmBtnClick);
+
+            mMy = allHeroCfgs[0];
+            mAi = allHeroCfgs[1];
         }
 
         private void OnConfirmBtnClick()
@@ -75,7 +78,7 @@ namespace DC.UI
         public void UpdateItemUiFunc(HeroCfg data, SelectHeroItemUI itemUi)
         {
             itemUi.ViewGen.nameText.text = data.mName;
-            ResourceSys.Instance.SetImage(itemUi.ViewGen.headerImage, data.mUiIcon);
+            ResourceSys.Instance.SetImage(itemUi.ViewGen.headerImage, data.GetIconPath());
         }
 
         private void OnItemClick(SelectHeroItemUI itemUi, int index)

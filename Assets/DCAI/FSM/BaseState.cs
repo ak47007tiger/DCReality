@@ -8,28 +8,33 @@ namespace DC.AI
     {
         public override void Reason(object data)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public override void Act(object data)
         {
-            throw new System.NotImplementedException();
+
         }
     }
 
     public class BaseHeroState : FSMState
     {
-        protected HeroEntity mHeroEntity;
+        protected HeroEntity Hero;
 
-        protected Caster mCaster;
+        protected Caster Caster;
 
-        protected GameActor mActor;
+        protected GameActor Actor;
+
+        public void SetStateId(StateID pStateId)
+        {
+            stateID = pStateId;
+        }
 
         public void SetUp(GameObject ctxObj)
         {
-            mHeroEntity = ctxObj.GetComponent<HeroEntity>();
-            mCaster = ctxObj.GetComponent<Caster>();
-            mActor = ctxObj.GetComponent<GameActor>();
+            Hero = ctxObj.GetComponent<HeroEntity>();
+            Caster = ctxObj.GetComponent<Caster>();
+            Actor = ctxObj.GetComponent<GameActor>();
         }
 
         public override void Reason(object data)
@@ -44,7 +49,7 @@ namespace DC.AI
 
         public static BuffEvt GetBuffEvt(object data)
         {
-            if (data is BuffEvt buff)
+            if (data is BuffEvt)
                 return (BuffEvt) data;
             return null;
         }

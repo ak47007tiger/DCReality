@@ -33,6 +33,7 @@ namespace DC
             //init all mono singleton
             //init all sys
             var gameNavigationSystem = GameNavigationSystem.Instance;
+            var gameInput = GameInput.Instance;
 
             SkillSys.Instance.Init();
 

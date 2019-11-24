@@ -17,8 +17,10 @@ MonoBehaviour:
   mDesc: 
   mCdDuration: 0
   mDuration: 1000
+  mPreCastDuration: 0
+  mAfterCastDuration: 0
   mCdWaitDuration: 0
-  mUiIcon: 
+  mUiIcon: bulande_q
   mHitCnt: 1
   mTargetType: 1
   mMaxTargetCnt: 1

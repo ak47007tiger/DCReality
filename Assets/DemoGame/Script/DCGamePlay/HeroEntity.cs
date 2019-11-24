@@ -2,6 +2,8 @@
 using DC.ActorSystem;
 using DC.AI;
 using DC.SkillSystem;
+using DC.UI;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,17 +23,52 @@ namespace DC.GameLogic
 
         private FSMSystem mHeroFsm;
 
+        public CastSkillUI mCastSkillUi;
+
         protected override void Awake()
         {
             base.Awake();
+        }
 
-            var idleState = new HeroIdleState();
-
-            mHeroFsm = new FSMSystem();
-
+        void Start()
+        {
             if (Actor.IsPlayer())
             {
                 MsgSys.Add<KeyCode>(GameEvent.KeyCodeEvt, OnKeyEvent);
+                CreateCastUI();
+            }
+
+            Actor.GetBuffCmpnt().AddOnBuffAddListener(OnAddBuff);
+            Actor.GetBuffCmpnt().AddOnRemoveAddListener(OnRemoveBuff);
+        }
+
+        public void SetFSM(AnimatorController animatorController)
+        {
+            mHeroFsm = AnimatorToFSM.Instance.ConvertHero(animatorController, gameObject);
+        }
+
+        public void CreateCastUI()
+        {
+            mCastSkillUi = UIManager.Instance.CreateUiInstance<CastSkillUI>(CacheTransform);
+            mCastSkillUi.CacheTransform.localPosition =
+                UIManager.Instance.LoadPrefab<CastSkillUI>().transform.localPosition;
+        }
+
+        private void OnAddBuff(Buff buff)
+        {
+            if (null != mHeroFsm)
+            {
+                mHeroFsm.CurrentState.Reason(new BuffEvt(buff, BuffOperate.Add));
+                mHeroFsm.CurrentState.Act(null);
+            }
+        }
+
+        public void OnRemoveBuff(Buff buff)
+        {
+            if (null != mHeroFsm)
+            {
+                mHeroFsm.CurrentState.Reason(new BuffEvt(buff, BuffOperate.Remove));
+                mHeroFsm.CurrentState.Act(null);
             }
         }
 
@@ -58,6 +95,15 @@ namespace DC.GameLogic
             HandleSkillKey();
             HandleLeftMouseBtn();
             HandleRightMouseBtn();
+        }
+
+        void FixedUpdate()
+        {
+            if (null != mHeroFsm)
+            {
+                mHeroFsm.CurrentState.Reason(null);
+                mHeroFsm.CurrentState.Act(null);
+            }
         }
 
         #region skill key code
@@ -117,6 +163,10 @@ namespace DC.GameLogic
             {
                 //选中某个技能 准备调参
                 mSelectedSkillCfg = skillCfg;
+                if (null != mCastSkillUi)
+                {
+                    mCastSkillUi.OnPrepareCast(mSelectedSkillCfg);
+                }
                 LogDC.LogEx("prepare skill ", skillId);
             }
         }
@@ -124,6 +174,9 @@ namespace DC.GameLogic
         #endregion
 
         #region set target
+
+        public bool mIsCastPrepareReady;
+        public RaycastHit mTargetHit;
 
         private void HandleLeftMouseBtn()
         {
@@ -138,6 +191,8 @@ namespace DC.GameLogic
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit, 100))
                     {
+                        mIsCastPrepareReady = true;
+                        mTargetHit = hit;
                         PrepareCastSelectedSkill(mSelectedSkillCfg, hit.transform, hit.point);
                     }
                 }
@@ -234,6 +289,8 @@ namespace DC.GameLogic
             ClearSkill();
         }
 
+        public void SetTransition(Transition t) { mHeroFsm.PerformTransition(t); }
+
         #region right mouse btn
         private void HandleRightMouseBtn()
         {
@@ -277,15 +334,27 @@ namespace DC.GameLogic
             return mSelectedSkillCfg != null;
         }
 
+        public SkillCfg GetSelectedSkillCfg()
+        {
+            return mSelectedSkillCfg;
+        }
+
         public void StopPreparingCast()
         {
             ClearSkill();
         }
 
+                
         public void ClearSkill()
         {
+            if (null != mCastSkillUi)
+            {
+                mCastSkillUi.OnCastEnd();
+            }
+
             mSelectedSkillCfg = null;
             mCastCfg = null;
+            mIsCastPrepareReady = false;
         }
     }
 }

@@ -24,7 +24,15 @@ namespace DC.GameLogic
             {
                 heroCfgs[i].BuildDerivedData();
             }
+
             mHeroCfgs.AddRange(heroCfgs);
+            mHeroCfgs.Sort((a, b) =>
+            {
+                if (a.mId < b.mId) return -1;
+                if (a.mId > b.mId) return 1;
+                return 0;
+            });
+
             mIdToHeroCfg = ConfigToolkit.ListToDictionary(heroCfgs, (v) => v.mId);
         }
 

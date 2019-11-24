@@ -22,5 +22,5 @@ MonoBehaviour:
   mPrefabPath: actor/demo_hero_enemy_fighter
   mName: hero2
   mDesc: 
-  mUiIcon: 
+  mUiIcon: jiakesi
   mSpeed: 4

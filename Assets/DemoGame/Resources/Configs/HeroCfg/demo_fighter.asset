@@ -34,5 +34,5 @@ MonoBehaviour:
   mPrefabPath: actor/demo_hero_fighter
   mName: hero1
   mDesc: 
-  mUiIcon: 
+  mUiIcon: bulande
   mSpeed: 4

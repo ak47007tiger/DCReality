@@ -4,7 +4,7 @@ namespace DC.GameLogic.UI
 {
     public class BaseItemUI<VGen> : BaseMonoBehaviour where VGen : MonoBehaviour
     {
-        protected VGen mVGen;
+        private VGen mVGen;
 
         public VGen ViewGen
         {

@@ -17,8 +17,10 @@ MonoBehaviour:
   mDesc: 
   mCdDuration: 0
   mDuration: 2
+  mPreCastDuration: 0
+  mAfterCastDuration: 0
   mCdWaitDuration: 0
-  mUiIcon: 
+  mUiIcon: liqin_r
   mHitCnt: 100
   mTargetType: 3
   mMaxTargetCnt: 4
@@ -39,6 +41,7 @@ MonoBehaviour:
     mHandleMaxCnt: 1
     mInterval: 0
     mEffectType: 1
+    mBuffCfgId: 0
     mVisualEffectCfg:
       mEffectPath: effect/demo_skill_linked
       mTransformType: 0
@@ -55,6 +58,7 @@ MonoBehaviour:
     mHandleMaxCnt: 1
     mInterval: 0
     mEffectType: 8
+    mBuffCfgId: 0
     mVisualEffectCfg:
       mEffectPath: Skill/demo_skill_linked
       mTransformType: 0

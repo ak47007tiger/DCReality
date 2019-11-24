@@ -19,7 +19,7 @@ namespace DC.UI
 
         void Update()
         {
-            CacheRectTransform.anchoredPosition = Input.mousePosition;
+//            CacheRectTransform.anchoredPosition = Input.mousePosition;
         }
 
         public Texture2D cursorTexture;

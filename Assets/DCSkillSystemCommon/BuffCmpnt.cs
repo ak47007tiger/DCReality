@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DC.SkillSystem
 {
@@ -17,14 +18,36 @@ namespace DC.SkillSystem
     {
         private List<Buff> mBuffList = new List<Buff>();
 
-        public void AddBuff(Buff buf)
+        private event Action<Buff> mOnAddListeners;
+        private event Action<Buff> mOnRemoveListeners;
+
+        public void AddOnBuffAddListener(Action<Buff> listener)
         {
-            mBuffList.Add(buf);
+            mOnAddListeners += listener;
+        }
+
+        public void AddOnRemoveAddListener(Action<Buff> listener)
+        {
+            mOnRemoveListeners -= listener;
+        }
+
+        public void AddBuff(Buff buff)
+        {
+            mBuffList.Add(buff);
+            if (null != mOnAddListeners)
+            {
+                mOnAddListeners(buff);
+            }
         }
 
         public bool RemoveBuff(Buff buff)
         {
-            return mBuffList.Remove(buff);
+            var removeBuff = mBuffList.Remove(buff);
+            if (null != mOnRemoveListeners)
+            {
+                mOnRemoveListeners(buff);
+            }
+            return removeBuff;
         }
 
         public List<Buff> GetBuffList()

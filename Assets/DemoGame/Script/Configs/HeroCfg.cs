@@ -6,9 +6,9 @@ using UnityEngine;
 namespace DC.GameLogic
 {
     [Serializable]
-    public class KeyToKill : KVPair<KeyCode, List<int>>
+    public class KeyToSkill : KVPair<KeyCode, List<int>>
     {
-        public KeyToKill(KeyCode key, List<int> value) : base(key, value)
+        public KeyToSkill(KeyCode key, List<int> value) : base(key, value)
         {
         }
     }
@@ -23,7 +23,7 @@ namespace DC.GameLogic
         public List<int> mSkillList = new List<int>();
 
         [Header("按键和对应技能")]
-        public List<KeyToKill> mKeyToSkillPairList = new List<KeyToKill>();
+        public List<KeyToSkill> mKeyToSkillPairList = new List<KeyToSkill>();
 
         /// <summary>
         /// 换肤用
@@ -71,6 +71,11 @@ namespace DC.GameLogic
             }
 
             return 0;
+        }
+
+        public string GetIconPath()
+        {
+            return "Texture/icon_hero/" + mUiIcon;
         }
     }
 

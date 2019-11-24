@@ -12,6 +12,31 @@ namespace DC.GameLogic.UI
         void UpdateItemUiFunc(D itemData, V itemUi);
     }
 
+    public abstract class BaseListViewFuncs<D, V> : IListViewFuncs<D, V>
+    {
+        protected Transform mItemParentTf;
+        protected List<D> mData;
+
+        public BaseListViewFuncs<D,V> SetParent(Transform itemParentTf)
+        {
+            mItemParentTf = itemParentTf;
+            return this;
+        }
+
+        public BaseListViewFuncs<D, V> SetData(List<D> data)
+        {
+            mData = data;
+            return this;
+        }
+
+        public virtual List<D> GetDataFunc()
+        {
+            return mData;
+        }
+        public abstract V CreateViewItemFunc(int index);
+        public abstract void UpdateItemUiFunc(D itemData, V itemUi);
+    }
+
     public class SimpleListView<D,V>
     {
         public delegate List<D> GetDataFunc();

@@ -55,6 +55,8 @@ namespace DC.SkillSystem
 
         can_not_move,
 
+        force_translate,
+
         can_not_select,
         /// <summary>
         /// 反伤

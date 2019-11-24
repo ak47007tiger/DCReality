@@ -25,7 +25,7 @@ namespace DC
 
         private bool mStop;
 
-        private bool mHasFocus;
+        private bool mHasFocus = true;
 
         void Awake()
         {

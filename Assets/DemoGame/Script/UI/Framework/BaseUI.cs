@@ -22,7 +22,7 @@
 
         }
 
-        public virtual void Destroy()
+        public virtual void OnWindowDestroy()
         {
 
         }

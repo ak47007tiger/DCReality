@@ -377,10 +377,14 @@ namespace DC.SkillSystem
         void OnDestroy()
         {
             LogDC.LogEx("destroy timer", mTimerToDestroy.Count);
+
+            DCTimer.RemoveNextFixedUpdate(DoSkillEffectForTimer);
+
             foreach (var timer in mTimerToDestroy)
             {
                 timer.Destroy();
             }
+
             mCaster.RemoveSkill(mCastCfg.mFromKey);
         }
 

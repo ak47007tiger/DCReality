@@ -17,12 +17,14 @@ MonoBehaviour:
   mDesc: 
   mCdDuration: 0
   mDuration: 4
+  mPreCastDuration: 0
+  mAfterCastDuration: 0
   mCdWaitDuration: 0
-  mUiIcon: 
+  mUiIcon: liqin_q
   mHitCnt: 100
   mTargetType: 3
   mMaxTargetCnt: 1
-  mCastRange: 4
+  mCastRange: 6
   mPrefabPath: Skill/demo_skill_empty
   mSkillType: 2
   mSpeed: 0
@@ -39,6 +41,7 @@ MonoBehaviour:
     mHandleMaxCnt: 1
     mInterval: 0
     mEffectType: 2
+    mBuffCfgId: 0
     mVisualEffectCfg:
       mEffectPath: 
       mTransformType: 0

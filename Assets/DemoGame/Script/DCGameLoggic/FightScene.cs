@@ -1,5 +1,7 @@
 ﻿using DC.ActorSystem;
 using DC.DCResourceSystem;
+using DC.UI;
+using UnityEditor.Animations;
 using UnityEngine;
 
 namespace DC.GameLogic
@@ -23,6 +25,10 @@ namespace DC.GameLogic
                 ActorSys.Instance.AddActor(actor.GetActorId(), actor);
 
                 ActorSys.Instance.SetMainActor(actor);
+
+                var path = "Assets/_DCTemp/Animator/HeroState.controller";
+                var animatorController = UnityEditor.AssetDatabase.LoadAssetAtPath<AnimatorController>(path);
+                actor.GetComponent<HeroEntity>().SetFSM(animatorController);
             }
 
             for (var i = 0; i < 5; i++)
@@ -34,6 +40,8 @@ namespace DC.GameLogic
 
                 ActorSys.Instance.AddActor(actor.GetActorId(), actor);
             }
+
+            UIManager.Instance.ShowUi<FightSceneUI>();
         }
 
         public GameActor CreateHero(HeroCfg heroCfg, int actorId)

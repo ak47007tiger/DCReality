@@ -1,5 +1,6 @@
 ﻿using DC.DCResourceSystem;
 using DC.GameLogic;
+using DC.GameLogic.UI;
 using DC.SkillSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,17 +13,9 @@ namespace DC.UI
     /// 技能图标
     /// 某种按键的技能生效时发送消息，这里接受，同步显示信息到ui
     /// </summary>
-    public class SkillItemUI : BaseUI
+    public class SkillItemUI : BaseItemUI<SkillItemUIGen>
     {
         public KeyCode mSendKeyCode;
-
-        public Image mImgSkill;
-
-        public Image mImgCdCover;
-
-        public Image mImgSilenceCover;
-
-        public Button mSkillBtn;
 
         [HideInInspector]
         public SkillCfg mSkillCfg;
@@ -31,12 +24,13 @@ namespace DC.UI
 
         private DCDurationTimer mCdTimer;
 
-        void Awake()
+        void Start()
         {
-            mImgSilenceCover.enabled = false;
-            mImgCdCover.fillAmount = 0;
+            ViewGen.silenceImage.enabled = false;
+            ViewGen.cdImage.enabled = false;
+            ViewGen.cdImage.fillAmount = 0;
 
-            mSkillBtn.onClick.AddListener(OnIconClick);
+            ViewGen.iconButton.onClick.AddListener(OnIconClick);
         }
 
         void OnDestroy()
@@ -48,7 +42,7 @@ namespace DC.UI
         {
             if (null != mCdTimer)
             {
-                mImgCdCover.fillAmount = GetCdPercentage();
+                ViewGen.cdImage.fillAmount = GetCdPercentage();
             }
         }
 
@@ -56,7 +50,7 @@ namespace DC.UI
         {
             mSkillCfg = skillCfg;
 
-            ResourceSys.Instance.SetImage(mImgSkill, skillCfg.mUiIcon);
+            ResourceSys.Instance.SetImage(ViewGen.iconImage, skillCfg.GetUiIconPath());
         }
 
         /// <summary>
@@ -83,12 +77,16 @@ namespace DC.UI
             mCdTimer = new DCDurationTimer(mSkillCfg.mCdDuration, OnCdEnd);
             mCdTimer.SetAutoDestroy(true);
             mCdTimer.CreateNormal();
+
+            ViewGen.cdImage.fillAmount = 1;
+            ViewGen.cdImage.enabled = true;
         }
 
         void OnCdEnd()
         {
             mCdTimer = null;
-            mImgCdCover.fillAmount = 0;
+            ViewGen.cdImage.enabled = false;
+            ViewGen.cdImage.fillAmount = 0;
         }
 
         /// <summary>
@@ -115,12 +113,12 @@ namespace DC.UI
 
         public void SetIcon(Sprite sprite)
         {
-            mImgSkill.sprite = sprite;
+            ViewGen.iconImage.sprite = sprite;
         }
 
         public void SetSilence(bool silence)
         {
-            mImgSilenceCover.enabled = silence;
+            ViewGen.silenceImage.enabled = silence;
         }
 
         public void OnIconClick()
@@ -130,9 +128,7 @@ namespace DC.UI
                 return;
             }
 
-            //todo d.c 根据buff判断是否可以释放
-
-            MsgSys.Send(GameEvent.KeyCodeEvt, mSendKeyCode);
+            GameInput.Instance.AddDownKeyCode(mSendKeyCode);
         }
     }
 }

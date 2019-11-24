@@ -118,8 +118,8 @@ namespace DC
             mKeyToUi.Remove(uiName);
 
             //destroy
-            baseUi.Destroy();
-            Destroy(baseUi);
+            baseUi.OnWindowDestroy();
+            Destroy(baseUi.gameObject);
 
             //pop top window
             if (mUiStack.Count > 0)
@@ -146,6 +146,31 @@ namespace DC
                     mUiStack.Push(mUiStackBuffer.Pop());
                 }
             }
+        }
+
+        public T CreateUiInstance<T>(Transform parent)
+        {
+            var uiName = GetUiName<T>();
+            return CreateUiInstance(parent, uiName).GetComponent<T>();
+        }
+
+        public GameObject CreateUiInstance(Transform parent, string uiName)
+        {
+            var prefab = LoadPrefab(uiName);
+            return Instantiate(prefab, parent);
+        }
+
+        public GameObject LoadPrefab<T>()
+        {
+            var uiName = GetUiName<T>();
+            return LoadPrefab(uiName);
+        }
+
+        public GameObject LoadPrefab(string uiName)
+        {
+            var assetPath = GetAssetPath(uiName);
+            var prefab = ResourceSys.Instance.Load<GameObject>(assetPath);
+            return prefab;
         }
 
         public static string GetUiName<T>()
