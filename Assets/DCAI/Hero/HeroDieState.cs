@@ -15,11 +15,9 @@ namespace DC.AI
             {
                 switch (buffEvt.mBuff.mBuffCfg.mBuffType)
                 {
-                    //to dizzy state
                     case BuffType.die:
-                        break;
-                    //to stop state
-                    case BuffType.can_not_move:
+                        Hero.SetTransition(Transition.ToIdle);
+                        //todo d.c move birth pos
                         break;
                 }
             }
