@@ -99,7 +99,11 @@ namespace DC.GameLogic
 
         void FixedUpdate()
         {
-            if (null != mHeroFsm)
+            EmitFSM();
+        }
+
+        private void EmitFSM(){
+          if (null != mHeroFsm)
             {
                 mHeroFsm.CurrentState.Reason(null);
                 mHeroFsm.CurrentState.Act(null);
@@ -157,7 +161,8 @@ namespace DC.GameLogic
             if (skillCfg.mTargetType == SkillTargetType.None)
             {
                 mSelectedSkillCfg = skillCfg;
-                Caster.Cast(skillCfg, mCastCfg);
+                // Caster.Cast(skillCfg, mCastCfg);
+                EmitFSM();
             }
             else
             {
@@ -172,6 +177,10 @@ namespace DC.GameLogic
         }
 
         #endregion
+
+        public CastCfg GetCastCfg(){
+          return mCastCfg;
+        }
 
         #region set target
 

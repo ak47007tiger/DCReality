@@ -43,6 +43,11 @@ namespace DC.GameLogic
             get { return mNavArrivePosition; }
         }
 
+        public NavTraceTarget NavTraceTarget
+        {
+            get { return mNavTraceTarget; }
+        }
+
         protected override void Awake()
         {
             base.Awake();
