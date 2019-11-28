@@ -6,7 +6,6 @@ using UnityEngine.AI;
 namespace DC.GameLogic
 {
     /*
-     
         nav移动导致 transform 移动不好用，因为限制了位置
         需要在使用 transform 移动时停止nav agent
      */
@@ -44,4 +43,6 @@ namespace DC.GameLogic
             mNavArrivePosition.StartTrace(pos, SystemPreset.move_stop_distance);
         }
     }
+
+    
 }
