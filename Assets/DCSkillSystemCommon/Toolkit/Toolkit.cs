@@ -94,6 +94,26 @@ namespace DC
             return ActorSide.neutral;
         }
 
+        public static void RemoveFromStack<T>(Stack<T> stack, T item)
+        {
+            if (stack.Contains(item))
+            {
+                Stack<T> tempStack = new Stack<T>();
+
+                //倒出去，找到，倒回来
+                var ui = stack.Pop();
+                while (!ui.Equals(item))
+                {
+                    tempStack.Push(ui);
+                    ui = stack.Pop();
+                }
+
+                while (tempStack.Count > 0)
+                {
+                    stack.Push(tempStack.Pop());
+                }
+            }
+        }
     }
 
     public static class DCGameObjectExtension
