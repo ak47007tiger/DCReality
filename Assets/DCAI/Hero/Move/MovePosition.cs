@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DC.AI
 {
-    public class MovePosition : DCFSMState
+    public class MovePosition : MoveBaseState
     {
         public override void Reason(object data)
         {

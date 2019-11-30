@@ -1,6 +1,6 @@
-﻿using DC.ActorSystem;
+﻿using System;
+using DC.ActorSystem;
 using DC.AI;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -44,18 +44,24 @@ namespace DC.GameLogic
             mNavArrivePosition.StartTrace(pos, SystemPreset.move_stop_distance);
         }
 
-        public int AnimatorStateToCodeState(AnimatorState state){
-            return 0;
-        }
-        public int AnimatorTransToCodeTrans(AnimatorStateTransition state)
+        public DCFSMState CreateDCFSMState(int state)
         {
-            return 0;
-        }
-        public DCFSMState CreateDCFSMState(AnimatorState state, GameObject ctxObj)
-        {
-            return null;
+            var enumState = (MoveState) state;
+            var type = Type.GetType(string.Format("DC.AI.{0}", enumState.ToString()));
+            var instance = (MoveBaseState)Activator.CreateInstance(type);
+            //todo d.c set up entity
+            return instance;
         }
     }
 
+    public enum MoveState
+    {
+        MoveIdle = 0,
+        MoveForceTranslate,
+        MovePosition,
+        MoveStop,
+        MoveTarget,
+        MoveTranslate,
+    }
     
 }
