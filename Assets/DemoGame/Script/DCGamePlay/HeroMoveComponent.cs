@@ -1,5 +1,6 @@
 ﻿using DC.ActorSystem;
 using DC.AI;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -41,6 +42,18 @@ namespace DC.GameLogic
             }
 
             mNavArrivePosition.StartTrace(pos, SystemPreset.move_stop_distance);
+        }
+
+        public int AnimatorStateToCodeState(AnimatorState state){
+            return 0;
+        }
+        public int AnimatorTransToCodeTrans(AnimatorStateTransition state)
+        {
+            return 0;
+        }
+        public DCFSMState CreateDCFSMState(AnimatorState state, GameObject ctxObj)
+        {
+            return null;
         }
     }
 
