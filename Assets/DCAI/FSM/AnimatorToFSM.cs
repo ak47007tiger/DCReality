@@ -17,7 +17,6 @@ namespace DC.AI
         /// <returns></returns>
         public FSMSystem ConvertHero(AnimatorController animator, GameObject ctxObj)
         {
-            Animator mt;
             var stateToHeroState = new Dictionary<AnimatorState, BaseHeroState>();
             var fsm = new FSMSystem();
             var controllerLayer = animator.layers[0];

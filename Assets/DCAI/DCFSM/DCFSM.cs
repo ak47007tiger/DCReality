@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DC.AI
@@ -95,14 +96,14 @@ namespace DC.AI
         /// This method decides if the state should transition to another on its list
         /// NPC is a reference to the object that is controlled by this class
         /// </summary>
-        public abstract void Reason(object data);
+        public abstract void Reason(object data = null);
 
         /// <summary>
         /// This method controls the behavior of the NPC in the game World.
         /// Every action, movement or communication the NPC does should be placed here
         /// NPC is a reference to the object that is controlled by this class
         /// </summary>
-        public abstract void Act(object data);
+        public abstract void Act(object data = null);
     }
 
     public class DCFSM

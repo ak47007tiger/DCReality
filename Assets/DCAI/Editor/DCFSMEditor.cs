@@ -36,17 +36,17 @@ namespace DC.AI
 
         public static int GetDefaultStateId()
         {
-            return 0;
+            return "Idle".GetExtHashCode();
         }
 
         public static int StateToId(AnimatorState state)
         {
-            return state.name.GetHashCode();
+            return state.name.GetExtHashCode();
         }
 
         public static int TransToId(AnimatorStateTransition transition)
         {
-            return ("To" + transition.destinationState.name).GetHashCode();
+            return ("To" + transition.destinationState.name).GetExtHashCode();
         }
 
     }

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7318669623805535347}
   - component: {fileID: 1338676455887232509}
   - component: {fileID: 1643545023}
-  - component: {fileID: 7047707774431691000}
   - component: {fileID: 1998430854886533284}
   - component: {fileID: 7890902136585925215}
   m_Layer: 0
@@ -49,6 +48,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mHeroCfg: {fileID: 0}
+  mCastSkillUi: {fileID: 0}
+  MoveCmpt: {fileID: 0}
+  mIsCastPrepareReady: 0
 --- !u!114 &1338676455887232509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83,19 +85,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
---- !u!114 &7047707774431691000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5318933030967389736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 873dc45a38b1e154f967e2ff3ad945fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mNavArrivePosition: {fileID: 0}
 --- !u!65 &1998430854886533284
 BoxCollider:
   m_ObjectHideFlags: 0

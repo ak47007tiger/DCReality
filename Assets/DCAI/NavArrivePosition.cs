@@ -43,6 +43,12 @@ namespace DC.AI
             return mTargetPos;
         }
 
+        public bool IsComplete()
+        {
+            var catchTarget = TfTraceTarget.IsCatchTargetWithPos(mTargetPos, CacheTransform.position, mStopDistance);
+            return catchTarget.Item1;
+        }
+
     }
 
 }

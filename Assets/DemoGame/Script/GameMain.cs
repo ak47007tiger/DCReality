@@ -40,7 +40,7 @@ namespace DC
             UIManager.Instance.ShowUi<SelectHeroUI>();
 
             //load scene
-
+            //f
         }
 
         void Test()

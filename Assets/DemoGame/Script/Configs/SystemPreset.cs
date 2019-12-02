@@ -19,5 +19,8 @@ namespace DC.GameLogic
         {
             return "Configs/" + typeof(T).Name;
         }
+
+        public static readonly int layer_ground = LayerMask.GetMask("Ground");
+        public static readonly int layer_actor = LayerMask.GetMask("Actor");
     }
 }

@@ -59,5 +59,10 @@ namespace DC.SkillSystem
         {
             return mBuffList.Contains(buff);
         }
+
+        public bool Contains(BuffType bufType)
+        {
+            return mBuffList.Find((item) => item.mBuffCfg.mBuffType == bufType) != null;
+        }
     }
 }

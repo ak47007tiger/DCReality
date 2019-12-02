@@ -25,6 +25,8 @@ namespace DC.GameLogic
 
         public CastSkillUI mCastSkillUi;
 
+        public HeroMoveComponent MoveCmpt;
+
         protected override void Awake()
         {
             base.Awake();
@@ -214,7 +216,7 @@ namespace DC.GameLogic
             {
                 case SkillTargetType.Actor:
                     {
-                        var target = targetTf.GetComponent<IActor>();
+                        var target = targetTf.GetComponent<GameActor>();
                         if (null != target)
                         {
                             LogDC.Log("find actor");
@@ -222,6 +224,7 @@ namespace DC.GameLogic
                             if (distance > selectedSkillCfg.mCastRange)
                             {
                                 LogDC.Log("try catch actor");
+                                MoveCmpt.Move(MoveType.NavTarget, target.CacheTransform, mHeroCfg.mSpeed, selectedSkillCfg.mCastRange);
                                 Actor.TryCatch(target.GetTransform(), selectedSkillCfg.mCastRange, OnCatchActor);
                                 return;
                             }

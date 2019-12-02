@@ -1,7 +1,5 @@
 ﻿using System;
-using DC.ActorSystem;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace DC.AI
 {
@@ -43,5 +41,10 @@ namespace DC.AI
             CacheTransform.position = TfTraceTarget.ComputeNextPositionWithPos(CacheTransform.position, mTargetPos, mSpeed);
         }
 
+        public bool IsComplete()
+        {
+            var catchTarget = TfTraceTarget.IsCatchTargetWithPos(mTargetPos, CacheTransform.position, mStopDistance);
+            return catchTarget.Item1;
+        }
     }
 }

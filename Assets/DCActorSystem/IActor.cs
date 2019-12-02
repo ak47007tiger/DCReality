@@ -34,9 +34,6 @@ namespace DC.ActorSystem
         void UpdateAnimatorParam(int paramId, float value);
         void UpdateAnimatorParam(int paramId, bool value);
 
-        void TryCatch(Transform actor, float stopDistance, Action<NavTraceTarget, float> onCatch);
-        void TryArrive(Vector3 targetPos, float stopDistance, Action<NavArrivePosition, float> onArrive);
-
         bool IsPlayer();
 
         ActorSide GetActorSide();

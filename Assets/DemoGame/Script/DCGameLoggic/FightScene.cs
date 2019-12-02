@@ -18,9 +18,12 @@ namespace DC.GameLogic
         {
             {
                 var actor = CreateHero(player, PlayerDataMgr.Instance.GetMainActorId());
+                actor.gameObject.AddComponent<HeroMoveComponent>();
                 actor.SetActorSide(ActorSide.blue);
+
                 var birthPosition = GetBirthPosition(0, ActorSide.blue);
                 actor.transform.position = birthPosition;
+
 
                 ActorSys.Instance.AddActor(actor.GetActorId(), actor);
 
