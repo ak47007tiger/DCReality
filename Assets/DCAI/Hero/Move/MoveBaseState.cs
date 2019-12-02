@@ -8,18 +8,7 @@ namespace DC.AI
         MovePosition,
         MoveStop,
         MoveTarget,
-        MoveTranslate,
         MoveForceTranslate,
-    }
-
-    public class MoveStateCls
-    {
-        public static readonly int Idle = "Idle".GetExtHashCode();
-        public static readonly int MovePosition = "MovePosition".GetExtHashCode();
-        public static readonly int MoveStop = "MoveStop".GetExtHashCode();
-        public static readonly int MoveTarget = "MoveTarget".GetExtHashCode();
-        public static readonly int MoveTranslate = "MoveTranslate".GetExtHashCode();
-        public static readonly int MoveForceTranslate = "MoveForceTranslate".GetExtHashCode();
     }
 
     public enum EnumMoveTranslate
@@ -38,16 +27,7 @@ namespace DC.AI
         public static readonly int ToMovePosition = "ToMovePosition".GetExtHashCode();
         public static readonly int ToMoveStop = "ToMoveStop".GetExtHashCode();
         public static readonly int ToMoveTarget = "ToMoveTarget".GetExtHashCode();
-        public static readonly int ToMoveTranslate = "ToMoveTranslate".GetExtHashCode();
         public static readonly int ToMoveForceTranslate = "ToMoveForceTranslate".GetExtHashCode();
-    }
-
-    public static class EE
-    {
-        public static int GetInt(this MoveState state)
-        {
-            return state.ToString().GetExtHashCode();
-        }
     }
 
     public abstract class MoveBaseState : DCFSMState
@@ -59,4 +39,5 @@ namespace DC.AI
             MoveCmpt.mFsm.PerformTransition(trans);
         }
     }
+
 }

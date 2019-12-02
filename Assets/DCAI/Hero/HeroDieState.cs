@@ -10,16 +10,11 @@ namespace DC.AI
             base.Reason(data);
 
             //to idle state
-            var buffEvt = GetBuffEvt(data);
-            if (buffEvt != null && buffEvt.mOperate == BuffOperate.Remove)
+            var buffCmpt = Actor.GetBuffCmpt();
+            if (!buffCmpt.Contains(BuffType.die))
             {
-                switch (buffEvt.mBuff.mBuffCfg.mBuffType)
-                {
-                    case BuffType.die:
-                        Hero.SetTransition(Transition.ToIdle);
-                        //todo d.c move birth pos
-                        break;
-                }
+                Hero.ToState(EnumHeroTrans.ToIdle);
+                //todo d.c move birth pos
             }
         }
     }

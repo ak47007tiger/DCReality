@@ -14,9 +14,12 @@ namespace DC.SkillSystem
         bool Contains(Buff buff);
     }
 
-    public class BuffCmpnt : IBuffCmpnt
+    public class BuffCmpt : IBuffCmpnt
     {
         private List<Buff> mBuffList = new List<Buff>();
+
+        private BuffCfg mLastAddBuffCfg;
+        private BuffCfg mLastRemoveBuffCfg;
 
         private event Action<Buff> mOnAddListeners;
         private event Action<Buff> mOnRemoveListeners;
@@ -34,6 +37,7 @@ namespace DC.SkillSystem
         public void AddBuff(Buff buff)
         {
             mBuffList.Add(buff);
+            mLastAddBuffCfg = buff.mBuffCfg;
             if (null != mOnAddListeners)
             {
                 mOnAddListeners(buff);
@@ -43,6 +47,10 @@ namespace DC.SkillSystem
         public bool RemoveBuff(Buff buff)
         {
             var removeBuff = mBuffList.Remove(buff);
+            if (removeBuff)
+            {
+                mLastRemoveBuffCfg = buff.mBuffCfg;
+            }
             if (null != mOnRemoveListeners)
             {
                 mOnRemoveListeners(buff);
@@ -64,5 +72,17 @@ namespace DC.SkillSystem
         {
             return mBuffList.Find((item) => item.mBuffCfg.mBuffType == bufType) != null;
         }
+
+        public BuffCfg GetLastAddBuffCfg()
+        {
+            return mLastAddBuffCfg;
+        }
+
+        public BuffCfg GetLastRemoveBuffCfg()
+        {
+            return mLastRemoveBuffCfg;
+        }
+
     }
+
 }

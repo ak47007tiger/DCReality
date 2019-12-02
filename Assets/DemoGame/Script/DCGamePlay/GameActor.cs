@@ -36,7 +36,7 @@ namespace DC.GameLogic
 
         private NavArrivePosition mNavArrivePosition;
 
-        private BuffCmpnt mBuffCmpnt = new BuffCmpnt();
+        private BuffCmpt _mBuffCmpt = new BuffCmpt();
 
         public NavArrivePosition NavArrivePosition
         {
@@ -117,9 +117,9 @@ namespace DC.GameLogic
             return Caster;
         }
 
-        public BuffCmpnt GetBuffCmpnt()
+        public BuffCmpt GetBuffCmpt()
         {
-            return mBuffCmpnt;
+            return _mBuffCmpt;
         }
 
         public ValueComponent GetValueComponent()

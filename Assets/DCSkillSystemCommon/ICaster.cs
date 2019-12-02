@@ -47,5 +47,7 @@ namespace DC.SkillSystem
         Skill GetSkill(KeyCode key);
         void SetSkill(KeyCode key, Skill skill);
         void RemoveSkill(KeyCode key);
+
+        Skill GetLastSkill();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using DC.GameLogic;
-
+using DC.SkillSystem;
 using UnityEngine;
 
 namespace DC.AI
@@ -34,10 +34,26 @@ namespace DC.AI
                     }
                     return;
             }
+
+            //to force translate
+            var buffCmpt = MoveCmpt.Actor.GetBuffCmpt();
+            if (buffCmpt.Contains(BuffType.force_translate))
+            {
+                ToState(EnumMoveTranslateCls.ToMoveForceTranslate);
+                return;
+            }
+            //to move stop
+            if (buffCmpt.Contains(BuffType.can_not_move))
+            {
+                ToState(EnumMoveTranslateCls.ToMoveStop);
+                return;
+            }
         }
 
-        public override void Act(object data)
+        public override void DoBeforeEntering()
         {
+            MoveCmpt.StopTrace();
+
             switch (MoveCmpt.mMoveType)
             {
                 case MoveType.NavPos:
@@ -49,6 +65,11 @@ namespace DC.AI
                     MoveCmpt.mTfArrivePos.SetStop(false);
                     return;
             }
+        }
+
+        public override void Act(object data)
+        {
+            
         }
     }
 }

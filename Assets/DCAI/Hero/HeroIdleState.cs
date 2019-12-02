@@ -12,40 +12,23 @@ namespace DC.AI
         {
             base.Reason(data);
 
-            if (CheckToMoveState())
+            var lastAddBuffCfg = Actor.GetBuffCmpt().GetLastAddBuffCfg();
+            switch (lastAddBuffCfg.mBuffType)
             {
-                Hero.SetTransition(Transition.ToSkill);
-
-                return;
+                //to dizzy state
+                case BuffType.dizzy:
+                    Hero.ToState(EnumHeroTrans.ToDizzy);
+                    return;
+                case BuffType.die:
+                    Hero.ToState(EnumHeroTrans.ToDie);
+                    return;
             }
 
-            if (CheckToSkillState())
+            if (Hero.GetSelectedSkillCfg() != null)
             {
-                Hero.SetTransition(Transition.ToMove);
+                Hero.ToState(EnumHeroTrans.ToSkill);
 
                 return;
-            }
-
-            var buffEvt = GetBuffEvt(data);
-            if (buffEvt != null && buffEvt.mOperate == BuffOperate.Add)
-            {
-                switch (buffEvt.mBuff.mBuffCfg.mBuffType)
-                {
-                    //to dizzy state
-                    case BuffType.dizzy:
-                        Hero.SetTransition(Transition.ToDizzy);
-                        break;
-                    //to stop state
-                    case BuffType.can_not_move:
-                        Hero.SetTransition(Transition.ToStop);
-                        break;
-                    case BuffType.force_translate:
-                        Hero.SetTransition(Transition.ToForceTranslate);
-                        break;
-                    case BuffType.die:
-                        Hero.SetTransition(Transition.ToDie);
-                        break;
-                }
             }
         }
 

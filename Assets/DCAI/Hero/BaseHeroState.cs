@@ -1,21 +1,33 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using DC.GameLogic;
 
 namespace DC.AI
 {
-    public class BaseHeroState : FSMState
+    public enum EnumHeroState
+    {
+        Idle,
+        Skill,
+        Dizzy,
+        Die,
+    }
+
+    public enum EnumHeroTrans
+    {
+        ToIdle,
+        ToSkill,
+        ToDizzy,
+        ToDie,
+    }
+
+    public class BaseHeroState : DCFSMState
     {
         protected HeroEntity Hero;
 
         protected Caster Caster;
 
         protected GameActor Actor;
-
-        public void SetStateId(StateID pStateId)
-        {
-            stateID = pStateId;
-        }
 
         public void SetUp(GameObject ctxObj)
         {
@@ -39,21 +51,6 @@ namespace DC.AI
             if (data is BuffEvt)
                 return (BuffEvt)data;
             return null;
-        }
-
-        public bool CheckToSkillState()
-        {
-            //to skill state
-            if (Input.GetMouseButtonDown(0))
-            {
-                var selectedSkillCfg = Hero.GetSelectedSkillCfg();
-
-                if (null != selectedSkillCfg && Hero.mIsCastPrepareReady)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         public bool CheckToMoveState()

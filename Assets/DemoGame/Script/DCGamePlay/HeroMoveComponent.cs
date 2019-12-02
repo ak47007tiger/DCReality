@@ -40,6 +40,30 @@ namespace DC.GameLogic
 
         public HeroEntity mHero;
 
+        public void StopNav()
+        {
+            mNavArrivePos.SetStop(true);
+            mNavTraceTarget.SetStop(true);
+        }
+
+        public void StopTf()
+        {
+            mTfArrivePos.SetStop(true);
+            mTfTraceTarget.SetStop(true);
+        }
+
+        public void StopTrace()
+        {
+            mNavTraceTarget.SetStop(true);
+            mTfTraceTarget.SetStop(true);
+        }
+
+        public void StopPos()
+        {
+            mNavArrivePos.SetStop(true);
+            mTfArrivePos.SetStop(true);
+        }
+
         public void SetPosListener(Action<NavArrivePosition, float> onCatchTarget)
         {
             mNavArrivePos.mOnCatchTarget = onCatchTarget;
@@ -135,6 +159,7 @@ namespace DC.GameLogic
             //todo d.c set up entity
             return instance;
         }
+
     }
 
 }

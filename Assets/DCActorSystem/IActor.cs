@@ -17,7 +17,7 @@ namespace DC.ActorSystem
 
         ICaster GetCaster();
         
-        BuffCmpnt GetBuffCmpnt();
+        BuffCmpt GetBuffCmpt();
 
         ValueComponent GetValueComponent();
 

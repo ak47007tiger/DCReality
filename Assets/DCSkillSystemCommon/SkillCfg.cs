@@ -52,6 +52,14 @@ namespace DC.SkillSystem
         Nearest,
     }
 
+    public enum CastType
+    {
+        //立即施法
+        immediately,
+        //持续施法
+        persistently
+    }
+
     [CreateAssetMenu(fileName = "SkillCfg", menuName = "DC/ScriptableObjects/SkillCfg", order = 1)]
     public class SkillCfg : ScriptableObject, ISkillCfg
     {
@@ -74,8 +82,11 @@ namespace DC.SkillSystem
         public float mAfterCastDuration;
         /// <summary>
         /// 释放后不立即cd要等待的时间
+        /// 用于多段技能，todo 尝试用buff实现
         /// </summary>
         public float mCdWaitDuration;
+
+        public CastType mCastType;
         public string mUiIcon;
         public int mHitCnt = 1;
         public List<KVPair<GValueType, float>> mConsumeList;
@@ -122,6 +133,11 @@ namespace DC.SkillSystem
         /// 生效后死亡
         /// </summary>
         public bool mDieAfterDone = true;
+
+        /// <summary>
+        /// 技能释放期间可否移动
+        /// </summary>
+        public bool mAllowMove;
 
         /// <summary>
         /// 可以影响到的关系

@@ -47,6 +47,12 @@ namespace DC.AI
             SetStop(false);
         }
 
+        public bool IsComplete()
+        {
+            var catchTarget = IsCatchTargetWithPos(mTargetTf.position, CacheTransform.position, mStopDistance);
+            return catchTarget.Item1;
+        }
+
         public static Tuple<bool, float> IsCatchTargetWithPos(Vector3 targetPos, Vector3 curPos, float stopDistance)
         {
             var distance = Vector3.Distance(targetPos, curPos);

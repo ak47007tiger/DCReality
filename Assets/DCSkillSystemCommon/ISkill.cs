@@ -28,5 +28,9 @@ namespace DC.SkillSystem
         Transform GetTransform();
 
         float GetTickedLife();
+
+        bool IsComplete();
+
+        void ClearSkill();
     }
 }

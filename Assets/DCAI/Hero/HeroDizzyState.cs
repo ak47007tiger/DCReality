@@ -10,15 +10,10 @@ namespace DC.AI
             base.Reason(data);
 
             //to idle state
-            var buffEvt = GetBuffEvt(data);
-            if (buffEvt != null && buffEvt.mOperate == BuffOperate.Remove)
+            var buffCmpt = Actor.GetBuffCmpt();
+            if (!buffCmpt.Contains(BuffType.dizzy))
             {
-                switch (buffEvt.mBuff.mBuffCfg.mBuffType)
-                {
-                    case BuffType.dizzy:
-                        Hero.SetTransition(Transition.ToIdle);
-                        break;
-                }
+                Hero.ToState(EnumHeroTrans.ToIdle);
             }
         }
     }

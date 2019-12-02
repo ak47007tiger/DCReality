@@ -84,7 +84,7 @@ namespace DC.SkillSystem
 
             foreach (var target in targets)
             {
-                target.GetBuffCmpnt().AddBuff(buff);
+                target.GetBuffCmpt().AddBuff(buff);
             }
         }
 

@@ -36,6 +36,8 @@ namespace DC.SkillSystem
         /// </summary>
         private HashSet<ActorSide> mEffectSide = new HashSet<ActorSide>();
 
+        public float mCreateTime;
+
         protected void Awake()
         {
             mBoxCollider = new CacheItem<BoxCollider>(GetComponent<BoxCollider>);
@@ -350,6 +352,8 @@ namespace DC.SkillSystem
             }
 
             MsgSys.Send(GameEvent.SkillEvt, this);
+
+            mCreateTime = Time.time;
         }
 
         private void OnTraceTransformEnd(TfTraceTarget cmp, float distance)
@@ -372,6 +376,16 @@ namespace DC.SkillSystem
         public float GetTickedLife()
         {
             return mTickedLife;
+        }
+
+        public bool IsComplete()
+        {
+            return false;
+        }
+
+        public void ClearSkill()
+        {
+            throw new NotImplementedException();
         }
 
         void OnDestroy()

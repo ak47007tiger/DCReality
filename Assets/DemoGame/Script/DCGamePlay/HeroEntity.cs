@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DC.ActorSystem;
 using DC.AI;
 using DC.SkillSystem;
 using DC.UI;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,8 +20,9 @@ namespace DC.GameLogic
 
         private SkillCfg mSelectedSkillCfg;
         private CastCfg mCastCfg;
+        private RaycastHit mCastHit;
 
-        private FSMSystem mHeroFsm;
+        public DCFSM HeroFsm;
 
         public CastSkillUI mCastSkillUi;
 
@@ -40,13 +41,22 @@ namespace DC.GameLogic
                 CreateCastUI();
             }
 
-            Actor.GetBuffCmpnt().AddOnBuffAddListener(OnAddBuff);
-            Actor.GetBuffCmpnt().AddOnRemoveAddListener(OnRemoveBuff);
+            Actor.GetBuffCmpt().AddOnBuffAddListener(OnAddBuff);
+            Actor.GetBuffCmpt().AddOnRemoveAddListener(OnRemoveBuff);
         }
 
-        public void SetFSM(AnimatorController animatorController)
+        /*public void SetFSM(AnimatorController animatorController)
         {
             mHeroFsm = AnimatorToFSM.Instance.ConvertHero(animatorController, gameObject);
+        }*/
+
+        public DCFSMState CreateDCFSMState(int state)
+        {
+            var enumState = (EnumHeroState)state;
+            var type = Type.GetType(string.Format("DC.AI.{0}", enumState.ToString()));
+            var instance = (BaseHeroState)Activator.CreateInstance(type);
+            //todo d.c set up entity
+            return instance;
         }
 
         public void CreateCastUI()
@@ -58,19 +68,19 @@ namespace DC.GameLogic
 
         private void OnAddBuff(Buff buff)
         {
-            if (null != mHeroFsm)
+            if (null != HeroFsm)
             {
-                mHeroFsm.CurrentState.Reason(new BuffEvt(buff, BuffOperate.Add));
-                mHeroFsm.CurrentState.Act(null);
+                HeroFsm.CurrentState.Reason(new BuffEvt(buff, BuffOperate.Add));
+                HeroFsm.CurrentState.Act();
             }
         }
 
         public void OnRemoveBuff(Buff buff)
         {
-            if (null != mHeroFsm)
+            if (null != HeroFsm)
             {
-                mHeroFsm.CurrentState.Reason(new BuffEvt(buff, BuffOperate.Remove));
-                mHeroFsm.CurrentState.Act(null);
+                HeroFsm.CurrentState.Reason(new BuffEvt(buff, BuffOperate.Remove));
+                HeroFsm.CurrentState.Act();
             }
         }
 
@@ -105,11 +115,11 @@ namespace DC.GameLogic
         }
 
         private void EmitFSM(){
-          if (null != mHeroFsm)
-            {
-                mHeroFsm.CurrentState.Reason(null);
-                mHeroFsm.CurrentState.Act(null);
-            }
+          if (null != HeroFsm)
+          {
+              HeroFsm.CurrentState.Reason();
+              HeroFsm.CurrentState.Act();
+          }
         }
 
         #region skill key code
@@ -186,7 +196,6 @@ namespace DC.GameLogic
 
         #region set target
 
-        public bool mIsCastPrepareReady;
         public RaycastHit mTargetHit;
 
         private void HandleLeftMouseBtn()
@@ -199,14 +208,20 @@ namespace DC.GameLogic
                     LogDC.Log("try get target");
                     var mPos = Input.mousePosition;
                     var ray = Camera.main.ScreenPointToRay(mPos);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, 100))
+                    if (Physics.Raycast(ray, out mTargetHit, 100))
                     {
-                        mIsCastPrepareReady = true;
-                        mTargetHit = hit;
-                        PrepareCastSelectedSkill(mSelectedSkillCfg, hit.transform, hit.point);
+                        PrepareCastSelectedSkill(mSelectedSkillCfg, mTargetHit.transform, mTargetHit.point);
                     }
                 }
+            }
+        }
+
+        public void OnLostActor(GameActor actor)
+        {
+            //todo d.c 如果是施法目标则停止施法
+            if (GetCastCfg() != null)
+            {
+
             }
         }
 
@@ -241,7 +256,7 @@ namespace DC.GameLogic
                         playerPos.y = 0;
 
                         var rawDirection = (hitPos - playerPos).normalized;
-                        var castCfg = new CastCfg();
+                        var castCfg = mCastCfg;
                         castCfg.SetDirection(rawDirection);
                         Caster.Cast(selectedSkillCfg, castCfg);
 
@@ -261,7 +276,7 @@ namespace DC.GameLogic
                             return;
                         }
 
-                        var castCfg = new CastCfg();
+                        var castCfg = mCastCfg;
                         castCfg.SetTargetPosition(hitPos);
                         Caster.Cast(selectedSkillCfg, castCfg);
 
@@ -292,7 +307,7 @@ namespace DC.GameLogic
 
         private void CastSelectedSkill(IActor target)
         {
-            var castCfg = new CastCfg();
+            var castCfg = mCastCfg;
             var targets = new List<IActor>();
             targets.Add(target);
             castCfg.SetTargetActors(targets);
@@ -301,7 +316,10 @@ namespace DC.GameLogic
             ClearSkill();
         }
 
-        public void SetTransition(Transition t) { mHeroFsm.PerformTransition(t); }
+        public void ToState(EnumHeroTrans trans)
+        {
+            HeroFsm.PerformTransition(trans.ToString().GetExtHashCode());
+        }
 
         #region right mouse btn
         private void HandleRightMouseBtn()
@@ -322,19 +340,18 @@ namespace DC.GameLogic
                 //normal attack
                 var mPos = Input.mousePosition;
                 var ray = Camera.main.ScreenPointToRay(mPos);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 100))
+                if (Physics.Raycast(ray, out mTargetHit, 100))
                 {
-                    LogDC.LogEx("cast obj ", hit.transform.gameObject.name);
+                    LogDC.LogEx("cast obj ", mTargetHit.transform.gameObject.name);
                     
-                    var target = hit.transform.GetComponent<GameActor>();
+                    var target = mTargetHit.transform.GetComponent<GameActor>();
                     //是目标
                     if (target != null)
                     {
                         var skillId = mHeroCfg.GetSkillId(KeyCode.A);
                         var skillCfg = SkillConfigMgr.Instance.GetSkillCfg(skillId);
                         mSelectedSkillCfg = skillCfg;
-                        PrepareCastSelectedSkill(mSelectedSkillCfg, hit.transform, Vector3.zero);
+                        PrepareCastSelectedSkill(mSelectedSkillCfg, mTargetHit.transform, Vector3.zero);
                     }
                 }
             }
@@ -356,7 +373,6 @@ namespace DC.GameLogic
             ClearSkill();
         }
 
-                
         public void ClearSkill()
         {
             if (null != mCastSkillUi)
@@ -366,7 +382,8 @@ namespace DC.GameLogic
 
             mSelectedSkillCfg = null;
             mCastCfg = null;
-            mIsCastPrepareReady = false;
         }
+
     }
+
 }

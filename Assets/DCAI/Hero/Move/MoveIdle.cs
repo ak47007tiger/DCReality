@@ -25,14 +25,14 @@ namespace DC.AI
             }
 
             //to force translate
-            BuffCmpnt buffCmpnt = MoveCmpt.Actor.GetBuffCmpnt();
-            if (buffCmpnt.Contains(BuffType.force_translate))
+            var buffCmpt = MoveCmpt.Actor.GetBuffCmpt();
+            if (buffCmpt.Contains(BuffType.force_translate))
             {
                 ToState(EnumMoveTranslateCls.ToMoveForceTranslate);
                 return;
             }
             //to move stop
-            if (buffCmpnt.Contains(BuffType.can_not_move))
+            if (buffCmpt.Contains(BuffType.can_not_move))
             {
                 ToState(EnumMoveTranslateCls.ToMoveStop);
                 return;

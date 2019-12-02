@@ -51,6 +51,11 @@ namespace DC.GameLogic
             mCodeToSkill.Remove(key);
         }
 
+        public Skill GetLastSkill()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool Cast(SkillCfg skillCfg, CastCfg castCfg)
         {
             LogDC.LogEx("cast", skillCfg.mId);
@@ -152,7 +157,7 @@ namespace DC.GameLogic
 
         public CastMsg BuffAllowCast(ISkill skill)
         {
-            var ownerBuffs = GetActor().GetBuffCmpnt().GetBuffList();
+            var ownerBuffs = GetActor().GetBuffCmpt().GetBuffList();
             var rejectBuff = ownerBuffs.Find((buff => !buff.AllowCast(skill)));
             if (null == rejectBuff)
             {

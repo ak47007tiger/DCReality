@@ -41,7 +41,7 @@ namespace DC.AI
                 {
                     var dstCodeState = AnimatorStateToCodeState(transition.destinationState);
                     var codeTrans = AnimatorTransitionToCodeTransition(transition);
-                    codeState.AddTransition(codeTrans, dstCodeState);
+//                    codeState.AddTransition(codeTrans, dstCodeState);
                 }
             }
 
@@ -56,13 +56,13 @@ namespace DC.AI
                 {
                     var animatorState = machineState.state;
                     var codeState = stateToHeroState[animatorState];
-                    codeState.AddTransition(codeTrans, dstCodeState);
+//                    codeState.AddTransition(codeTrans, dstCodeState);
                 }
             }
 
             foreach (var item in stateToHeroState)
             {
-                fsm.AddState(item.Value);
+//                fsm.AddState(item.Value);
             }
 
             return fsm;
@@ -91,7 +91,6 @@ namespace DC.AI
 
             var stateInst = (BaseHeroState) Activator.CreateInstance(type);
             var stateID = AnimatorStateToCodeState(animatorState);
-            stateInst.SetStateId(stateID);
             stateInst.SetUp(cxtObj);
 
             return stateInst;
