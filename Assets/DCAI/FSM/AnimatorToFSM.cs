@@ -17,7 +17,7 @@ namespace DC.AI
         /// <returns></returns>
         public FSMSystem ConvertHero(AnimatorController animator, GameObject ctxObj)
         {
-            var stateToHeroState = new Dictionary<AnimatorState, BaseHeroState>();
+            var stateToHeroState = new Dictionary<AnimatorState, HeroBaseState>();
             var fsm = new FSMSystem();
             var controllerLayer = animator.layers[0];
             var stateMachine = controllerLayer.stateMachine;
@@ -85,11 +85,11 @@ namespace DC.AI
             return AnimatorStateToCodeState(animatorState.name);
         }
 
-        public BaseHeroState CreateHeroState(AnimatorState animatorState, GameObject cxtObj)
+        public HeroBaseState CreateHeroState(AnimatorState animatorState, GameObject cxtObj)
         {
             var type = AnimatorStateToCodeStateType(animatorState.name, "Hero");
 
-            var stateInst = (BaseHeroState) Activator.CreateInstance(type);
+            var stateInst = (HeroBaseState) Activator.CreateInstance(type);
             var stateID = AnimatorStateToCodeState(animatorState);
             stateInst.SetUp(cxtObj);
 

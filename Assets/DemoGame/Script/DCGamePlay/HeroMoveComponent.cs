@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using DC.ActorSystem;
 using DC.AI;
+using DC.Collections;
 using DC.DCResourceSystem;
 using UnityEngine;
 using UnityEngine.AI;
@@ -40,6 +42,8 @@ namespace DC.GameLogic
 
         public HeroEntity mHero;
 
+        private Dictionary<int, MoveState> mIntToState;
+
         public void StopNav()
         {
             mNavArrivePos.SetStop(true);
@@ -77,9 +81,6 @@ namespace DC.GameLogic
         public void Move(MoveType type)
         {
             mMoveType = type;
-
-            mFsm.CurrentState.Reason();
-            mFsm.CurrentState.Act();
         }
 
         public void Move(MoveType type, Transform target, float speed, float stopDistance)
@@ -88,8 +89,8 @@ namespace DC.GameLogic
             mTargetTf = target;
             mStopDistance = stopDistance;
 
-            mFsm.CurrentState.Reason();
-            mFsm.CurrentState.Act();
+            mNavTraceTarget.mSpeed = speed;
+            mTfTraceTarget.mSpeed = speed;
         }
 
         public void Move(MoveType type, Vector3 pos, float speed, float stopDistance)
@@ -98,18 +99,15 @@ namespace DC.GameLogic
             mTargetPos = pos;
             mStopDistance = stopDistance;
 
-            mFsm.CurrentState.Reason();
-            mFsm.CurrentState.Act();
-        }
-
-        public void SetSpeed(float speed)
-        {
-            mNavAgent.speed = speed;
+            mNavArrivePos.mSpeed = speed;
+            mTfArrivePos.mSpeed = speed;
         }
 
         protected override void Awake()
         {
             base.Awake();
+            mIntToState = ConfigToolkit.ConvertEnumToDic<MoveState>();
+
             mHero = gameObject.GetComponent<HeroEntity>();
 
             mNavArrivePos = gameObject.GetOrAdd<NavArrivePosition>();
@@ -118,7 +116,7 @@ namespace DC.GameLogic
             mTfTraceTarget = gameObject.GetOrAdd<TfTraceTarget>();
             mNavAgent = gameObject.GetComponent<NavMeshAgent>();
 
-            var path = string.Format("Configs/fsm/{0}", "HeroMove");
+            var path = string.Format("Configs/fsm/{0}", "HeroMoveFSMCfg");
             var jsonStr = ResourceSys.Instance.Load<TextAsset>(path).text;
             mFsm = DCAnimatorToFSM.Instance.Convert(jsonStr, CreateDCFSMState);
         }
@@ -129,30 +127,30 @@ namespace DC.GameLogic
 
         private void FixedUpdate()
         {
-            Vector3 mousePosition = Input.mousePosition;
-            Ray ray = DCGraphics.Instance.MainCamera.ScreenPointToRay(mousePosition);
+            var mousePosition = Input.mousePosition;
+            var ray = DCGraphics.Instance.MainCamera.ScreenPointToRay(mousePosition);
             //nav move pos
             if (Physics.Raycast(ray, out var hit, 10, SystemPreset.layer_ground))
             {
+                Move(MoveType.NavPos, hit.point, mHero.GetSpeed(), SystemPreset.move_stop_distance);
             }
 
-            mFsm.CurrentState.Reason();
-            mFsm.CurrentState.Act();
+            EmitFfs();
         }
 
-        void OnClickEnvGround(Vector3 pos)
+        public void EmitFfs()
         {
-            if (Actor.IsAutoMoving())
+            if (null != mFsm)
             {
-                Actor.StopAutoMove();
+                mFsm.CurrentState.Reason();
+                mFsm.CurrentState.Act();
             }
-
-            mNavArrivePos.StartTrace(pos, SystemPreset.move_stop_distance);
         }
+
 
         public DCFSMState CreateDCFSMState(int state)
         {
-            var enumState = (MoveState) state;
+            var enumState = mIntToState[state];
             var type = Type.GetType(string.Format("DC.AI.{0}", enumState.ToString()));
             var instance = (MoveBaseState)Activator.CreateInstance(type);
             instance.MoveCmpt = this;

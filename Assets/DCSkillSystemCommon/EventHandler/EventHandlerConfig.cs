@@ -84,7 +84,7 @@ namespace DC.SkillSystem
 
         #region action
         public EffectType mEffectType;
-        public int mBuffCfgId;
+        public BuffEffectConfig mBuffEffectCfg;
         public VisualEffectCfg mVisualEffectCfg;
         public int mChildSkillId;
         public TranslateFxConfig mTranslateFxConfig;

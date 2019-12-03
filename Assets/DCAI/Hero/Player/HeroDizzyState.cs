@@ -3,7 +3,7 @@ using DC.SkillSystem;
 
 namespace DC.AI
 {
-    public class HeroDieState : BaseHeroState
+    public class HeroDizzyState : HeroBaseState
     {
         public override void Reason(object data)
         {
@@ -11,10 +11,9 @@ namespace DC.AI
 
             //to idle state
             var buffCmpt = Actor.GetBuffCmpt();
-            if (!buffCmpt.Contains(BuffType.die))
+            if (!buffCmpt.Contains(BuffType.dizzy))
             {
-                Hero.ToState(EnumHeroTrans.ToIdle);
-                //todo d.c move birth pos
+                Hero.ToState(EnumHeroTrans.ToHeroIdleState);
             }
         }
     }

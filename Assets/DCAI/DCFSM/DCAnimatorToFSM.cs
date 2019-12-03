@@ -22,7 +22,7 @@ relations
         {
             var json = JSON.Parse(jsonCfg);
 
-            var stateIds = json["stateIds"].AsArray;
+            var stateIds = json["states"].AsArray;
             var stateIdToStateDic = new Dictionary<int, DCFSMState>();
             for (var i = 0; i < stateIds.Count; i++)
             {

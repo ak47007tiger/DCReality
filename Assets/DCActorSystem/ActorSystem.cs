@@ -73,11 +73,16 @@ namespace DC.ActorSystem
         enemy,
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum EffectType
     {
-        neutral,
+        self,
         friend,
+        neutral,
         enemy,
+        all,
     }
 
     public enum ActorPos

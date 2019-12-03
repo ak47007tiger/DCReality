@@ -79,8 +79,9 @@ namespace DC.SkillSystem
 
         public void DoBuffAction(List<IActor> targets)
         {
-            var buffCfg = BuffConfigMgr.Instance.GetBuffCfg(mHandlerCfg.mBuffCfgId);
-            var buff = BuffConfigMgr.Instance.GetBuff(mHandlerCfg.mBuffCfgId);
+            var buffEfxCfg = mHandlerCfg.mBuffEffectCfg;
+            var buffCfg = BuffConfigMgr.Instance.GetBuffCfg(buffEfxCfg.mBuffCfgId);
+            var buff = BuffConfigMgr.Instance.GetBuff(buffEfxCfg.mBuffCfgId);
 
             foreach (var target in targets)
             {

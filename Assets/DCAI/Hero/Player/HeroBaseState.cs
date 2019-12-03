@@ -5,23 +5,9 @@ using DC.GameLogic;
 
 namespace DC.AI
 {
-    public enum EnumHeroState
-    {
-        Idle,
-        Skill,
-        Dizzy,
-        Die,
-    }
+    
 
-    public enum EnumHeroTrans
-    {
-        ToIdle,
-        ToSkill,
-        ToDizzy,
-        ToDie,
-    }
-
-    public class BaseHeroState : DCFSMState
+    public class HeroBaseState : DCFSMState
     {
         protected HeroEntity Hero;
 

@@ -9,18 +9,44 @@ using UnityEditor.Animations;
 
 namespace DC.AI
 {
-    public class DCFSMEditor : Editor
+    public class DCFSMEditor : EditorWindow
     {
+        [MenuItem("DC/FSM/CreateWindow", false, 1)]
+        public static void ShowWindow()
+        {
+            var window = EditorWindow.GetWindow(typeof(DCFSMEditor));
+            var screenResolution = Screen.currentResolution;
+            //left,top to center,center
+            var w = 300;
+            var h = 150;
+            var r = new Rect(screenResolution.width * 0.5f - w * 0.5f, screenResolution.height * 0.5f - h * 0.5f, w, h);
+            window.position = r;
+        }
 
-        [MenuItem("Assets/DC/FSM/ControllerToFSMCfg")]
-        public static void AnimatorControllerToFSMCfg()
+        public string defaultState;
+
+        void OnGUI()
+        {
+            defaultState = EditorGUILayout.TextField("Name", defaultState);
+            if (string.IsNullOrEmpty(defaultState))
+            {
+                defaultState = "Idle";
+            }
+
+            if (GUILayout.Button("Create"))
+            {
+                AnimatorControllerToFSMCfg();
+                Close();
+            }
+        }
+
+        public void AnimatorControllerToFSMCfg()
         {
             if (Selection.activeObject is AnimatorController)
             {
                 var controller = Selection.activeObject as AnimatorController;
 
                 var converter = new AnimatorControllerToConfig();
-                converter.GetDefaultStateId = GetDefaultStateId;
                 converter.StateToId = StateToId;
                 converter.TransToId = TransToId;
 
@@ -34,11 +60,6 @@ namespace DC.AI
             }
         }
 
-        public static int GetDefaultStateId()
-        {
-            return "Idle".GetExtHashCode();
-        }
-
         public static int StateToId(AnimatorState state)
         {
             return state.name.GetExtHashCode();
@@ -48,14 +69,12 @@ namespace DC.AI
         {
             return ("To" + transition.destinationState.name).GetExtHashCode();
         }
-
     }
 
     public class AnimatorControllerToConfig
     {
         public Convert<int, AnimatorState> StateToId;
         public Convert<int, AnimatorStateTransition> TransToId;
-        public Convert<int> GetDefaultStateId;
 
         public string Convert(AnimatorController controller)
         {
@@ -65,6 +84,7 @@ namespace DC.AI
             var controllerLayer = controller.layers[0];
             var stateMachine = controllerLayer.stateMachine;
             var machineStates = stateMachine.states;
+            var defaultState = stateMachine.defaultState;
 
             //所有状态
             foreach (var machineState in machineStates)
@@ -107,14 +127,15 @@ namespace DC.AI
             }
 
             var json = new JSONObject();
-            
-            json.Add("defaultState", GetDefaultStateId());
+
+            json.Add("defaultState", StateToId(defaultState));
 
             var jsonStates = new JSONArray();
             foreach (var stateId in stateIdToTransState.Keys)
             {
                 jsonStates.Add(stateId);
             }
+
             json.Add("states", jsonStates);
 
             var relationsJson = new JSONObject();
@@ -144,5 +165,4 @@ namespace DC.AI
             return json.ToString(1);
         }
     }
-
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DC.AI
 {
-    public class HeroSkillState : BaseHeroState
+    public class HeroSkillState : HeroBaseState
     {
         public override void Reason(object data)
         {
@@ -16,24 +16,25 @@ namespace DC.AI
                 //不是施法，无操作
                 if (Hero.GetSelectedSkillCfg() == null)
                 {
-                    Hero.ToState(EnumHeroTrans.ToIdle);
+                    Hero.ToState(EnumHeroTrans.ToHeroIdleState);
                 }
+                //在等待施法条件达成，直接返回
                 return;
             }
 
             //施法完
-            //持续施法结束
+            //1 持续施法结束
             if (lastSkill.GetSkillCfg().mCastType == CastType.persistently
                 && lastSkill.IsComplete())
             {
-                Hero.ToState(EnumHeroTrans.ToIdle);
+                Hero.ToState(EnumHeroTrans.ToHeroIdleState);
                 return;
             }
 
-            //瞬时技能释放完毕 or 取消施法
+            //2 瞬时技能释放完毕 or 取消施法
             if (Hero.GetSelectedSkillCfg() == null)
             {
-                Hero.ToState(EnumHeroTrans.ToIdle);
+                Hero.ToState(EnumHeroTrans.ToHeroIdleState);
                 return;
             }
 
@@ -57,7 +58,8 @@ namespace DC.AI
             base.Act(data);
             //如果是持续施法中，忽略其他
             var lastSkill = Caster.GetLastSkill();
-            if (null != lastSkill && lastSkill.GetSkillCfg().mCastType == CastType.persistently && !lastSkill.IsComplete())
+            if (null != lastSkill && lastSkill.GetSkillCfg().mCastType == CastType.persistently &&
+                !lastSkill.IsComplete())
             {
                 return;
             }
@@ -67,20 +69,44 @@ namespace DC.AI
             var castCfg = Hero.GetCastCfg();
             if (null != skillCfg && null != castCfg)
             {
+                var casterTf = Hero.CacheTransform;
+                var hit = Hero.mCastTargetHit;
                 //检查各种条件
                 //距离
                 switch (skillCfg.mTargetType)
                 {
                     case SkillTargetType.Actor:
-                        break;
                     case SkillTargetType.Position:
+
+                    {
+                        var targetTf = hit.transform;
+
+                        var distance = Toolkit.ComputeDistance(targetTf, casterTf);
+                        if (distance <= skillCfg.mCastRange)
+                        {
+                            LogDC.Log("try catch actor");
+                            Caster.Cast(skillCfg, castCfg);
+                            Hero.ClearSkill();
+                            return;
+                        }
+
                         break;
+                    }
                     case SkillTargetType.Direction:
+                    {
+                        var hitPos = hit.point;
+                        var hitGroundPos = new Vector3(hitPos.x, 0, hitPos.z);
+                        var playerPos = Hero.CacheTransform.position;
+                        var rawDirection = (hitGroundPos - playerPos).normalized;
+
+                        Caster.Cast(skillCfg, castCfg);
+                        Hero.ClearSkill();
                         break;
+                    }
                 }
+
                 Caster.Cast(skillCfg, castCfg);
             }
         }
-
     }
 }

@@ -11,10 +11,10 @@ namespace DC.AI
             switch (MoveCmpt.mMoveType)
             {
                 case MoveType.NavPos:
-                    ToState(EnumMoveTranslateCls.ToMovePosition);
+                    ToState(EnumMoveTrans.ToMovePosition);
                     return;
                 case MoveType.TfPos:
-                    ToState(EnumMoveTranslateCls.ToMovePosition);
+                    ToState(EnumMoveTrans.ToMovePosition);
                     return;
             }
 
@@ -23,13 +23,13 @@ namespace DC.AI
                 case MoveType.NavTarget:
                     if (MoveCmpt.mNavTraceTarget.IsComplete())
                     {
-                        ToState(EnumMoveTranslateCls.ToIdle);
+                        ToState(EnumMoveTrans.ToMoveIdle);
                     }
                     return;
                 case MoveType.TfTarget:
                     if (MoveCmpt.mTfTraceTarget.IsComplete())
                     {
-                        ToState(EnumMoveTranslateCls.ToIdle);
+                        ToState(EnumMoveTrans.ToMoveIdle);
                     }
                     return;
             }
@@ -38,13 +38,13 @@ namespace DC.AI
             var buffCmpt = MoveCmpt.Actor.GetBuffCmpt();
             if (buffCmpt.Contains(BuffType.force_translate))
             {
-                ToState(EnumMoveTranslateCls.ToMoveForceTranslate);
+                ToState(EnumMoveTrans.ToMoveForceTranslate);
                 return;
             }
             //to move stop
             if (buffCmpt.Contains(BuffType.can_not_move))
             {
-                ToState(EnumMoveTranslateCls.ToMoveStop);
+                ToState(EnumMoveTrans.ToMoveStop);
                 return;
             }
         }

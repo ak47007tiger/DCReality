@@ -12,7 +12,7 @@ namespace DC.SkillSystem
 {
     public class Skill : BaseMonoBehaviour, ISkill
     {
-        private ICaster mCaster;
+        private Caster mCaster;
 
         private SkillCfg mSkillCfg;
 
@@ -48,7 +48,7 @@ namespace DC.SkillSystem
             return mCaster;
         }
 
-        public void SetCaster(ICaster caster)
+        public void SetCaster(Caster caster)
         {
             mCaster = caster;
             UpdateEffectSide();
@@ -385,7 +385,7 @@ namespace DC.SkillSystem
 
         public void ClearSkill()
         {
-            throw new NotImplementedException();
+
         }
 
         void OnDestroy()
@@ -549,7 +549,7 @@ namespace DC.SkillSystem
                         return;
                     }
 
-                    var hitActor = raycastHit.transform.GetComponent<IActor>();
+                    var hitActor = raycastHit.transform.GetComponent<GameActor>();
 
                     if (hitActor != null)
                     {

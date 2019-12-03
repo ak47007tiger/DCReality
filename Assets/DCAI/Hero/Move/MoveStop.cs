@@ -11,13 +11,13 @@ namespace DC.AI
             var buffCmpt = MoveCmpt.Actor.GetBuffCmpt();
             if (buffCmpt.Contains(BuffType.force_translate))
             {
-                ToState(EnumMoveTranslateCls.ToMoveForceTranslate);
+                ToState(EnumMoveTrans.ToMoveForceTranslate);
                 return;
             }
 
             if (!buffCmpt.Contains(BuffType.can_not_move))
             {
-                ToState(EnumMoveTranslateCls.ToIdle);
+                ToState(EnumMoveTrans.ToMoveIdle);
                 return;
             }
         }

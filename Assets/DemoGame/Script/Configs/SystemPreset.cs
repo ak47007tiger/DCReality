@@ -2,7 +2,7 @@
 
 namespace DC.GameLogic
 {
-    public class SystemPreset
+    public static class SystemPreset
     {
         public static float max_skill_cast_range = 200;
 
@@ -22,5 +22,15 @@ namespace DC.GameLogic
 
         public static readonly int layer_ground = LayerMask.GetMask("Ground");
         public static readonly int layer_actor = LayerMask.GetMask("Actor");
+
+        public static float GetMiniatureValue(float value)
+        {
+            return value * 0.99f;
+        }
+
+        public static float MiniatureValue(this float value)
+        {
+            return value * 0.99f;
+        }
     }
 }

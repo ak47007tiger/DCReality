@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DC.ActorSystem;
+using DC.GameLogic;
 using UnityEngine;
 
 namespace DC.SkillSystem
@@ -7,7 +8,7 @@ namespace DC.SkillSystem
     public interface ISkill
     {
         ICaster GetCaster();
-        void SetCaster(ICaster caster);
+        void SetCaster(Caster caster);
 
         CastCfg GetCastCfg();
         void SetCastCfg(CastCfg castCfg);

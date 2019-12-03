@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
 using DC.DCPhysics;
+using DC.GameLogic;
 
 namespace DC.SkillSystem
 {
@@ -20,7 +21,7 @@ namespace DC.SkillSystem
     {
         public static readonly CastCfg Empty = new CastCfg();
 
-        public List<IActor> mTargets;
+        public List<GameActor> mTargets;
         public Vector3 mDirection;
         public Vector3 mTargetPosition;
         /// <summary>
@@ -34,12 +35,12 @@ namespace DC.SkillSystem
         /// </summary>
         public bool mIsSubSkill;
 
-        public List<IActor> GetTargetActors()
+        public List<GameActor> GetTargetActors()
         {
             return mTargets;
         }
 
-        public bool IsTarget(IActor actor)
+        public bool IsTarget(GameActor actor)
         {
             if (Toolkit.IsNullOrEmpty(mTargets)) return false;
             return mTargets.Contains(actor);
@@ -51,9 +52,16 @@ namespace DC.SkillSystem
             return mTargets[0];
         }
 
-        public void SetTargetActors(List<IActor> targets)
+        public void SetTargetActors(List<GameActor> targets)
         {
             mTargets = targets;
+        }
+
+        public void SetTargetActor(GameActor actor)
+        {
+            var list = new List<GameActor>();
+            list.Add(actor);
+            SetTargetActors(list);
         }
 
         public void SetDirection(Vector3 direction)

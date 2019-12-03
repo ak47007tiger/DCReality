@@ -13,7 +13,7 @@ namespace DC.AI
                 case MoveType.TfPos:
                     if (MoveCmpt.mTfArrivePos.IsComplete())
                     {
-                        ToState(EnumMoveTranslateCls.ToIdle);
+                        ToState(EnumMoveTrans.ToMoveIdle);
                     }
                     return;
             }
@@ -21,7 +21,7 @@ namespace DC.AI
             var buffCmpt = MoveCmpt.Actor.GetBuffCmpt();
             if (buffCmpt.Contains(BuffType.can_not_move))
             {
-                ToState(EnumMoveTranslateCls.ToMoveStop);
+                ToState(EnumMoveTrans.ToMoveStop);
                 return;
             }
         }

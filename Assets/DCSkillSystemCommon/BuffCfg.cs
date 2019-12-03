@@ -97,6 +97,7 @@ namespace DC.SkillSystem
         public string mName;
         public string mDesc;
         public string mUiIcon;
+        public VisualEffectCfg mVfxCfg;
     }
 
 }

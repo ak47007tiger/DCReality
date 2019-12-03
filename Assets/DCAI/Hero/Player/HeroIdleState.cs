@@ -6,7 +6,7 @@ namespace DC.AI
     /// <summary>
     /// 
     /// </summary>
-    public class HeroIdleState : BaseHeroState
+    public class HeroIdleState : HeroBaseState
     {
         public override void Reason(object data)
         {
@@ -17,16 +17,16 @@ namespace DC.AI
             {
                 //to dizzy state
                 case BuffType.dizzy:
-                    Hero.ToState(EnumHeroTrans.ToDizzy);
+                    Hero.ToState(EnumHeroTrans.ToHeroDizzyState);
                     return;
                 case BuffType.die:
-                    Hero.ToState(EnumHeroTrans.ToDie);
+                    Hero.ToState(EnumHeroTrans.ToHeroDieState);
                     return;
             }
 
             if (Hero.GetSelectedSkillCfg() != null)
             {
-                Hero.ToState(EnumHeroTrans.ToSkill);
+                Hero.ToState(EnumHeroTrans.ToHeroSkillState);
 
                 return;
             }
