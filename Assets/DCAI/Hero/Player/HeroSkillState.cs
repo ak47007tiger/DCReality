@@ -18,6 +18,7 @@ namespace DC.AI
                 {
                     Hero.ToState(EnumHeroTrans.ToHeroIdleState);
                 }
+
                 //在等待施法条件达成，直接返回
                 return;
             }
@@ -67,7 +68,7 @@ namespace DC.AI
             //if 选好了技能和目标 尝试施法
             var skillCfg = Hero.GetSelectedSkillCfg();
             var castCfg = Hero.GetCastCfg();
-            if (null != skillCfg && null != castCfg)
+            if (null != skillCfg && null != castCfg && castCfg.mPrepared)
             {
                 var casterTf = Hero.CacheTransform;
                 var hit = Hero.mCastTargetHit;
@@ -75,19 +76,26 @@ namespace DC.AI
                 //距离
                 switch (skillCfg.mTargetType)
                 {
-                    case SkillTargetType.Actor:
                     case SkillTargetType.Position:
-
                     {
-                        var targetTf = hit.transform;
-
-                        var distance = Toolkit.ComputeDistance(targetTf, casterTf);
+                        var distance = Vector3.Distance(hit.point, casterTf.position);
+                        LogDC.LogEx("wait for position", distance, skillCfg.mCastRange);
                         if (distance <= skillCfg.mCastRange)
                         {
-                            LogDC.Log("try catch actor");
                             Caster.Cast(skillCfg, castCfg);
                             Hero.ClearSkill();
-                            return;
+                        }
+
+                        break;
+                    }
+                    case SkillTargetType.Actor:
+                    {
+                        var distance = Toolkit.ComputeDistance(hit.transform, casterTf);
+                        LogDC.LogEx("wait for position", distance, skillCfg.mCastRange);
+                        if (distance <= skillCfg.mCastRange)
+                        {
+                            Caster.Cast(skillCfg, castCfg);
+                            Hero.ClearSkill();
                         }
 
                         break;
@@ -101,11 +109,10 @@ namespace DC.AI
 
                         Caster.Cast(skillCfg, castCfg);
                         Hero.ClearSkill();
+
                         break;
                     }
                 }
-
-                Caster.Cast(skillCfg, castCfg);
             }
         }
     }

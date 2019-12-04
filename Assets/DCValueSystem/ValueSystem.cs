@@ -70,9 +70,15 @@ namespace DC.ValueSys
     public enum GValueType
     {
         hp,
+        /// <summary>
+        /// 回血
+        /// </summary>
         hp_recover,
 
         mp,
+        /// <summary>
+        /// 回蓝
+        /// </summary>
         mp_recover,
 
         /// <summary>

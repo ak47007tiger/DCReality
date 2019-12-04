@@ -19,23 +19,20 @@ namespace DC.GameLogic
         {
             {
                 var actor = CreateHero(player, PlayerDataMgr.Instance.GetMainActorId());
-                actor.gameObject.AddComponent<HeroMoveComponent>();
                 actor.SetActorSide(ActorSide.blue);
+                ActorSys.Instance.AddActor(actor.GetActorId(), actor);
+                ActorSys.Instance.SetMainActor(actor);
 
+                var heroEntity = actor.GetComponent<HeroEntity>();
+
+                var heroMoveComponent = actor.gameObject.AddComponent<HeroMoveComponent>();
                 var birthPosition = GetBirthPosition(0, ActorSide.blue);
                 actor.transform.position = birthPosition;
 
+                heroEntity.MoveCmpt = heroMoveComponent;
 
-                ActorSys.Instance.AddActor(actor.GetActorId(), actor);
-
-                ActorSys.Instance.SetMainActor(actor);
-
-                /*var path = "Assets/_DCTemp/Animator/HeroState.controller";
-                var animatorController = UnityEditor.AssetDatabase.LoadAssetAtPath<AnimatorController>(path);
-                actor.GetComponent<HeroEntity>().SetFSM(animatorController);*/
                 var path = "Configs/fsm/PlayerHero";
                 var jsonStr = ResourceSys.Instance.Load<TextAsset>(path).text;
-                var heroEntity = actor.GetComponent<HeroEntity>();
                 var fsm = DCAnimatorToFSM.Instance.Convert(jsonStr, heroEntity.CreateDCFSMState);
                 heroEntity.HeroFsm = fsm;
             }

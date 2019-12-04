@@ -74,7 +74,6 @@ namespace DC.ActorSystem
     }
 
     /// <summary>
-    /// 
     /// </summary>
     public enum EffectType
     {
@@ -84,7 +83,6 @@ namespace DC.ActorSystem
         enemy,
         all,
     }
-
     public enum ActorPos
     {
         root,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
 using DC.DCPhysics;
+using DC.ValueSys;
 
 namespace DC.SkillSystem
 {
@@ -36,7 +37,9 @@ namespace DC.SkillSystem
         蓝量
         攻击特效
      */
-
+    /// <summary>
+    /// buff的影响类型
+    /// </summary>
     public enum BuffType
     {
         hp,
@@ -48,6 +51,7 @@ namespace DC.SkillSystem
         magic_defense,
         physic_weaken,
         magic_weaken,
+
         /// <summary>
         /// 免伤
         /// </summary>
@@ -58,16 +62,19 @@ namespace DC.SkillSystem
         force_translate,
 
         can_not_select,
+
         /// <summary>
         /// 反伤
         /// </summary>
         feedback_damage,
+
         /// <summary>
         /// 晕眩
         /// </summary>
         dizzy,
-        
+
         invisible,
+
         /// <summary>
         /// 攻击特效
         /// 附带最大生命值
@@ -81,6 +88,12 @@ namespace DC.SkillSystem
         /// 死亡状态
         /// </summary>
         die,
+    }
+
+    public enum EffectRangeType
+    {
+        Single,
+        Aoe,
     }
 
     public interface IBuffCfg
@@ -97,7 +110,16 @@ namespace DC.SkillSystem
         public string mName;
         public string mDesc;
         public string mUiIcon;
+        public EffectRangeType mEffectRangeType;
+        /// <summary>
+        /// 视觉特效
+        /// </summary>
         public VisualEffectCfg mVfxCfg;
-    }
+        /// <summary>
+        /// 数值影响
+        /// </summary>
+        public ValueEffectConfig MValueEffectCfg;
 
+        public BuffEffectConfig mBuffEffectCfg;
+    }
 }

@@ -35,6 +35,13 @@ namespace DC.SkillSystem
         /// </summary>
         public bool mIsSubSkill;
 
+        public bool mPrepared;
+
+        public CastCfg()
+        {
+
+        }
+
         public List<GameActor> GetTargetActors()
         {
             return mTargets;
@@ -55,6 +62,7 @@ namespace DC.SkillSystem
         public void SetTargetActors(List<GameActor> targets)
         {
             mTargets = targets;
+            mPrepared = true;
         }
 
         public void SetTargetActor(GameActor actor)
@@ -67,6 +75,8 @@ namespace DC.SkillSystem
         public void SetDirection(Vector3 direction)
         {
             mDirection = direction;
+            mPrepared = true;
+
         }
 
         public Vector3 GetTargetPosition()
@@ -77,6 +87,8 @@ namespace DC.SkillSystem
         public void SetTargetPosition(Vector3 position)
         {
             mTargetPosition = position;
+            mPrepared = true;
+
         }
 
         public int GetPower()

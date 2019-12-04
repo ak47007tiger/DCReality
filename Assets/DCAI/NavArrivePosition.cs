@@ -11,6 +11,8 @@ namespace DC.AI
 
         public Vector3 mTargetPos;
 
+        public float mDistance;
+
         public void StartTrace(Vector3 targetPos, float stopDistance)
         {
             mTargetPos = targetPos;
@@ -24,7 +26,8 @@ namespace DC.AI
 
             mNavMeshAgent.destination = GetTargetPos();
 
-            var catchTarget = TfTraceTarget.IsCatchTargetWithPos(mTargetPos, CacheTransform.position, mStopDistance);
+            var catchTarget = TfTraceTarget.IsCatchTargetWithPos(GetTargetPos(), CacheTransform.position, mStopDistance);
+            mDistance = catchTarget.Item2;
 
             if (catchTarget.Item1)
             {
@@ -47,7 +50,7 @@ namespace DC.AI
 
         public bool IsComplete()
         {
-            var catchTarget = TfTraceTarget.IsCatchTargetWithPos(mTargetPos, CacheTransform.position, mStopDistance);
+            var catchTarget = TfTraceTarget.IsCatchTargetWithPos(GetTargetPos(), CacheTransform.position, mStopDistance);
             return catchTarget.Item1;
         }
 

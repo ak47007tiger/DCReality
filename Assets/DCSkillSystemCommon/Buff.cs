@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DC.ActorSystem;
 using DC.DCPhysics;
+using DC.GameLogic;
 
 namespace DC.SkillSystem
 {
@@ -18,19 +19,11 @@ namespace DC.SkillSystem
 
         public BuffCfg mBuffCfg;
 
+        List<GameActor> mEfxActorList = new List<GameActor>();
+
         public bool AllowCast(ISkill skill)
         {
             return true;
-        }
-
-        public void OnAdd(IActor actor)
-        {
-
-        }
-
-        public void OnRemove(IActor actor)
-        {
-
         }
 
         public void OnUpdate()

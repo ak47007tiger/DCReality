@@ -32,6 +32,9 @@ namespace DC.SkillSystem
     [Serializable]
     public class VisualEffectCfg
     {
+        /// <summary>
+        /// 特效路径，没有就不填
+        /// </summary>
         public string mEffectPath;
 
         public TransformType mTransformType;

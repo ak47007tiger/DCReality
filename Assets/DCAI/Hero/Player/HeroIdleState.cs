@@ -27,7 +27,7 @@ namespace DC.AI
                 }
             }
 
-            if (Hero.GetSelectedSkillCfg() != null)
+            if (Hero.GetCastCfg() != null && Hero.GetCastCfg().mPrepared)
             {
                 Hero.ToState(EnumHeroTrans.ToHeroSkillState);
 

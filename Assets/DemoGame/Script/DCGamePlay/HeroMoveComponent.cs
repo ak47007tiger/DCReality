@@ -103,8 +103,14 @@ namespace DC.GameLogic
             mTfArrivePos.mSpeed = speed;
 
             LogDC.Log("Move " + pos);
-
-            mNavArrivePos.StartTrace(pos, stopDistance);
+            if(type == MoveType.NavPos)
+            {
+                mNavArrivePos.StartTrace(pos, stopDistance);
+            }
+            else if (type == MoveType.TfPos)
+            {
+                mTfArrivePos.StartTrace(pos, stopDistance, speed);
+            }
         }
 
         protected override void Awake()

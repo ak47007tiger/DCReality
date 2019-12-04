@@ -153,11 +153,10 @@ namespace DC.GameLogic
             LogDC.LogEx("press  ", code);
 
             var currentSkill = Caster.GetSkill(code);
-
-            int skillId;
             mCastCfg = new CastCfg();
             mCastCfg.mFromKey = code;
 
+            int skillId;
             if (currentSkill != null)
             {
                 skillId = mHeroCfg.GetNextSkill(code, currentSkill.GetSkillCfg().mId);
@@ -214,6 +213,7 @@ namespace DC.GameLogic
                     var ray = Camera.main.ScreenPointToRay(mPos);
                     if (Physics.Raycast(ray, out mCastTargetHit, 100))
                     {
+                        LogDC.Log("get target " + mCastTargetHit.transform.gameObject.name);
                         PrepareCastSelectedSkill(mSelectedSkillCfg, mCastTargetHit.transform, mCastTargetHit.point);
                     }
                 }
@@ -256,19 +256,21 @@ namespace DC.GameLogic
                     var playerPos = CacheTransform.position;
                     playerPos.y = 0;
                     var rawDirection = (hitPos - playerPos).normalized;
-                    mCastCfg.SetDirection(rawDirection);
+                    GetCastCfg().SetDirection(rawDirection);
                 }
                     break;
                 case SkillTargetType.Position:
                 {
                     var playerPos = CacheTransform.position;
                     hitPos.y = 0;
-                    mCastCfg.SetTargetPosition(hitPos);
+                    GetCastCfg().SetTargetPosition(hitPos);
 
                     var distance = Vector3.Distance(hitPos, playerPos);
                     if (distance > selectedSkillCfg.mCastRange)
                     {
-                        MoveCmpt.Move(MoveType.NavPos, hitPos, GetSpeed(), mSelectedSkillCfg.mCastRange.MiniatureValue());
+                        var miniatureValue = mSelectedSkillCfg.mCastRange.MiniatureValue();
+                        LogDC.LogEx("trace pos ", hitPos, miniatureValue);
+                        MoveCmpt.Move(MoveType.NavPos, hitPos, GetSpeed(), miniatureValue);
                     }
                 }
                     break;
@@ -281,24 +283,6 @@ namespace DC.GameLogic
         {
             //todo d.c get speed from actor data
             return mHeroCfg.mSpeed;
-        }
-
-        private void OnCatchActor(NavTraceTarget tracer, float distance)
-        {
-            tracer.mOnCatchTarget = null;
-
-            CastSelectedSkill(tracer.mTargetTf.GetComponent<GameActor>());
-        }
-
-        private void CastSelectedSkill(GameActor target)
-        {
-            var castCfg = mCastCfg;
-            var targets = new List<GameActor>();
-            targets.Add(target);
-            castCfg.SetTargetActors(targets);
-            Caster.Cast(mSelectedSkillCfg, castCfg);
-
-            ClearSkill();
         }
 
         public void ToState(EnumHeroTrans trans)
@@ -335,9 +319,9 @@ namespace DC.GameLogic
                     if (target != null)
                     {
                         var skillId = mHeroCfg.GetSkillId(KeyCode.A);
+                        var skillCfg = SkillConfigMgr.Instance.GetSkillCfg(skillId);
                         mCastCfg = new CastCfg();
                         mCastCfg.mFromKey = KeyCode.A;
-                        var skillCfg = SkillConfigMgr.Instance.GetSkillCfg(skillId);
                         mSelectedSkillCfg = skillCfg;
                         PrepareCastSelectedSkill(mSelectedSkillCfg, mCastTargetHit.transform, Vector3.zero);
                     }
