@@ -11,7 +11,6 @@ namespace DC.AI
 {
     public class DCFSMEditor : EditorWindow
     {
-        [MenuItem("DC/FSM/CreateWindow", false, 1)]
         public static void ShowWindow()
         {
             var window = EditorWindow.GetWindow(typeof(DCFSMEditor));
@@ -27,7 +26,7 @@ namespace DC.AI
 
         void OnGUI()
         {
-            defaultState = EditorGUILayout.TextField("Name", defaultState);
+            defaultState = EditorGUILayout.TextField("DefaultState", defaultState);
             if (string.IsNullOrEmpty(defaultState))
             {
                 defaultState = "Idle";
@@ -40,7 +39,8 @@ namespace DC.AI
             }
         }
 
-        public void AnimatorControllerToFSMCfg()
+        [MenuItem("DC/FSM/CreateConfig", false, 1)]
+        public static void AnimatorControllerToFSMCfg()
         {
             if (Selection.activeObject is AnimatorController)
             {

@@ -54,6 +54,8 @@ namespace DC.AI
         {
             MoveCmpt.StopTrace();
 
+            //todo set move pos of component
+
             switch (MoveCmpt.mMoveType)
             {
                 case MoveType.NavPos:

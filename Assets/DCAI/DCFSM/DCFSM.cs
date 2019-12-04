@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace DC.AI
@@ -12,7 +11,19 @@ namespace DC.AI
         protected Dictionary<int, int> map = new Dictionary<int, int>();
 
         protected int stateID;
-        public int ID { get { return stateID; } }
+        private byte writeIdCnt;
+        public int ID
+        {
+            get { return stateID; }
+            set
+            {
+                if (writeIdCnt == 0)
+                {
+                    writeIdCnt++;
+                    stateID = value;
+                }
+            }
+        }
 
         public void AddTransition(int trans, int id)
         {
@@ -209,7 +220,7 @@ namespace DC.AI
 
             // Update the currentStateID and currentState		
             currentStateID = id;
-            if(states.TryGetValue(id, out var state))
+            if (states.TryGetValue(id, out var state))
             {
                 // Do the post processing of the state before setting the new one
                 currentState.DoBeforeLeaving();
@@ -228,7 +239,7 @@ namespace DC.AI
 
         public void BackToPreviousState()
         {
-            if(mStateStack.Count > 1)
+            if (mStateStack.Count > 1)
             {
                 var top = mStateStack.Pop();
                 top.DoBeforeLeaving();

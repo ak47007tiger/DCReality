@@ -49,9 +49,6 @@ namespace DC.ActorSystem
         HeroCfg GetHeroCfg();
         void SetHeroCfg(HeroCfg cfg);
 
-        bool IsAutoMoving();
-        void StopAutoMove();
-
         void FaceTo(Transform targetTf);
         void FaceTo(Vector3 direction);
     }

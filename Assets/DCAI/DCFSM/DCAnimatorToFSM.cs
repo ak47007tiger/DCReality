@@ -28,6 +28,7 @@ relations
             {
                 var stateId = stateIds[i].AsInt;
                 var dcState = StateIdToState(stateId);
+                dcState.ID = stateId;
                 stateIdToStateDic.Add(stateId, dcState);
             }
 
@@ -39,7 +40,7 @@ relations
                 var relation = relations[stateId.ToString()].AsArray;
                 for (var j = 0; j < relation.Count; j++)
                 {
-                    var relationItem = relations[j];
+                    var relationItem = relation[j];
                     var trans = relationItem["trans"].AsInt;
                     var dstStateId = relationItem["state"];
                     srcState.AddTransition(trans, dstStateId);

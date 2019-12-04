@@ -19,7 +19,7 @@ namespace DC.AI
             SetStop(false);
         }
 
-        void Update()
+        void FixedUpdate()
         {
             if (mStop) return;
 

@@ -7,7 +7,6 @@ namespace DC.AI
     {
         public float mStopDistance = 1;
 
-        [HideInInspector]
         public float mSpeed;
 
         public NavMeshAgent mNavMeshAgent;

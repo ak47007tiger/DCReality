@@ -32,26 +32,11 @@ namespace DC.GameLogic
 
         private HeroCfg mHeroCfg;
 
-        private NavTraceTarget mNavTraceTarget;
-
-        private NavArrivePosition mNavArrivePosition;
-
-        private BuffCmpt _mBuffCmpt = new BuffCmpt();
-
-        public NavArrivePosition NavArrivePosition
-        {
-            get { return mNavArrivePosition; }
-        }
-
-        public NavTraceTarget NavTraceTarget
-        {
-            get { return mNavTraceTarget; }
-        }
+        private BuffCmpt mBuffCmpt = new BuffCmpt();
 
         protected override void Awake()
         {
             base.Awake();
-            mNavArrivePosition = gameObject.GetOrAdd<NavArrivePosition>();
         }
 
         void Start()
@@ -119,7 +104,7 @@ namespace DC.GameLogic
 
         public BuffCmpt GetBuffCmpt()
         {
-            return _mBuffCmpt;
+            return mBuffCmpt;
         }
 
         public ValueComponent GetValueComponent()
@@ -155,22 +140,6 @@ namespace DC.GameLogic
         public void UpdateAnimatorParam(int paramId, bool value)
         {
             throw new System.NotImplementedException();
-        }
-
-        public void TryCatch(Transform actor, float stopDistance, Action<NavTraceTarget, float> onCatch)
-        {
-            if (mNavTraceTarget == null)
-            {
-                mNavTraceTarget = gameObject.AddComponent<NavTraceTarget>();
-            }
-            mNavTraceTarget.mOnCatchTarget = onCatch;
-            mNavTraceTarget.StartTrace(actor, stopDistance);
-        }
-
-        public void TryArrive(Vector3 targetPos, float stopDistance, Action<NavArrivePosition, float> onArrive)
-        {
-            mNavArrivePosition.mOnCatchTarget = onArrive;
-            mNavArrivePosition.StartTrace(targetPos, stopDistance);
         }
 
         public bool IsPlayer()
@@ -216,36 +185,6 @@ namespace DC.GameLogic
         public void SetHeroCfg(HeroCfg cfg)
         {
             mHeroCfg = cfg;
-        }
-
-        public bool IsAutoMoving()
-        {
-            if (null != mNavTraceTarget)
-            {
-                return !mNavTraceTarget.IsStop();
-            }
-
-            if (null != mNavArrivePosition)
-            {
-                return !mNavArrivePosition.IsStop();
-            }
-
-            return false;
-        }
-
-        public void StopAutoMove()
-        {
-            if (null != mNavTraceTarget)
-            {
-                mNavTraceTarget.SetStop(true);
-                mNavTraceTarget.mOnCatchTarget = null;
-            }
-
-            if (null != mNavArrivePosition)
-            {
-                mNavArrivePosition.SetStop(true);
-                mNavArrivePosition.mOnCatchTarget = null;
-            }
         }
 
         public void FaceTo(Transform targetTf)

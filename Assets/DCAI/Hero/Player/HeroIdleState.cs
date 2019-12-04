@@ -13,15 +13,18 @@ namespace DC.AI
             base.Reason(data);
 
             var lastAddBuffCfg = Actor.GetBuffCmpt().GetLastAddBuffCfg();
-            switch (lastAddBuffCfg.mBuffType)
+            if(null != lastAddBuffCfg)
             {
-                //to dizzy state
-                case BuffType.dizzy:
-                    Hero.ToState(EnumHeroTrans.ToHeroDizzyState);
-                    return;
-                case BuffType.die:
-                    Hero.ToState(EnumHeroTrans.ToHeroDieState);
-                    return;
+                switch (lastAddBuffCfg.mBuffType)
+                {
+                    //to dizzy state
+                    case BuffType.dizzy:
+                        Hero.ToState(EnumHeroTrans.ToHeroDizzyState);
+                        return;
+                    case BuffType.die:
+                        Hero.ToState(EnumHeroTrans.ToHeroDieState);
+                        return;
+                }
             }
 
             if (Hero.GetSelectedSkillCfg() != null)

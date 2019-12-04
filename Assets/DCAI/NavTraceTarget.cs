@@ -14,11 +14,13 @@ namespace DC.AI
 
         public Action<NavTraceTarget, float> mOnCatchTarget;
 
-        void Update()
+        void FixedUpdate()
         {
             if(mStop) return;
 
             if (mTargetTf == null) return;
+
+            mNavMeshAgent.destination = GetTargetPos();
 
             var catchTarget = CatchTarget(mTargetTf, CacheTransform, mStopDistance);
             if (catchTarget.Item1)
@@ -31,11 +33,15 @@ namespace DC.AI
                 }
                 return;
             }
-            mNavMeshAgent.destination = GetTargetPos();
         }
 
         public override Vector3 GetTargetPos()
         {
+            if(mTargetTf == null)
+            {
+                return CacheTransform.position;
+            }
+
             return mTargetTf.position;
         }
 

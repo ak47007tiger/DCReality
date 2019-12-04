@@ -6,6 +6,12 @@ namespace DC.AI
 {
     public class MoveIdle : MoveBaseState
     {
+        public override void DoBeforeEntering() 
+        {
+            LogDC.LogEx("to move idle");
+            MoveCmpt.Move(MoveType.Idle);
+        }
+
         public override void Reason(object data)
         {
             switch (MoveCmpt.mMoveType)

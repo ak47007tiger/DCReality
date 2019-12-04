@@ -101,6 +101,10 @@ namespace DC.GameLogic
 
             mNavArrivePos.mSpeed = speed;
             mTfArrivePos.mSpeed = speed;
+
+            LogDC.Log("Move " + pos);
+
+            mNavArrivePos.StartTrace(pos, stopDistance);
         }
 
         protected override void Awake()
@@ -110,11 +114,19 @@ namespace DC.GameLogic
 
             mHero = gameObject.GetComponent<HeroEntity>();
 
-            mNavArrivePos = gameObject.GetOrAdd<NavArrivePosition>();
-            mNavTraceTarget = gameObject.GetOrAdd<NavTraceTarget>();
-            mTfArrivePos = gameObject.GetOrAdd<TfArrivePosition>();
-            mTfTraceTarget = gameObject.GetOrAdd<TfTraceTarget>();
             mNavAgent = gameObject.GetComponent<NavMeshAgent>();
+
+            mNavArrivePos = gameObject.GetOrAdd<NavArrivePosition>();
+            mNavArrivePos.SetStop(true);
+
+            mNavTraceTarget = gameObject.GetOrAdd<NavTraceTarget>();
+            mNavTraceTarget.SetStop(true);
+
+            mTfArrivePos = gameObject.GetOrAdd<TfArrivePosition>();
+            mTfArrivePos.SetStop(true);
+
+            mTfTraceTarget = gameObject.GetOrAdd<TfTraceTarget>();
+            mTfTraceTarget.SetStop(true);
 
             var path = string.Format("Configs/fsm/{0}", "HeroMoveFSMCfg");
             var jsonStr = ResourceSys.Instance.Load<TextAsset>(path).text;
@@ -127,12 +139,16 @@ namespace DC.GameLogic
 
         private void FixedUpdate()
         {
-            var mousePosition = Input.mousePosition;
-            var ray = DCGraphics.Instance.MainCamera.ScreenPointToRay(mousePosition);
-            //nav move pos
-            if (Physics.Raycast(ray, out var hit, 10, SystemPreset.layer_ground))
+            if (Input.GetMouseButtonDown(1))
             {
-                Move(MoveType.NavPos, hit.point, mHero.GetSpeed(), SystemPreset.move_stop_distance);
+                var mousePosition = Input.mousePosition;
+                var ray = DCGraphics.Instance.MainCamera.ScreenPointToRay(mousePosition);
+                //nav move pos
+                if (Physics.Raycast(ray, out var hit, 200, SystemPreset.layer_ground))
+                {
+                    LogDC.LogEx("hero move ", "right down", hit.point);
+                    Move(MoveType.NavPos, hit.point, mHero.GetSpeed(), SystemPreset.move_stop_distance);
+                }
             }
 
             EmitFfs();

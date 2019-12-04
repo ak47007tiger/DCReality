@@ -53,7 +53,7 @@ namespace DC.GameLogic
 
         public Skill GetLastSkill()
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public bool Cast(SkillCfg skillCfg, CastCfg castCfg)

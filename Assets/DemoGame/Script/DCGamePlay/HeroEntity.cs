@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DC.ActorSystem;
 using DC.AI;
+using DC.Collections;
 using DC.SkillSystem;
 using DC.UI;
 using UnityEngine;
@@ -28,9 +29,12 @@ namespace DC.GameLogic
 
         public HeroMoveComponent MoveCmpt;
 
+        private Dictionary<int, EnumHeroState> mIntToState;
+
         protected override void Awake()
         {
             base.Awake();
+            mIntToState = ConfigToolkit.ConvertEnumToDic<EnumHeroState>();
         }
 
         void Start()
@@ -52,9 +56,10 @@ namespace DC.GameLogic
 
         public DCFSMState CreateDCFSMState(int state)
         {
-            var enumState = (EnumHeroState) state;
+            var enumState = mIntToState[state];
             var type = Type.GetType(string.Format("DC.AI.{0}", enumState.ToString()));
             var instance = (HeroBaseState) Activator.CreateInstance(type);
+            instance.SetUp(gameObject);
             //todo d.c set up entity
             return instance;
         }
@@ -278,11 +283,6 @@ namespace DC.GameLogic
             return mHeroCfg.mSpeed;
         }
 
-        private void OnArrive(NavArrivePosition arrive, float distance)
-        {
-            arrive.mOnCatchTarget = null;
-        }
-
         private void OnCatchActor(NavTraceTarget tracer, float distance)
         {
             tracer.mOnCatchTarget = null;
@@ -313,12 +313,12 @@ namespace DC.GameLogic
             //1 非施法准备期 普攻 2 施法准备期 取消
             if (Input.GetMouseButtonDown(1))
             {
-                LogDC.Log("right btn click");
+                //LogDC.Log("right btn click");
 
                 //cancel skill
                 if (IsPreparingCast())
                 {
-                    LogDC.Log("cancel cast");
+                    //LogDC.Log("cancel cast");
                     StopPreparingCast();
                     return;
                 }
@@ -328,7 +328,7 @@ namespace DC.GameLogic
                 var ray = Camera.main.ScreenPointToRay(mPos);
                 if (Physics.Raycast(ray, out mCastTargetHit, 100))
                 {
-                    LogDC.LogEx("cast obj ", mCastTargetHit.transform.gameObject.name);
+                    //LogDC.LogEx("cast obj ", mCastTargetHit.transform.gameObject.name);
 
                     var target = mCastTargetHit.transform.GetComponent<GameActor>();
                     //是目标

@@ -16,14 +16,16 @@ namespace DC.AI
             mTargetPos = targetPos;
             mStopDistance = stopDistance;
             SetStop(false);
-            mNavMeshAgent.destination = GetTargetPos();
         }
 
-        void Update()
+        void FixedUpdate()
         {
             if (mStop) return;
 
+            mNavMeshAgent.destination = GetTargetPos();
+
             var catchTarget = TfTraceTarget.IsCatchTargetWithPos(mTargetPos, CacheTransform.position, mStopDistance);
+
             if (catchTarget.Item1)
             {
                 if (StopAfterCatchTarget)
