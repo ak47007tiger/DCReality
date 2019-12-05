@@ -30,7 +30,6 @@ namespace DC.SkillSystem
         /// </summary>
         public virtual void Update()
         {
-
         }
 
         /// <summary>
@@ -79,19 +78,32 @@ namespace DC.SkillSystem
 
         public void DoBuffAction(List<IActor> targets)
         {
+            var caster = mSkill.GetCaster();
             var buffEfxCfg = mHandlerCfg.mBuffEffectCfg;
+
             var buffCfg = BuffConfigMgr.Instance.GetBuffCfg(buffEfxCfg.mBuffCfgId);
             var buff = BuffConfigMgr.Instance.GetBuff(buffEfxCfg.mBuffCfgId);
 
-            foreach (var target in targets)
+            switch (mHandlerCfg.mBuffEffectCfg.mAddBuffTargetType)
             {
-                target.GetBuffCmpt().AddBuff(buff);
+                case AddBuffTargetType.Caster:
+                {
+                    caster.Actor.GetBuffCmpt().AddBuff(buff);
+                }
+                    break;
+                case AddBuffTargetType.Target:
+                {
+                    foreach (var target in targets)
+                    {
+                        target.GetBuffCmpt().AddBuff(buff);
+                    }
+                }
+                    break;
             }
         }
 
         public void DoAnimationFx()
         {
-
         }
 
         public void DoTranslateAction(Skill skill, List<IActor> actors)
@@ -162,6 +174,7 @@ namespace DC.SkillSystem
             {
                 worldPos = anchorTf.localToWorldMatrix.MultiplyPoint(cfg.mLocalPosOfXX);
             }
+
             LogDC.LogEx("display vfx: ", cfg.mEffectPath);
             var prefab = ResourceSys.Instance.Load<GameObject>(cfg.mEffectPath);
             var vfx = Object.Instantiate(prefab, worldPos, Quaternion.identity);
@@ -176,6 +189,7 @@ namespace DC.SkillSystem
                     var childTf = tf.GetChild(i);
                     childTf.position = targets[i].GetTransform().position;
                 }
+
                 //隐藏多余节点
                 cnt = Mathf.Min(cfg.mPointCnt, targets.Count);
                 for (var i = cnt; i < tf.childCount; i++)
@@ -184,11 +198,8 @@ namespace DC.SkillSystem
                     childTf.gameObject.SetActive(false);
                 }
             }
-            DCTimer.RunAction(cfg.mDuration, () =>
-            {
-                Object.Destroy(vfx);
-            });
-        }
 
+            DCTimer.RunAction(cfg.mDuration, () => { Object.Destroy(vfx); });
+        }
     }
 }

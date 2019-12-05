@@ -7,7 +7,7 @@ namespace DC.SkillSystem
 {
     public interface ISkill
     {
-        ICaster GetCaster();
+        Caster GetCaster();
         void SetCaster(Caster caster);
 
         CastCfg GetCastCfg();

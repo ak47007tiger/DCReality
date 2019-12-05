@@ -162,7 +162,7 @@ namespace DC.SkillSystem
 
         public void OnCreate()
         {
-
+            
         }
 
         public string GetUiIconPath()

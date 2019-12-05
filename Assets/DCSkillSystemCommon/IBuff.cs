@@ -1,4 +1,6 @@
-﻿namespace DC.SkillSystem
+﻿using DC.GameLogic;
+
+namespace DC.SkillSystem
 {
     public interface IBuff
     {
@@ -8,5 +10,9 @@
         /// <param name="skill"></param>
         /// <returns></returns>
         bool AllowCast(ISkill skill);
+
+        void OnAttach(GameActor actor);
+
+        void OnDetach();
     }
 }

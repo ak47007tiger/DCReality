@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DC.GameLogic;
 
 namespace DC.SkillSystem
 {
@@ -24,6 +25,8 @@ namespace DC.SkillSystem
         private event Action<Buff> mOnAddListeners;
         private event Action<Buff> mOnRemoveListeners;
 
+        public GameActor OwnActor { get; set; }
+
         public void AddOnBuffAddListener(Action<Buff> listener)
         {
             mOnAddListeners += listener;
@@ -36,8 +39,13 @@ namespace DC.SkillSystem
 
         public void AddBuff(Buff buff)
         {
+            //todo 相同类型的buff不重复添加
+            //todo 策略1 在加的时候过滤掉；
+            //todo 策略2 在加的时候不过滤但是查询的时候只给出效果最强的buff
             mBuffList.Add(buff);
             mLastAddBuffCfg = buff.mBuffCfg;
+            buff.OnAttach(OwnActor);
+            
             if (null != mOnAddListeners)
             {
                 mOnAddListeners(buff);

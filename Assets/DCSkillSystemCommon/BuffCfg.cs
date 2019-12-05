@@ -7,13 +7,21 @@ using DC.ValueSys;
 
 namespace DC.SkillSystem
 {
-    public class RoleEffectedByBuff
+    /*public enum RoleEffectedByBuff
+    {
+        Caster,
+        Friend,
+        Enemy,
+        Neutral,
+        All
+    }*/
+    /*public class RoleEffectedByBuff
     {
         public static readonly uint Owner = Convert.ToUInt32("1", 2);
         public static readonly uint Friend_Hero = Convert.ToUInt32("10", 2);
         public static readonly uint Friend_Soldier = Convert.ToUInt32("100", 2);
         public static readonly uint Enemy = Convert.ToUInt32("1000", 2);
-    }
+    }*/
 
     /*
      
@@ -96,6 +104,16 @@ namespace DC.SkillSystem
         Aoe,
     }
 
+    public enum BuffEffectTargetType
+    {
+        Owner,
+        Friend,
+        Enemy,
+        Neutral,
+        NeutralAndEnemy,
+        All,
+    }
+
     public interface IBuffCfg
     {
     }
@@ -107,10 +125,25 @@ namespace DC.SkillSystem
         public BuffType mBuffType;
         public float mEffectRange;
         public RoleType mEffectRole;
+        /// <summary>
+        /// 持续时间
+        /// </summary>
+        public float mDuration;
         public string mName;
         public string mDesc;
         public string mUiIcon;
+        /// <summary>
+        /// aoe还是单体
+        /// </summary>
         public EffectRangeType mEffectRangeType;
+        /// <summary>
+        /// aoe buff会影响的目标对象类别
+        /// </summary>
+        public BuffEffectTargetType mBuffEffectTargetType;
+        /// <summary>
+        /// 技能影响到的所属关系
+        /// </summary>
+        public SideRelation[] mEffectSideRelations;
         /// <summary>
         /// 视觉特效
         /// </summary>
@@ -118,8 +151,10 @@ namespace DC.SkillSystem
         /// <summary>
         /// 数值影响
         /// </summary>
-        public ValueEffectConfig MValueEffectCfg;
-
-        public BuffEffectConfig mBuffEffectCfg;
+        public ValueEffectConfig mValueEffectCfg;
+        /// <summary>
+        /// 施加buff的buff
+        /// </summary>
+        public BuffEffectConfig mBuffEffectConfig;
     }
 }

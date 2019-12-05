@@ -43,7 +43,7 @@ namespace DC.SkillSystem
             mBoxCollider = new CacheItem<BoxCollider>(GetComponent<BoxCollider>);
         }
 
-        public ICaster GetCaster()
+        public Caster GetCaster()
         {
             return mCaster;
         }

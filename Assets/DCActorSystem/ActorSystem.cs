@@ -68,8 +68,9 @@ namespace DC.ActorSystem
 
     public enum SideRelation
     {
-        neutral,
+        self,
         friend,
+        neutral,
         enemy,
     }
 
