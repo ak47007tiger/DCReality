@@ -96,6 +96,11 @@ namespace DC.SkillSystem
         /// 死亡状态
         /// </summary>
         die,
+
+        /// <summary>
+        /// aoe状态buff，可以生成buff的buff
+        /// </summary>
+        state_buff,
     }
 
     public enum EffectRangeType
@@ -146,6 +151,30 @@ namespace DC.SkillSystem
         public bool IsInEffectRelation(SideRelation relation)
         {
             return mEffectSideRelations.Contains(relation);
+        }
+
+        /// <summary>
+        /// -2 同一个buff
+        /// 0 相同
+        /// -1 弱于
+        /// 1 强于
+        /// 2 不相干
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public int Compare(BuffCfg config)
+        {
+            if (config.mId == mId)
+            {
+                return -2;
+            }
+
+            if (config.mBuffType != mBuffType)
+            {
+                return 2;
+            }
+
+            return mValueEffectCfg.Compare(config.mValueEffectCfg);
         }
     }
 }

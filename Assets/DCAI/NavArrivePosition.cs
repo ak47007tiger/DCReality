@@ -24,6 +24,7 @@ namespace DC.AI
         {
             if (mStop) return;
 
+            mNavMeshAgent.speed = mSpeed;
             mNavMeshAgent.destination = GetTargetPos();
 
             var catchTarget = TfTraceTarget.IsCatchTargetWithPos(GetTargetPos(), CacheTransform.position, mStopDistance);

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using DC.ActorSystem;
+﻿using DC.ActorSystem;
 using DC.AI;
 using DC.DCResourceSystem;
 using DC.GameLogic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DC.SkillSystem
@@ -46,7 +46,7 @@ namespace DC.SkillSystem
                     DoAction(null);
                     break;
                 case HandlerType.on_cast_target:
-                    DoAction((List<IActor>) objs[2]);
+                    DoAction((List<IActor>)objs[2]);
                     break;
             }
         }
@@ -87,17 +87,25 @@ namespace DC.SkillSystem
             switch (mHandlerCfg.mBuffEffectCfg.mAddBuffTargetType)
             {
                 case AddBuffTargetType.Caster:
-                {
-                    caster.Actor.GetBuffCmpt().AddBuff(buff);
-                }
+                    {
+                        var buffCmpt = caster.Actor.GetBuffCmpt();
+                        if (null != buffCmpt)
+                        {
+                            buffCmpt.AddBuff(buff);
+                        }
+                    }
                     break;
                 case AddBuffTargetType.Target:
-                {
-                    foreach (var target in targets)
                     {
-                        target.GetBuffCmpt().AddBuff(buff);
+                        foreach (var target in targets)
+                        {
+                            var buffCmpt = target.GetBuffCmpt();
+                            if (null != buffCmpt)
+                            {
+                                buffCmpt.AddBuff(buff);
+                            }
+                        }
                     }
-                }
                     break;
             }
         }

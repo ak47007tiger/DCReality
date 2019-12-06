@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DC.Collections.Generic;
+using DC.SkillSystem;
 
 namespace DC.ValueSys
 {
@@ -21,18 +22,23 @@ namespace DC.ValueSys
 
     public interface IValueComponent
     {
-        int GetValue(GValueType type);
-        void SetValue(GValueType type, int value);
-        int this[GValueType type] { get; set; }
+        float GetValue(GValueType type);
+        void SetValue(GValueType type, float value);
+        float this[GValueType type] { get; set; }
+        /// <summary>
+        /// 有buff加成的
+        /// </summary>
+        /// <returns></returns>
+        float GetBuffedValue(GValueType type, BuffCmpt cmpt);
     }
 
     public class ValueComponent : IValueComponent
     {
-        private Dictionary<GValueType, int> mDicTypeToValue = new Dictionary<GValueType, int>();
+        private Dictionary<GValueType, float> mDicTypeToValue = new Dictionary<GValueType, float>();
 
-        public Action<GValueType, int, int> OnValueChange;
+        public Action<GValueType, float, float> OnValueChange;
 
-        public int GetValue(GValueType type)
+        public float GetValue(GValueType type)
         {
             if (mDicTypeToValue.TryGetValue(type, out var value))
             {
@@ -42,7 +48,7 @@ namespace DC.ValueSys
             return 0;
         }
 
-        public void SetValue(GValueType type, int value)
+        public void SetValue(GValueType type, float value)
         {
             var old = GetValue(type);
             mDicTypeToValue[type] = value;
@@ -52,10 +58,29 @@ namespace DC.ValueSys
             }
         }
 
-        public int this[GValueType type]
+        public float this[GValueType type]
         {
             get { return GetValue(type); }
             set { SetValue(type,value);}
+        }
+
+        public float GetBuffedValue(GValueType type, BuffCmpt cmpt)
+        {
+            var buffList = cmpt.GetBuffList();
+            var srcValue = GetValue(type);
+            var dstValue = srcValue;
+            foreach (var buff in buffList)
+            {
+                var valueEffectCfg = buff.mBuffCfg.mValueEffectCfg;
+                if (valueEffectCfg.mId > 0)
+                {
+                    var process = valueEffectCfg.Process(srcValue);
+                    var delta = process - srcValue;
+                    srcValue += delta;
+                }
+            }
+
+            return 0;
         }
 
     }

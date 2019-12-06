@@ -91,10 +91,22 @@ namespace DC.SkillSystem
                 {
                     if (!mEfxActors.Contains(targetActor))
                     {
-                        var buffCmpt = targetActor.GetBuffCmpt();
-                        buffCmpt.AddBuff(this);
+                        AddBuffEffect(targetActor);
                         mEfxActors.Add(targetActor);
                     }
+                }
+            }
+        }
+
+        private void AddBuffEffect(GameActor targetActor)
+        {
+            if (mBuffCfg.mBuffEffectConfig.mBuffCfgId > 0)
+            {
+                var buffCmpt = targetActor.GetBuffCmpt();
+                if (null != buffCmpt)
+                {
+                    var buff = BuffConfigMgr.Instance.GetBuff(mBuffCfg.mBuffEffectConfig.mBuffCfgId);
+                    buffCmpt.AddBuff(buff);
                 }
             }
         }

@@ -42,14 +42,14 @@ namespace DC.SkillSystem
             //todo 相同类型的buff不重复添加
             //todo 策略1 在加的时候过滤掉；
             //todo 策略2 在加的时候不过滤但是查询的时候只给出效果最强的buff
-            mBuffList.Add(buff);
-            mLastAddBuffCfg = buff.mBuffCfg;
-            buff.OnAttach(OwnActor);
+            //mBuffList.Add(buff);
+            //mLastAddBuffCfg = buff.mBuffCfg;
+            //buff.OnAttach(OwnActor);
             
-            if (null != mOnAddListeners)
-            {
-                mOnAddListeners(buff);
-            }
+            //if (null != mOnAddListeners)
+            //{
+            //    mOnAddListeners(buff);
+            //}
         }
 
         public bool RemoveBuff(Buff buff)
@@ -89,6 +89,14 @@ namespace DC.SkillSystem
         public BuffCfg GetLastRemoveBuffCfg()
         {
             return mLastRemoveBuffCfg;
+        }
+
+        public void OnUpdate()
+        {
+            foreach (var buff in mBuffList)
+            {
+                buff.OnUpdate();
+            }
         }
 
     }

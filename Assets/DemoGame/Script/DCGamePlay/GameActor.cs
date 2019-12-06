@@ -18,8 +18,6 @@ namespace DC.GameLogic
 
         private int mActorId;
 
-        private ValueComponent mValueComponent = new ValueComponent();
-
         private string mModelPath;
 
         private Dictionary<ActorPos, Transform> mPosToTf = new Dictionary<ActorPos, Transform>();
@@ -32,11 +30,16 @@ namespace DC.GameLogic
 
         private HeroCfg mHeroCfg;
 
+        private ValueComponent mValueComponent = new ValueComponent();
+
         private BuffCmpt mBuffCmpt = new BuffCmpt();
+
+        private EquipmentCmpt mEquipmentCmpt = new EquipmentCmpt();
 
         protected override void Awake()
         {
             base.Awake();
+            mBuffCmpt.OwnActor = this;
         }
 
         void Start()
@@ -44,12 +47,17 @@ namespace DC.GameLogic
             mValueComponent.OnValueChange = OnComponentValueChange;
         }
 
-        void OnComponentValueChange(GValueType type, int old, int cur)
+        void OnComponentValueChange(GValueType type, float old, float cur)
         {
             if (type == GValueType.move_speed)
             {
                 gameObject.GetOrAdd<NavArrivePosition>().mNavMeshAgent.speed = cur;
             }
+        }
+
+        public EquipmentCmpt GetEquipmentCmpt()
+        {
+            return mEquipmentCmpt;
         }
 
         public void SetModel(string model)
@@ -110,6 +118,11 @@ namespace DC.GameLogic
         public ValueComponent GetValueComponent()
         {
             return mValueComponent;
+        }
+
+        public float GetSpeed()
+        {
+            return mValueComponent.GetBuffedValue(GValueType.move_speed, mBuffCmpt);
         }
 
         public void SetVisibility(bool show)
@@ -196,5 +209,15 @@ namespace DC.GameLogic
         {
             CacheTransform.forward = direction;
         }
+
+        protected void Update()
+        {
+            if (null != mBuffCmpt)
+            {
+                mBuffCmpt.OnUpdate();
+            }
+        }
+
     }
+
 }

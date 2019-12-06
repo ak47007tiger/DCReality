@@ -15,7 +15,7 @@ namespace DC.AI
         {
         }
 
-        void FixedUpdate()
+        void Update()
         {
             if(mStop) return;
 
@@ -74,8 +74,6 @@ namespace DC.AI
             if (Vector3.Dot(curPos - previousPos, curPos - targetPos) > 0)
             {
             }
-            
-
 
             return false;
         }

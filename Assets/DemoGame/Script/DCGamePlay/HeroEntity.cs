@@ -37,6 +37,12 @@ namespace DC.GameLogic
             mIntToState = ConfigToolkit.ConvertEnumToDic<EnumHeroState>();
         }
 
+        public void UpdateActorData()
+        {
+            //英雄基础数值
+            //装备加成
+        }
+
         void Start()
         {
             if (Actor.IsPlayer())
@@ -116,6 +122,8 @@ namespace DC.GameLogic
 
         void FixedUpdate()
         {
+            
+
             EmitFSM();
         }
 

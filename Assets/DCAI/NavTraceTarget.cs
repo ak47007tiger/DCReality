@@ -14,12 +14,13 @@ namespace DC.AI
 
         public Action<NavTraceTarget, float> mOnCatchTarget;
 
-        void FixedUpdate()
+        void Update()
         {
             if(mStop) return;
 
             if (mTargetTf == null) return;
 
+            mNavMeshAgent.speed = mSpeed;
             mNavMeshAgent.destination = GetTargetPos();
 
             var catchTarget = CatchTarget(mTargetTf, CacheTransform, mStopDistance);

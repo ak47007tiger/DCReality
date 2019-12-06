@@ -145,6 +145,12 @@ namespace DC.GameLogic
 
         private void FixedUpdate()
         {
+            var speed = mHero.GetSpeed();
+            mNavArrivePos.mSpeed = speed;
+            mNavTraceTarget.mSpeed = speed;
+            mTfArrivePos.mSpeed = speed;
+            mTfTraceTarget.mSpeed = speed;
+
             if (Input.GetMouseButtonDown(1))
             {
                 var mousePosition = Input.mousePosition;

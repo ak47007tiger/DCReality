@@ -55,27 +55,8 @@ namespace DC.ActorSystem
     
     public class ActorData
     {
-        public int mHp;
-        public int mHpRecover;
-        public int mMp;
-        public int mMpRecover;
+        public int mLevel;
 
-        public int mPhysicAttack;
-        public int mMagicAttack;
-
-        public int mPhysicDefense;
-        public int mMagicDefense;
-
-        //穿透
-        public int mPhysicWeaken;
-        public int mMagicWeaken;
-
-        public int mAttackSpeed;
-        public int mMoveSpeed;
-        /// <summary>
-        /// 暴击
-        /// </summary>
-        public int mCritRate;
     }
 
 }
