@@ -40,6 +40,7 @@ namespace DC.SkillSystem
         {
             OwnActor = null;
 
+            //去除aoe buff产生的buff
             if (mBuffCfg.mEffectRangeType == EffectRangeType.Aoe)
             {
 
@@ -75,33 +76,25 @@ namespace DC.SkillSystem
                     actor.GetBuffCmpt().RemoveBuff(this);
                 }
             }
-            
+
+            ActorSide ownActorSide = OwnActor.GetActorSide();
+
             //todo 包围盒子配置
             var halfSize = new Vector3(mBuffCfg.mEffectRange, 1, mBuffCfg.mEffectRange);
             var overlapBox = Physics.OverlapBox(OwnActor.CacheTransform.position, halfSize, Quaternion.identity, SystemPreset.layer_actor);
             foreach (var collider in overlapBox)
             {
                 var targetActor = collider.GetComponent<GameActor>();
-                switch (mBuffCfg.mBuffEffectTargetType)
+                var sideRelation = Toolkit.GetSideRelation(ownActorSide, targetActor.GetActorSide());
+
+                if (mBuffCfg.IsInEffectRelation(sideRelation))
                 {
-                    case BuffEffectTargetType.Owner:
-                        break;
-                    case BuffEffectTargetType.Friend:
-                        break;
-                    case BuffEffectTargetType.Neutral:
-                        break;
-                    case BuffEffectTargetType.Enemy:
-                        break;
-                    case BuffEffectTargetType.NeutralAndEnemy:
-                        break;
-                    case BuffEffectTargetType.All:
-                        break;
-                }
-                if (!mEfxActors.Contains(targetActor))
-                {
-                    var buffCmpt = targetActor.GetBuffCmpt();
-                    buffCmpt.AddBuff(this);
-                    mEfxActors.Add(targetActor);
+                    if (!mEfxActors.Contains(targetActor))
+                    {
+                        var buffCmpt = targetActor.GetBuffCmpt();
+                        buffCmpt.AddBuff(this);
+                        mEfxActors.Add(targetActor);
+                    }
                 }
             }
         }

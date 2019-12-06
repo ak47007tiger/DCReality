@@ -82,6 +82,11 @@ namespace DC
             return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
         }
 
+        /// <summary>
+        /// 用来获得红方或者蓝方
+        /// </summary>
+        /// <param name="actorSide"></param>
+        /// <returns></returns>
         public static ActorSide GetOpSide(ActorSide actorSide)
         {
             switch (actorSide)
@@ -92,6 +97,44 @@ namespace DC
                     return ActorSide.blue;
             }
             return ActorSide.neutral;
+        }
+
+        /// <summary>
+        /// 获取不是自身的side
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="dst"></param>
+        /// <returns></returns>
+        public static SideRelation GetSideRelation(ActorSide src, ActorSide dst)
+        {
+            switch (src)
+            {
+                case ActorSide.red:
+                    switch (dst)
+                    {
+                        case ActorSide.red:
+                            return SideRelation.friend;
+                        case ActorSide.blue:
+                            return SideRelation.enemy;
+                        case ActorSide.neutral:
+                            return SideRelation.neutral;
+                    }
+                    break;
+                case ActorSide.blue:
+                    switch (dst)
+                    {
+                        case ActorSide.red:
+                            return SideRelation.enemy;
+                        case ActorSide.blue:
+                            return SideRelation.friend;
+                        case ActorSide.neutral:
+                            return SideRelation.neutral;
+                    }
+                    break;
+                case ActorSide.neutral:
+                    return SideRelation.neutral;
+            }
+            return SideRelation.neutral;
         }
 
         public static void RemoveFromStack<T>(Stack<T> stack, T item)

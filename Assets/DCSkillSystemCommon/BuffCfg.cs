@@ -104,16 +104,6 @@ namespace DC.SkillSystem
         Aoe,
     }
 
-    public enum BuffEffectTargetType
-    {
-        Owner,
-        Friend,
-        Enemy,
-        Neutral,
-        NeutralAndEnemy,
-        All,
-    }
-
     public interface IBuffCfg
     {
     }
@@ -137,13 +127,9 @@ namespace DC.SkillSystem
         /// </summary>
         public EffectRangeType mEffectRangeType;
         /// <summary>
-        /// aoe buff会影响的目标对象类别
-        /// </summary>
-        public BuffEffectTargetType mBuffEffectTargetType;
-        /// <summary>
         /// 技能影响到的所属关系
         /// </summary>
-        public SideRelation[] mEffectSideRelations;
+        public List<SideRelation> mEffectSideRelations;
         /// <summary>
         /// 视觉特效
         /// </summary>
@@ -156,5 +142,10 @@ namespace DC.SkillSystem
         /// 施加buff的buff
         /// </summary>
         public BuffEffectConfig mBuffEffectConfig;
+
+        public bool IsInEffectRelation(SideRelation relation)
+        {
+            return mEffectSideRelations.Contains(relation);
+        }
     }
 }
