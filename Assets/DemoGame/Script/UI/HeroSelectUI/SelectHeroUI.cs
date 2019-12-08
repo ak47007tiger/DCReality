@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DC.DCResourceSystem;
 using DC.GameLogic;
-using DC.GameLogic.UI;
 using UnityEngine.SceneManagement;
 
 namespace DC.UI

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DC.GameLogic.UI
+namespace DC.UI
 {
     public class BaseItemUI<VGen> : BaseMonoBehaviour where VGen : MonoBehaviour
     {

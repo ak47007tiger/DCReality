@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DC.ActorSystem;
 using DC.GameLogic;
-using DC.GameLogic.UI;
 using DC.SkillSystem;
 
 namespace DC.UI

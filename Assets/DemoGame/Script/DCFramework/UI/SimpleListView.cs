@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace DC.GameLogic.UI
+namespace DC.UI
 {
     public interface IListViewFuncs<D,V>
     {

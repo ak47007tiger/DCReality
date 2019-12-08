@@ -10,13 +10,19 @@ namespace DC
 {
     public class ViewFinderEditor : Editor
     {
-        private static ViewScriptGenerator ScriptGenerator = new ViewScriptGenerator();
+        private static readonly ViewScriptGenerator ScriptGenerator = new ViewScriptGenerator();
 
         [MenuItem("Assets/DC/ViewFinder/GenerateScriptToClipboard", priority = 1)]
         public static void GenerateScriptToClipboard()
         {
             var root = Selection.activeGameObject;
             var rootTf = root.transform;
+
+            var code = ScriptGenerator.GenerateCodeScript(rootTf);
+            var textEditor = new TextEditor();
+            textEditor.text = code;
+            textEditor.SelectAll();
+            textEditor.Copy();
         }
 
         [MenuItem("Assets/DC/ViewFinder/GenerateScriptFile", priority = 1)]
@@ -55,7 +61,7 @@ namespace DC
         public static readonly string class_template = @"
 using UnityEngine;
 using UnityEngine.UI;
-namespace DC
+namespace DC.UI
 {
     public class #className : MonoBehaviour
     {
@@ -67,8 +73,76 @@ namespace DC
     }
 }
 ";
+        public static readonly string code_template = @"
+#fieldStr
+        void Awake()
+        {
+#findStr
+        }
+";
 
-        public string GenerateScript(Transform rootTf)
+        public string GenerateCodeScript(Transform rootTf)
+        {
+            var dictionary = new Dictionary<string, Transform>();
+            SearchAllTarget(ref dictionary, rootTf);
+
+            var fieldStrBuffer = new StringBuilder();
+            var findStrBuffer = new StringBuilder();
+
+            var gameObjectType = typeof(GameObject);
+            var rectTfType = typeof(RectTransform);
+
+            foreach (var kv in dictionary)
+            {
+                var name = kv.Key;
+                var tf = kv.Value;
+
+                var path = GetPathOfRoot(rootTf, tf);
+
+                var fieldName = name.Substring(name.IndexOf('_') + 1);
+
+                if (name.StartsWith(prefix_cm))
+                {
+                    foreach (var supportType in support_compoent)
+                    {
+                        var cmpt = tf.GetComponent(supportType);
+
+                        if (null != cmpt)
+                        {
+                            FillComponentContent(supportType.Name, path, fieldName, fieldStrBuffer, findStrBuffer);
+                        }
+                    }
+                }
+                else if (name.StartsWith(prefix_id))
+                {
+                    FillGameObjectContent(gameObjectType.Name, path, fieldName, fieldStrBuffer, findStrBuffer);
+                    FillComponentContent(rectTfType.Name, path, fieldName, fieldStrBuffer, findStrBuffer);
+                }
+                else if (name.StartsWith(prefix_go))
+                {
+                    FillGameObjectContent(gameObjectType.Name, path, fieldName, fieldStrBuffer, findStrBuffer);
+                }
+                else if (name.StartsWith(prefix_tf))
+                {
+                    FillComponentContent(rectTfType.Name, path, fieldName, fieldStrBuffer, findStrBuffer);
+                }
+                else if (name.StartsWith(prefix_it))
+                {
+                    FillGameObjectContent("GameObject", path, fieldName, fieldStrBuffer, findStrBuffer);
+                }
+
+                fieldStrBuffer.Append("\r\n");
+                findStrBuffer.Append("\r\n");
+            }
+
+            var classScript = new StringBuilder(code_template)
+                    .Replace("#fieldStr", fieldStrBuffer.ToString())
+                    .Replace("#findStr", findStrBuffer.ToString());
+
+            return classScript.ToString();
+        }
+
+        public string GenerateClsScript(Transform rootTf)
         {
             /*
              
@@ -145,7 +219,7 @@ namespace DC
         {
             var className = GetClassName(rootTf);
 
-            var generateScript = GenerateScript(rootTf);
+            var generateScript = GenerateClsScript(rootTf);
 
             //save to file
             var setting = ViewFinderSetting.GetSetting();
