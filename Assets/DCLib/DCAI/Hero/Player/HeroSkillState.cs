@@ -79,7 +79,7 @@ namespace DC.AI
                     case SkillTargetType.Position:
                     {
                         var distance = Vector3.Distance(hit.point, casterTf.position);
-                        LogDC.LogEx("wait for position", distance, skillCfg.mCastRange);
+                        DCLog.LogEx("wait for position", distance, skillCfg.mCastRange);
                         if (distance <= skillCfg.mCastRange)
                         {
                             Caster.Cast(skillCfg, castCfg);
@@ -91,7 +91,7 @@ namespace DC.AI
                     case SkillTargetType.Actor:
                     {
                         var distance = Toolkit.ComputeDistance(hit.transform, casterTf);
-                        LogDC.LogEx("wait for position", distance, skillCfg.mCastRange);
+                        DCLog.LogEx("wait for position", distance, skillCfg.mCastRange);
                         if (distance <= skillCfg.mCastRange)
                         {
                             Caster.Cast(skillCfg, castCfg);

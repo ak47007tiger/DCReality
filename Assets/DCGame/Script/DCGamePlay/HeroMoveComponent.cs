@@ -102,7 +102,7 @@ namespace DC.GameLogic
             mNavArrivePos.mSpeed = speed;
             mTfArrivePos.mSpeed = speed;
 
-            LogDC.Log("Move " + pos);
+            DCLog.Log("Move " + pos);
             if(type == MoveType.NavPos)
             {
                 mNavArrivePos.StartTrace(pos, stopDistance);
@@ -158,7 +158,7 @@ namespace DC.GameLogic
                 //nav move pos
                 if (Physics.Raycast(ray, out var hit, 200, SystemPreset.layer_ground))
                 {
-                    LogDC.LogEx("hero move ", "right down", hit.point);
+                    DCLog.LogEx("hero move ", "right down", hit.point);
                     Move(MoveType.NavPos, hit.point, mHero.GetSpeed(), SystemPreset.move_stop_distance);
                 }
             }

@@ -37,7 +37,7 @@ namespace DC
             if (mTimerSet.Count > 0)
             {
                 mTimersToInvoke.AddRange(mTimerSet);
-                LogDC.LogEx("timer count ", mTimersToInvoke.Count);
+                DCLog.LogEx("timer count ", mTimersToInvoke.Count);
                 foreach (var timer in mTimersToInvoke)
                 {
                     timer.Update();
@@ -85,7 +85,7 @@ namespace DC
             if (mPhysicTimerSet.Count > 0)
             {
                 mPhysicTimersToInvoke.AddRange(mPhysicTimerSet);
-                LogDC.LogEx("physic timer count ", mPhysicTimersToInvoke.Count);
+                DCLog.LogEx("physic timer count ", mPhysicTimersToInvoke.Count);
                 foreach (var timer in mPhysicTimersToInvoke)
                 {
                     timer.Update();
@@ -116,7 +116,7 @@ namespace DC
         public static void RemoveNormal(DCBaseTimer timer)
         {
             if (null == Instance) return;
-            LogDC.Log("add to remove");
+            DCLog.Log("add to remove");
             Instance.mToDelTimerSet.Add(timer);
         }
 
@@ -176,10 +176,10 @@ namespace DC
 
         public void Destroy()
         {
-            LogDC.Log("Destroy 1");
+            DCLog.Log("Destroy 1");
             if (mDestroyed) return;
             mDestroyed = true;
-            LogDC.Log("Destroy 2");
+            DCLog.Log("Destroy 2");
 
             if (mPhysic)
             {

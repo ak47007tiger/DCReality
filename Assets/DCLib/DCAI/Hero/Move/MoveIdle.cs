@@ -8,7 +8,7 @@ namespace DC.AI
     {
         public override void DoBeforeEntering() 
         {
-            LogDC.LogEx("to move idle");
+            DCLog.LogEx("to move idle");
             MoveCmpt.Move(MoveType.Idle);
         }
 

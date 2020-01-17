@@ -288,7 +288,7 @@ namespace DC.SkillSystem
                 switch (handlerConfig.mHandlerType)
                 {
                     case HandlerType.none:
-                        LogDC.Log("none handler cfg");
+                        DCLog.Log("none handler cfg");
                         break;
                     case HandlerType.time:
                     {
@@ -313,12 +313,12 @@ namespace DC.SkillSystem
                     }
                 }
             }
-            LogDC.LogEx("init handlers ", mTypeToHandlerList.Keys.Count, mEvthandlerList.Count);
+            DCLog.LogEx("init handlers ", mTypeToHandlerList.Keys.Count, mEvthandlerList.Count);
         }
 
         public void Create()
         {
-            LogDC.LogEx("apply skill id :", GetSkillCfg().mId, mSkillCfg.mSkillType);
+            DCLog.LogEx("apply skill id :", GetSkillCfg().mId, mSkillCfg.mSkillType);
 
             InitHandlers();
 
@@ -341,7 +341,7 @@ namespace DC.SkillSystem
                     break;
             }
 
-            LogDC.Log("on create skill " + mSkillCfg.mId);
+            DCLog.Log("on create skill " + mSkillCfg.mId);
 
             if (mTypeToHandlerList.TryGetValue(HandlerType.after_create, out var list))
             {
@@ -390,7 +390,7 @@ namespace DC.SkillSystem
 
         void OnDestroy()
         {
-            LogDC.LogEx("destroy timer", mTimerToDestroy.Count);
+            DCLog.LogEx("destroy timer", mTimerToDestroy.Count);
 
             DCTimer.RemoveNextFixedUpdate(DoSkillEffectForTimer);
 
@@ -484,7 +484,7 @@ namespace DC.SkillSystem
         {
             if (mHitCnt > mSkillCfg.mHitCnt)
             {
-                LogDC.Log("skill hit max");
+                DCLog.Log("skill hit max");
                 return;
             }
             RaycastHit[] allHit;
@@ -519,7 +519,7 @@ namespace DC.SkillSystem
 
             if (!Toolkit.IsNullOrEmpty(allHit))
             {
-                LogDC.Log("get hit cnt: " + allHit.Length);
+                DCLog.Log("get hit cnt: " + allHit.Length);
 
                 switch (mSkillCfg.mSkillType)
                 {
@@ -614,7 +614,7 @@ namespace DC.SkillSystem
 
             if (mTypeToHandlerList.TryGetValue(HandlerType.on_cast_target, out var list))
             {
-                LogDC.LogEx("on area skill cast target", list.Count);
+                DCLog.LogEx("on area skill cast target", list.Count);
 
                 foreach (var handler in list)
                 {
@@ -625,7 +625,7 @@ namespace DC.SkillSystem
 
         void OnBulletHitActor(IActor hitActor)
         {
-            LogDC.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
+            DCLog.LogEx("skill get actor", hitActor.GetTransform().gameObject.name);
 
             mHitCnt++;
             if (mHitCnt > mSkillCfg.mHitCnt)

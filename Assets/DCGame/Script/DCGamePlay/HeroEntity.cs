@@ -158,7 +158,7 @@ namespace DC.GameLogic
 
         public void OnKeyEvent(KeyCode code)
         {
-            LogDC.LogEx("press  ", code);
+            DCLog.LogEx("press  ", code);
 
             var currentSkill = Caster.GetSkill(code);
             mCastCfg = new CastCfg();
@@ -178,7 +178,7 @@ namespace DC.GameLogic
             var skillCfg = SkillConfigMgr.Instance.GetSkillCfg(skillId);
             if (null == skillCfg)
             {
-                LogDC.LogEx("no such skill: ", skillId);
+                DCLog.LogEx("no such skill: ", skillId);
                 return;
             }
 
@@ -196,7 +196,7 @@ namespace DC.GameLogic
                     mCastSkillUi.OnPrepareCast(mSelectedSkillCfg);
                 }
 
-                LogDC.LogEx("prepare skill ", skillId);
+                DCLog.LogEx("prepare skill ", skillId);
             }
         }
 
@@ -216,12 +216,12 @@ namespace DC.GameLogic
             {
                 if (null != mSelectedSkillCfg)
                 {
-                    LogDC.Log("try get target");
+                    DCLog.Log("try get target");
                     var mPos = Input.mousePosition;
                     var ray = Camera.main.ScreenPointToRay(mPos);
                     if (Physics.Raycast(ray, out mCastTargetHit, 100))
                     {
-                        LogDC.Log("get target " + mCastTargetHit.transform.gameObject.name);
+                        DCLog.Log("get target " + mCastTargetHit.transform.gameObject.name);
                         PrepareCastSelectedSkill(mSelectedSkillCfg, mCastTargetHit.transform, mCastTargetHit.point);
                     }
                 }
@@ -245,7 +245,7 @@ namespace DC.GameLogic
                     var target = targetTf.GetComponent<GameActor>();
                     if (null != target)
                     {
-                        LogDC.Log("find actor");
+                        DCLog.Log("find actor");
                         GetCastCfg().SetTargetActor(target);
 
                         var distance = Toolkit.ComputeDistance(targetTf, CacheTransform);
@@ -277,7 +277,7 @@ namespace DC.GameLogic
                     if (distance > selectedSkillCfg.mCastRange)
                     {
                         var miniatureValue = mSelectedSkillCfg.mCastRange.MiniatureValue();
-                        LogDC.LogEx("trace pos ", hitPos, miniatureValue);
+                        DCLog.LogEx("trace pos ", hitPos, miniatureValue);
                         MoveCmpt.Move(MoveType.NavPos, hitPos, GetSpeed(), miniatureValue);
                     }
                 }

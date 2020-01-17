@@ -58,7 +58,7 @@ namespace DC.GameLogic
 
         public bool Cast(SkillCfg skillCfg, CastCfg castCfg)
         {
-            LogDC.LogEx("cast", skillCfg.mId);
+            DCLog.LogEx("cast", skillCfg.mId);
 
             var skill = GetSkillSystem().CreateSkill(skillCfg);
             skill.SetCaster(this);

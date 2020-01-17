@@ -38,7 +38,7 @@ namespace DC.SkillSystem
         /// <param name="objs"></param>
         public virtual void OnEvt(params object[] objs)
         {
-            LogDC.LogEx("on evt", mHandlerCfg.mHandlerType);
+            DCLog.LogEx("on evt", mHandlerCfg.mHandlerType);
 
             switch (mHandlerCfg.mHandlerType)
             {
@@ -53,7 +53,7 @@ namespace DC.SkillSystem
 
         protected virtual void DoAction(List<IActor> targets)
         {
-            LogDC.LogEx("on action", mHandlerCfg.mEffectType);
+            DCLog.LogEx("on action", mHandlerCfg.mEffectType);
             switch (mHandlerCfg.mEffectType)
             {
                 case EffectType.visual_effect:
@@ -137,7 +137,7 @@ namespace DC.SkillSystem
             var targetPos = mSkill.CacheTransform.position;
             var speed = cfg.mSpeed;
 
-            LogDC.LogEx(targetTf.name, targetPos, speed);
+            DCLog.LogEx(targetTf.name, targetPos, speed);
 
             if (cfg.mImmediately)
             {
@@ -183,7 +183,7 @@ namespace DC.SkillSystem
                 worldPos = anchorTf.localToWorldMatrix.MultiplyPoint(cfg.mLocalPosOfXX);
             }
 
-            LogDC.LogEx("display vfx: ", cfg.mEffectPath);
+            DCLog.LogEx("display vfx: ", cfg.mEffectPath);
             var prefab = ResourceSys.Instance.Load<GameObject>(cfg.mEffectPath);
             var vfx = Object.Instantiate(prefab, worldPos, Quaternion.identity);
             //链状技能

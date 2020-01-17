@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DC
 {
-    public static class LogDC
+    public static class DCLog
     {
         public static readonly StringBuilder sBd = new StringBuilder();
 
