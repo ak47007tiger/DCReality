@@ -1,7 +1,7 @@
 ﻿namespace DC.ss
 {
-    [NodeInfo(10001001, "发送事件")]
-    public class Action_10001001 : Action
+    [NodeInfo(10001001, "切换time line")]
+    public class Action_10001002 : Action
     {
         public int evtId;
 

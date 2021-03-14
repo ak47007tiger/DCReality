@@ -5,6 +5,8 @@ namespace DC.ss
 {
     public class TimeLineDesc : Desc
     {
-        public int[] nodeIdList;
+        public float duration;
+
+        public Desc[] nodeDescList;
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SimpleJSON;
+using UnityEngine;
 
 namespace DC.ss
 {
@@ -11,5 +12,15 @@ namespace DC.ss
         public int[] intData;
 
         public long[] longData;
+
+        public virtual JSONNode GetJson()
+        {
+            return null;
+        }
+
+        public virtual void FromJson(JSONObject json)
+        {
+
+        }
     }
 }

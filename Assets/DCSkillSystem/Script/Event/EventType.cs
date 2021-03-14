@@ -1,6 +1,6 @@
 ﻿namespace DC.ss
 {
-    public enum EventType
+    public enum SkillEventType
     {
         skill_create = 1,
 

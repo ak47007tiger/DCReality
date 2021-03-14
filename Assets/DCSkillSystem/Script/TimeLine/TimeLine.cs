@@ -9,13 +9,22 @@ namespace DC.ss
     {
         public List<SkillNode> skillNodeList;
 
+        public bool enable;
+
         public override void Tick(float delta)
         {
+            if (!enable) return;
+
             base.Tick(delta);
+        }
+
+        public override void OnTick(float delta)
+        {
+            base.OnTick(delta);
 
             for (int i = 0; i < skillNodeList.Count; i++)
             {
-                skillNodeList[i].Tick(delta);
+                skillNodeList[i].OnTick(delta);
             }
         }
     }

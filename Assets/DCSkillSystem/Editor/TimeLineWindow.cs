@@ -1,4 +1,7 @@
-﻿using UnityEditor;
+﻿using System;
+using DC.DCIMGUIBox;
+using UnityEditor;
+using UnityEngine;
 
 namespace DC.ss.e
 {
@@ -8,13 +11,26 @@ namespace DC.ss.e
      * 增加节点
      *
      */
-    public class TimeLineWindow : EditorWindow
+    public class TimeLineWindow : DCEWindow
     {
-        public void OnGUI()
+        [MenuItem("DC/IMGUI/TimeLineWindow")]
+        public static void Open()
         {
-
+            var window = GetWindow<TimeLineWindow>();
+            window.minSize = new Vector2(800, 600);
         }
 
+        public TimeLineDesc timeLineDesc;
+
+        public float duration;
+
+        protected override void OnSetupWidget()
+        {
+            var widget = Add(new TimeLineSlider(this));
+            widget.SetArea(new Rect(0, 0, position.width, TimeLineSlider.HEIGHT));
+        }
 
     }
+
+    
 }

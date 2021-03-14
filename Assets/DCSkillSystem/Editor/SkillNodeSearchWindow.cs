@@ -2,7 +2,7 @@
 
 namespace DC.ss.e
 {
-    public class ConditionPropertyWindow : EditorWindow
+    public class SkillNodeSearchWindow : EditorWindow
     {
         
     }

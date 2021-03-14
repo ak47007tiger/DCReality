@@ -57,6 +57,10 @@ namespace DC.ss
         {
             tickTimer += delta;
 
+            for (int i = 0; i < timeLineList.Count; i++)
+            {
+                timeLineList[i].Tick(delta);
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DC.ss.e
 {
-    public class ActionPropertyWindow : EditorWindow
+    public class LogicEditorWindow : EditorWindow
     {
         
     }
